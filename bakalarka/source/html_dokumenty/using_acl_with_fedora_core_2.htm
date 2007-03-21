@@ -1,0 +1,929 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta name="author" content="Van Emery">
+  <meta name="description" content="Using ACLs with Fedora Core 2">
+  <meta name="keywords" content="Linux ACLs, Fedora Core ACLs, FC-2 ACLs, 2.6 Kernel ACL, Linux getfacl, Linux setfacl, 
+  Linux ACL HOWTO, Fedora Core ACL HOWTO, Linux ACL Tutorial">
+
+ <title>Using ACLs with Fedora Core 2</title>
+
+ <link href="../../howto.css" rel="stylesheet" type="text/css">
+
+</head>
+<body>
+
+<table class="banner">
+ <tr>
+  <td class="banner"><h2>Using ACLs with Fedora Core 2 &nbsp;&nbsp;(Linux Kernel 2.6.5)</h2></td>
+  <td class="banner" align="right"> | <a href="../linux.html">Back to Index</a> | </td>
+ </tr>
+</table>
+
+<h4 class="blue">&nbsp;&nbsp;&nbsp;By Van Emery</h4>
+
+<div class="toc">
+ <h3>Table of Contents</h3>
+
+ <ul class="nobull">
+	<li><a href="#intro">Introduction</a></li>
+	<li><a href="#assume">Assumptions</a></li>
+	<li><a href="#getstart">Getting Started</a></li>
+	<li><a href="#using">Using ACLs</a></li>
+	<li><a href="#setfacl">More <tt>setfacl</tt> Details and Examples</a></li>
+	<li><a href="#scenario">Example Scenario</a></li>
+   <li><a href="#default">The Default ACL</a></li>
+   <li><a href="#cp-mv">Using <tt>cp</tt> and <tt>mv</tt> with ACLs</a></li>
+   <li><a href="#copy">Copying ACLs</a></li>
+   <li><a href="#archive">Archive and Restore Files with ACLs</a></li>
+   <li><a href="#XFS-notes">XFS Notes</a></li>
+	<li><a href="#finalnotes">Final Notes</a></li>
+	<li><a href="#resource">Additional Resources</a></li>
+ </ul>
+
+</div>
+
+<h3 id="intro"><br />Introduction</h3>
+
+<p>What are ACLs and why would you want to use them?</p>
+
+<p>ACLs are Access Control Lists for files and directories.  They are based on the IEEE's POSIX 1003.1e draft 17, also 
+known simply as POSIX.1e. &nbsp;&nbsp;ACLs are an addition to the standard Unix file permissions (r,w,x,-) for User, 
+Group, and Other.  ACLs give users and administrators flexibility and fine-grained control over who can 
+read, write, and execute files.  This can all be done without adding mysterious groups and pestering the 
+system administrator.</p>
+
+<p>Commercial Unix operating systems (except SCO) have all had ACL functionality for quite awhile.  
+Microsoft's NTFS also has similar capabilities.  FreeBSD 5.x supports POSIX.1e ACLs as well.  The new
+Linux 2.6 kernel supports ACLs for EXT2, EXT3, XFS, JFS, and ReiserFS.</p>
+
+<p>Fedora Core 2, Red Hat's first distribution with a 2.6 kernel, is a good vehicle for taking Linux ACLs 
+for a test drive.  This document is a basic HOWTO/tutorial on using ACLs with Fedora.</p>
+
+<h3 id="assume">Assumptions</h3>
+
+<ul>
+	<li>You are using Fedora Core 2</li>
+	<li>You have another partition besides <b>/</b>, <b>/boot</b>, and <b>swap</b> defined, or some 
+	unpartitioned free space on one of your disks</li>
+	<li>You are using the EXT2, EXT3, or XFS filesystems</li>
+	<li>You can login as root</li>
+</ul>
+
+<p>If you have no free space on the disk, and all of your files and binaries are located in the root ( / ) 
+partition, then <b>you may not want to experiment with ACLs</b>.</p>
+
+<p><b>Note:</b> &nbsp;&nbsp;
+Both JFS and ReiserFS <i>can</i> support ACLs under Linux, but Fedora Core 2 does not appear to support 
+it.  ReiserFS cannot be mounted with the "acl" option, and <tt>jfs_mkfs</tt> appears to be seriously broken. 
+Therefore, this HOWTO will be limited to EXT2, EXT3, and XFS.</p>
+
+<h3 id="getstart">Getting Started</h3>
+
+<p>Assuming you have an EXT2 or EXT3 partition that you are willing to use for testing, we can get 
+started.  On my test machine, I have the following available partitions:</p>
+
+<ul>
+ <li><tt>/dev/hda5    /home     (ext3)</tt></li>
+ <li><tt>/dev/hda9    /XFS      (xfs)</tt></li>
+</ul> 
+
+<p>For the examples in this HOWTO, I will be using the home directory of user "tristan", which is
+<tt>/home/tristan</tt>.  Note that this directory belongs to a separate Linux partition, <i>not</i> the 
+the root ( / ) partition.  If you have some extra unpartitioned space on one of your disks, this would be a good 
+time to create a test partition.  You can do this with the <tt>fdisk</tt> command, then you can format it 
+with the <tt>mke2fs</tt> command.  Make sure you read up on all the required steps before you do this, otherwise 
+you can nuke your system, disk, or data!</p>
+
+<p>If you did not install Fedora Core 2 with the "XFS" option, but you want to try ACLs on XFS, take a 
+look at the <a href="#XFS-notes">XFS Notes section</a>.</p>
+
+<p>You will need to unmount the partitions of your choice, and then remount them with the "acl" option.  
+First, I made a copy of my <tt>/etc/fstab</tt> file:</p>
+
+<pre>
+[root@fc2 root]# <b>cp -v /etc/fstab /etc/fstab.org</b>
+`/etc/fstab' -> `/etc/fstab.org'
+</pre>
+
+<p>Then, I made the following modifications in <strong>red</strong> to the <tt>/etc/fstab</tt> config 
+file.  For clarity, I am only including hard disk entries:</p>
+
+<pre>
+LABEL=/                 /                       ext3    defaults        1 1
+LABEL=/boot             /boot                   ext3    defaults        1 2
+LABEL=/home             /home                   ext3    <strong>rw,acl</strong>          1 2
+LABEL=/tmp              /tmp                    ext3    defaults        1 2
+LABEL=/usr              /usr                    ext3    defaults        1 2
+LABEL=/var              /var                    ext3    defaults        1 2
+/dev/hda8               swap                    swap    defaults        0 0
+/dev/hdd1               /Data                   ext3    ro,noatime      1 2
+LABEL=/XFS              /XFS                    xfs     rw,noatime      0 2
+</pre>
+
+<p>Now, you will need to remount the <tt>/home</tt> partition with the "acl" option.  The easiest way to do 
+this is with the "remount" option, since it will work even while the partition is in use:</p>
+
+<pre>
+[root@fc2 root]# <b>mount -v -o remount /home</b>
+/dev/hda5 on /home type ext3 (rw,acl)
+</pre>
+  
+<p>Another way to remount the partition with the "acl" option is to make sure that nobody else is on the 
+sytem and the <tt>/home</tt> partition is not in use, then unmount, then mount the partition:</p>
+
+<pre>
+[root@fc2 root]# <b>umount /home</b>
+[root@fc2 root]# <b>mount /home</b>
+
+[root@fc2 root]# <b>mount -l</b>
+/dev/hda2 on / type ext3 (rw) [/]
+/dev/hda1 on /boot type ext3 (rw) [/boot]
+/dev/hda5 on /home type ext3 (rw,<strong>acl</strong>) [/home]
+/dev/hda7 on /tmp type ext3 (rw) [/tmp]
+/dev/hda3 on /usr type ext3 (rw) [/usr]
+/dev/hda6 on /var type ext3 (rw) [/var]
+/dev/hdd1 on /Data type ext3 (ro,noatime) []
+/dev/hda9 on /XFS type xfs (rw,noatime) [/XFS]
+</pre>
+
+<p>If you had trouble unmounting your target partitions, you may need to drop to single user mode with the 
+<tt>init 1</tt> command.  This should allow you to unmount the filesystems.  After that, you can remount 
+the filesystems and issue an <tt>init 3</tt> or <tt>init 5</tt> command to put you back into your regular 
+operating environment.</p>
+
+<h3 id="using">Using ACLs</h3>
+
+<p>Now, we can actually start using ACLs.  The basic commands that we are interested in are:</p>
+
+<ul>
+	<li><tt>getfacl</tt></li>
+	<li><tt>setfacl</tt></li>
+</ul>
+
+<p>We will first look at the <tt>getfacl</tt> command.  The owner of the directory we will be working with 
+is "tristan", and the guest user will be "axel" and the guest group will be "lensmen".  First, create 
+a test file, then look at the permissions and the ACL:</p>
+
+
+<pre>
+[tristan@fc2 tristan]$ <b>cd /home/tristan</b>
+[tristan@fc2 tristan]$ <b>cp /etc/services pizza</b>
+
+[tristan@fc2 tristan]$ <b>ls -l pizza</b>
+-rw-r--r--  1 tristan tristan 19936 May 28 16:59 pizza
+
+[tristan@fc2 tristan]$ <b>getfacl pizza</b>
+# file: pizza
+# owner: tristan
+# group: tristan
+user::rw-
+group::r--
+other::r--
+</pre>
+
+<p>So far, there is nothing very exciting to see.  Now, let's change the ACL so that user "axel" can 
+read and write to the file:</p>
+
+<pre>
+[tristan@fc2 tristan]$ <b>setfacl -m u:axel:rw- pizza</b>
+[tristan@fc2 tristan]$ <b>getfacl pizza</b>
+# file: pizza
+# owner: tristan
+# group: tristan
+user::rw-
+<strong>user:axel:rw-</strong>
+group::r--
+mask::rw-
+other::r--
+                                                                                
+[tristan@fc2 tristan]$ <b>ls -l pizza</b>
+-rw-rw-r--<strong>+</strong> 1 tristan tristan 19936 May 28 16:59 pizza
+</pre>
+
+<p>You will notice that there is now an extra user entry in the ACL, and there is a "+" next to the file in 
+the output from the <tt>ls</tt> command.  The "+" indicates that an ACL has been applied to the file or 
+directory.  Now, let's add a group ("lensmen") and another user ("tippy") to the ACL for <tt>pizza</tt>:</p>
+
+<pre>
+[root@fc2 tristan]# <b>setfacl -m u:tippy:r--,g:lensmen:r-- pizza</b>
+
+[root@fc2 tristan]# <b>getfacl pizza</b>
+# file: pizza
+# owner: tristan
+# group: tristan
+user::rw-
+user:axel:rw-
+user:tippy:r--
+group::r--
+group:lensmen:r--
+mask::rw-
+other::r--
+</pre>
+
+<p>Hmmm...what's the <b>mask</b> entry?  This is the effective rights mask. This entry limits the effective 
+rights granted to all ACL groups and ACL users. The traditional Unix User, Group, and Other entries are 
+not affected.  If the mask is more restrictive than the ACL permissions that you grant, then the 
+mask takes precedence.  For example, let's change the mask to "<tt>r--</tt>" and give user "tippy" and 
+group "lensmen" the permissions <tt>rwx</tt>, and see what happens:</p>
+
+<pre>
+[tristan@fc2 tristan]$ <b>setfacl -m u:tippy:rwx,g:lensmen:rwx pizza</b>
+
+[tristan@fc2 tristan]$ <b>setfacl -m mask::r-- pizza</b>
+
+[tristan@fc2 tristan]$ <b>getfacl --omit-header pizza</b>
+user::rw-
+user:axel:rw-                #effective:r--
+user:tippy:rwx               #effective:r--
+group::r--
+group:lensmen:rwx            #effective:r--
+mask::r--
+other::r--
+</pre>
+
+<p>The ACL now shows an "effective" rights mask.  Even though "tippy" has been given <tt>rwx</tt> 
+permissions, he actually only has <tt>r--</tt> permissions because of the mask.</p>
+
+<p>In most cases, I want the effective mask to allow whatever permissions I granted to named users and 
+groups, so my mask will be <tt>rw-</tt> or <tt>rwx</tt>.  I will reset it like this:</p>
+
+<pre>
+[tristan@fc2 tristan]$ <b>setfacl -m m::rw- pizza</b>
+
+[tristan@fc2 tristan]$ <b>getfacl --omit pizza</b>
+user::rw-
+user:axel:rw-
+user:tippy:rw-
+group::r--
+group:lensmen:rwx               #effective:rw-
+mask::rw-
+other::r--
+</pre>
+
+<p>What about using the <tt>setfacl</tt> command to change normal User, Group, and Other permissions?  No 
+problem!  This can be used instead of <tt>chmod</tt>:</p>
+
+<pre>
+[tristan@fc2 tristan]$ <b>setfacl -m u::rwx,g::rwx,o:rwx pizza</b>
+
+[tristan@fc2 tristan]$ <b>ls -l pizza</b>
+-rwxrwxrwx+ 1 tristan tristan 19965 May 29 09:31 pizza
+
+[tristan@fc2 tristan]$ <b>getfacl --omit pizza</b>
+user::rwx
+user:axel:rw-
+user:tippy:rw-
+group::rwx
+group:lensmen:rwx
+mask::rwx
+other::rwx
+</pre>
+
+<p><strong>Note</strong> that the mask changed!  Whenever you change the permissions of a user or a group 
+with <tt>setfacl</tt>, the mask is changed to match.  Therefore, if you want a restrictive mask, it must 
+be applied <i>after</i> the user and group permissions are modified.</p>
+
+<p>Another thing to keep in mind is that the <tt>chmod</tt> command does not alter the 
+file's ACL...the ACL information will remain intact, <i>except</i> that the mask entry can change as 
+described above.</p>
+
+<h3 id="setfacl">More <tt>setfacl</tt> Details and Examples</h3>
+
+<p>The <tt>setfacl</tt> command has many options.  In this section, we will look at some of the more useful 
+ones.</p>
+
+<h4>Remove Specific Entries from an ACL</h4>
+
+<p>You can remove specific ACL entries with the <tt>-x</tt> option.  In 
+this example, we will remove the entry for user "tippy" and user "axel" but leave the other entries 
+alone:</p>
+
+<pre>
+[tristan@fc2 tristan]$ <b>getfacl --omit pizza</b>
+user::rwx
+user:axel:rw-
+user:tippy:rw-
+group::rwx
+group:lensmen:rwx
+mask::rwx
+other::rwx
+
+[tristan@fc2 tristan]$ <b>setfacl -x u:tippy,u:axel pizza</b>
+
+[tristan@fc2 tristan]$ <b>getfacl --omit pizza</b>
+user::rwx
+group::rwx
+group:lensmen:rwx
+mask::rwx
+other::rwx
+</pre>
+
+<h4>Remove Entire ACL</h4>
+
+<p>To completely remove an ACL from a file or directory:</p>
+
+<pre>
+[tristan@fc2 tristan]$ <b>setfacl -b pizza</b>
+</pre>
+
+<p>You can also use:</p>
+
+<pre>
+[tristan@fc2 tristan]$ <b>setfacl --remove-all pizza</b>
+</pre>
+
+<h4>Using the <tt>--set</tt> Option</h4>
+
+<p>If you want to explicitly set all of the file permissions on a file or a group of files, you must use 
+the <tt>--set</tt> option.  This is different from the <tt>-m</tt> option, which only modifies the existing 
+ACL.  The <tt>--set</tt> option replaces all permissions and ACLs with the new values.  When you use the 
+<tt>--set</tt> option, all of the User, Group, and Other permissions <i>must</i> be defined.  Here is an 
+example:</p>
+
+<pre>
+[tristan@fc2 tristan]$ <b>setfacl --set u::rw,g::rw,o::-,u:tippy:r pizza</b>
+
+[tristan@fc2 tristan]$ <b>getfacl --omit pizza</b>
+user::rw-
+user:tippy:r--
+group::rw-
+mask::rw-
+other::---
+</pre>
+
+<h4>Using <tt>setfacl</tt> Recursively</h4>
+
+<p>If you want to apply ACLs to an entire directory and all of its subdirectories, use the <tt>-R</tt> 
+option.  Given the directory hierarchy <tt>/home/tristan/Level1/Level2/Level3/Level4</tt>, the following 
+command will add an ACL entry for group "lensmen" to all of the <tt>Level*</tt> directories and their 
+contents:</p>
+
+<pre>
+[tristan@fc2 tristan]$ <b>setfacl -R -m g:lensmen:r-x /home/tristan/Level1</b>
+</pre>
+
+<h4>Using ACL Entries from a File:</h4>
+
+<p>What if you have a lengthy ACL that needs to be used frequently?  Rather than typing it over and over 
+again on the command line, you can save the ACL as a text file and use it to apply ACLs to other files.  For 
+example, we will create the ACL config file <tt>/home/tristan/myacl</tt>:</p>
+
+<pre class="conf">
+user:axel:rw-
+user:tippy:rw-
+group:lensmen:r--
+group:marty:r--
+group:fafnir:r--
+mask::rw-
+other::---
+</pre>
+
+<p>Now, we can easily apply these ACL modifications to files:</p>
+
+<pre>
+[tristan@fc2 tristan]$ <b>setfacl -M myacl test*</b>
+
+[tristan@fc2 tristan]$ <b>ls -l test*</b>
+-rw-rw----+ 1 tristan tristan 168 May 30 09:41 test1
+-rw-rw----+ 1 tristan tristan 168 May 30 09:42 test2
+-rw-rw----+ 1 tristan tristan 168 May 30 09:42 test3
+
+[tristan@fc2 tristan]$ <b>getfacl test1</b>
+# file: test1
+# owner: tristan
+# group: tristan
+user::rw-
+user:axel:rw-
+user:tippy:rw-
+group::rw-
+group:marty:r--
+group:lensmen:r--
+group:fafnir:r--
+mask::rw-
+other::---
+</pre>
+
+<h4>Note on UID, GID, and Permissions</h4>
+
+<p>When you are using <tt>setfacl</tt>, you can use numeric UIDs and GIDs instead of the actual names.  The 
+UIDs and GIDs do not have to exist yet.  If you use names, then they <i>must</i> exist or you will get an 
+error.  You can use the</p>
+
+<pre><b>getfacl --numeric</b> <i>filename</i></pre>
+
+<p>command to view the numeric values.</p>
+
+<p>Also, when you are specifying permissions, you can use octal permissions (0-7) instead of (r,w,x,-).</p>
+
+<div><hr /></div>
+
+<h3 id="scenario">Example Scenario</h3>
+
+<p>Now that we have seen basic command usage, let's use a practical example to learn some more about ACLs. 
+Tippy is working with Tristan on a project.  He needs to be able to read, write, create, and 
+delete files related to the project, which are located in Tristan's home directory.  Tristan wants 
+to do this without bothering the system administrator with requests for new groups and group membership  
+changes.  When the project is over, Tristan will remove the permissions for user "tippy" 
+without bothering the sysadmin.</p>
+
+<p>All of the project files are located in <tt>/home/tristan/Project</tt>.  Here is how Tristan will handle 
+the situation:</p>
+
+<pre>
+[tristan@fc2 tristan]$ <b>setfacl -m user:tippy:--x /home/tristan</b>
+[tristan@fc2 tristan]$ <b>getfacl /home/tristan</b>
+getfacl: Removing leading '/' from absolute path names
+# file: home/tristan
+# owner: tristan
+# group: tristan
+user::rwx
+user:tippy:--x
+group::---
+mask::--x
+other::---
+
+[tristan@fc2 tristan]$ <b>setfacl -R -m u:tippy:rwx,o::--- Project</b>
+[tristan@fc2 tristan]$ <b>getfacl Project</b>
+# file: Project
+# owner: tristan
+# group: tristan
+user::rwx
+user:tippy:rwx
+group::rwx
+mask::rwx
+other::---
+
+[tristan@fc2 tristan]$ <b>cd Project</b>
+[tristan@fc2 Project]$ <b>ls -l</b>
+total 1560
+-rwxrwx---+ 1 tristan tristan  86532 May 29 14:02 libgssapi_krb5.so
+-rwxrwx---+ 1 tristan tristan  86532 May 29 14:02 libgssapi_krb5.so.2
+-rwxrwx---+ 1 tristan tristan  86532 May 29 14:02 libgssapi_krb5.so.2.2
+-rwxrwx---+ 1 tristan tristan 423572 May 29 14:02 libkrb5.so
+-rwxrwx---+ 1 tristan tristan 423572 May 29 14:02 libkrb5.so.3
+-rwxrwx---+ 1 tristan tristan 423572 May 29 14:02 libkrb5.so.3.2
+[tristan@fc2 Project]$ <b>getfacl --omit libkrb5.so</b>
+user::rwx
+user:tippy:rwx
+group::r-x
+mask::rwx
+other::---
+</pre>
+
+<p>Now, Tippy can access the <tt>/home/tristan/Project</tt> directory.  He can read, modify, add, and 
+delete files.  However, he cannot delete the <tt>Project</tt> directory, nor can he view any other files in 
+Tristan's home directory.  This is good, because Tippy likes to test his limits.  Let's see what he can and 
+can't do:</p>
+
+<pre class="user2">
+[tippy@fc2 tippy]$ <b>cd /home/tristan</b>
+[tippy@fc2 tristan]$ <b>ls</b>
+ls: .: Permission denied
+[tippy@fc2 tristan]$ <b>rm -rf Project</b>
+rm: cannot remove `Project': Permission denied
+[tippy@fc2 tristan]$ <b>cd Project</b>
+[tippy@fc2 Project]$ <b>ls -l</b>
+total 1560
+-rwxrwx---+ 1 tristan tristan  86532 May 29 14:02 libgssapi_krb5.so
+-rwxrwx---+ 1 tristan tristan  86532 May 29 14:02 libgssapi_krb5.so.2
+-rwxrwx---+ 1 tristan tristan  86532 May 29 14:02 libgssapi_krb5.so.2.2
+-rwxrwx---+ 1 tristan tristan 423572 May 29 14:02 libkrb5.so
+-rwxrwx---+ 1 tristan tristan 423572 May 29 14:02 libkrb5.so.3
+-rwxrwx---+ 1 tristan tristan 423572 May 29 14:02 libkrb5.so.3.2
+[tippy@fc2 Project]$ <b>touch status-report.txt</b>
+
+[tippy@fc2 Project]$ <b>date >> libkrb5.so.3</b>
+[tippy@fc2 Project]$ <b>rm libkrb5.so.3</b>
+[tippy@fc2 Project]$ <b>ls -l</b>
+total 1136
+-rwxrwx---+ 1 tristan tristan  86532 May 29 14:02 libgssapi_krb5.so
+-rwxrwx---+ 1 tristan tristan  86532 May 29 14:02 libgssapi_krb5.so.2
+-rwxrwx---+ 1 tristan tristan  86532 May 29 14:02 libgssapi_krb5.so.2.2
+-rwxrwx---+ 1 tristan tristan 423572 May 29 14:02 libkrb5.so
+-rwxrwx---+ 1 tristan tristan 423572 May 29 14:02 libkrb5.so.3.2
+-rw-rw-r--  1 tippy   tippy        0 May 29 16:06 status-report.txt
+</pre>
+
+<p>Now, after the project is complete, it is a simple matter for user Tristan to revoke Tippy's access 
+to <tt>/home/tristan</tt>:</p>
+
+<pre>
+[tristan@fc2 tristan]$ <b>setfacl -x u:tippy: /home/tristan</b>
+[tristan@fc2 tristan]$ <b>getfacl /home/tristan</b>
+getfacl: Removing leading '/' from absolute path names
+# file: home/tristan
+# owner: tristan
+# group: tristan
+user::rwx
+group::---
+mask::---
+other::---
+</pre>
+
+<p>If user "tippy" decides to snoop around in <tt>/home/tristan/Project</tt> again, he will not be able 
+to:</p>
+
+<pre class="user2">
+[tippy@fc2 tippy]$ <b>cd /home/tristan</b>
+-bash: cd: /home/tristan: Permission denied
+[tippy@fc2 tippy]$ <b>ls /home/tristan/Project</b>
+ls: /home/tristan/Project: Permission denied
+</pre>
+
+<p>Note that this entire example was done without having to involve the system administrator!</p>
+
+<div><hr /></div>
+
+<h3 id="default">The Default ACL</h3>
+
+<p>Up until now, we have been looking at the <i>access</i> ACL.  There is also another type of ACL, called the 
+<i>default</i> ACL.  The default ACL is only applied to directories, and it defines the permissions that a 
+newly created file or directory <i>inherits</i> from its parent directory.</p>
+
+<p>When you create a new directory inside a directory that already has a default ACL, the new directory 
+inherits the default ACL both as its access ACL <i>and</i> its default ACL.</p>
+
+<p>Here is an example of defining a default ACL for a directory, and what happens when files and 
+directories are created underneath that directory:</p>
+
+<pre>
+[tristan@fc2 tristan]$ <b>mkdir Plato</b>
+
+[tristan@fc2 tristan]$ <b>setfacl --set u::rwx,g::r-x,o::- Plato</b>
+
+[tristan@fc2 tristan]$ <b>setfacl -d --set u::rwx,u:tippy:rwx,u:axel:rx,g::rx,g:lensmen:rx,o::- Plato</b>
+[tristan@fc2 tristan]$ <b>getfacl Plato</b>
+# file: Plato
+# owner: tristan
+# group: tristan
+user::rwx
+group::r-x
+other::---
+default:user::rwx
+default:user:axel:r-x
+default:user:tippy:rwx
+default:group::r-x
+default:group:lensmen:r-x
+default:mask::rwx
+default:other::---
+
+[tristan@fc2 tristan]$ <b>cd Plat</b>o
+[tristan@fc2 Plato]$ <b>touch guitar</b>
+[tristan@fc2 Plato]$ <b>getfacl guitar</b>
+# file: guitar
+# owner: tristan
+# group: tristan
+user::rw-
+user:axel:r-x                #effective:r--
+user:tippy:rwx               #effective:rw-
+group::r-x                   #effective:r--
+group:lensmen:r-x            #effective:r--
+mask::rw-
+other::---
+
+[tristan@fc2 Plato]$ <b>mkdir Zep</b>
+[tristan@fc2 Plato]$ <b>getfacl Zep</b>
+# file: Zep
+# owner: tristan
+# group: tristan
+user::rwx
+user:axel:r-x
+user:tippy:rwx
+group::r-x
+group:lensmen:r-x
+mask::rwx
+other::---
+default:user::rwx
+default:user:axel:r-x
+default:user:tippy:rwx
+default:group::r-x
+default:group:lensmen:r-x
+default:mask::rwx
+default:other::---
+
+[tristan@fc2 Plato]$ <b>cd Zep</b>
+[tristan@fc2 Zep]$ <b>touch airship</b>
+[tristan@fc2 Zep]$ <b>getfacl airship</b>
+# file: airship
+# owner: tristan
+# group: tristan
+user::rw-
+user:axel:r-x                #effective:r--
+user:tippy:rwx               #effective:rw-
+group::r-x                   #effective:r--
+group:lensmen:r-x            #effective:r--
+mask::rw-
+other::---
+</pre>
+
+<p>The umask has no effect if a default ACL exists.  In the following example, the umask is honored when a 
+file is created in the <tt>/home/tristan</tt> directory, which has no default ACL.  When a file is created 
+under <tt>/home/tristan/Plato</tt>, which has a default ACL, you can see that the umask is ignored:</p>
+
+<pre>
+[tristan@fc2 tristan]$ <b>umask ugo=</b>
+[tristan@fc2 tristan]$ <b>umask</b>
+0777
+[tristan@fc2 tristan]$ <b>touch button</b>
+[tristan@fc2 tristan]$ <b>ls -l button</b>
+----------  1 tristan tristan 0 Jun  1 00:47 button
+
+[tristan@fc2 tristan]$ <b>cd Plato</b>
+[tristan@fc2 Plato]$ <b>touch switch</b>
+[tristan@fc2 Plato]$ <b>ls -l switch</b>
+-rw-rw----+ 1 tristan tristan 0 Jun  1 00:47 switch
+</pre>
+
+<p>You can also modify and create default ACLs with another syntax, prefixing the u, g, or o entries 
+with a "<tt>d</tt>" :</p>
+
+<pre>
+[tristan@fc2 tristan]$ <b>setfacl -m d:u:axel:rwx,d:g:lensmen:rwx Plato</b>
+[tristan@fc2 tristan]$ <b>getfacl Plato</b>
+# file: Plato
+# owner: tristan
+# group: tristan
+user::rwx
+group::r-x
+other::---
+default:user::rwx
+default:user:axel:rwx
+default:user:tippy:rwx
+default:group::r-x
+default:group:lensmen:rwx
+default:mask::rwx
+default:other::---
+</pre>
+
+<h3 id="cp-mv">Using <tt>cp</tt> and <tt>mv</tt> with ACLs</h3>
+
+<p>Three major file utilities, <tt>ls</tt>, <tt>cp</tt>, and <tt>mv</tt> have been updated to handle ACLs.  
+The <tt>mv</tt> command will always preserve ACLs if it is possible.  If it is not 
+possible, it will issue a warning.  The <tt>cp</tt> command will only preserve ACLs if used with the 
+<tt>-p</tt> or <tt>-a</tt> options.</p>
+
+<p>In both cases, if you are trying to copy/move from a filesystem that supports ACLs to a filesystem that 
+does not, only the standard Unix permissions will be retained.  In the example below, you can see that 
+using the <tt>cp -p</tt> command within the ACL-enabled <tt>/home</tt> filesystem worked, and using the 
+same command to copy the file to the <tt>/root</tt> directory (which is <i>not</i> ACL-enabled) 
+resulted in an error message.  As root, do the following:</p>
+
+<pre>
+[root@fc2 root]# <b>cd /home/tristan</b>
+[root@fc2 tristan]# <b>mkdir ACL</b>
+[root@fc2 tristan]# <b>cp -p pizza ACL/pizza</b>
+[root@fc2 tristan]# <b>ls -l ACL/pizza</b>
+-rw-rwx---+ 1 tristan tristan 19965 May 29 09:31 ACL/pizza
+
+[root@fc2 tristan]# <b>cp -p pizza /root</b>
+cp: preserving permissions for `/root/pizza': Operation not supported
+[root@fc2 tristan]# <b>ls -l /root/pizza</b>
+-rw-rwx---  1 tristan tristan 19965 May 29 09:31 /root/pizza
+</pre>
+
+<h3 id="copy">Copying ACLs</h3>
+
+<p>If you already have a file with a complex ACL, you can easily copy that ACL to other files by piping 
+the output of a <tt>getfacl</tt> command into the <tt>setfacl</tt> command.  Here is an example of copying 
+the ACL from <tt>bingo.txt</tt> to all of the files starting with "test":</p>
+
+<pre>
+[tristan@fc2 Compaq]$ <b>ls -l</b>
+total 4
+-rw-rw----+ 1 tristan tristan 0 Jun  2 09:52 bingo.txt
+-rw-rw----  1 tristan tristan 0 Jun  2 09:53 testa1
+-rw-rw----  1 tristan tristan 0 Jun  2 09:53 testa2
+-rw-rw----  1 tristan tristan 0 Jun  2 09:55 testa3
+-rw-rw----  1 tristan tristan 0 Jun  2 09:53 testa4
+-rw-rw----  1 tristan tristan 0 Jun  2 09:55 testa5
+
+[tristan@fc2 Compaq]$ <b>getfacl bingo.txt | setfacl --set-file=- test*</b>
+
+[tristan@fc2 Compaq]$ <b>ls -l</b>
+total 24
+-rw-rw----+ 1 tristan tristan 0 Jun  2 09:52 bingo.txt
+-rw-rw----+ 1 tristan tristan 0 Jun  2 09:53 testa1
+-rw-rw----+ 1 tristan tristan 0 Jun  2 09:53 testa2
+-rw-rw----+ 1 tristan tristan 0 Jun  2 09:55 testa3
+-rw-rw----+ 1 tristan tristan 0 Jun  2 09:53 testa4
+-rw-rw----+ 1 tristan tristan 0 Jun  2 09:55 testa5
+
+[tristan@fc2 Compaq]$ <b>getfacl --omit testa5</b>
+user::rw-
+user:axel:rw-
+user:tippy:rw-
+group::rw-
+group:marty:r--
+group:lensmen:r--
+group:fafnir:r--
+mask::rw-
+other::---
+</pre>
+
+<p>You can also archive all of the ACLs from an entire directory tree, then restore them later.  You might want 
+to do this if you are recovering files from backup media that does not support ACLs, like CD-ROM.  Here is 
+an example of archiving/saving all of the ACLs in the <tt>/home/tristan/Tree</tt> directory tree, and restoring 
+them.</p>
+
+<p>There are 898 files in this tree:</p>
+
+<pre>
+[tristan@fc2 tristan]$ <b>du -h Tree</b>
+9.5M    Tree/A/B/C/D
+19M     Tree/A/B/C
+29M     Tree/A/B
+38M     Tree/A
+9.5M    Tree/AA/BB/CC/DD
+19M     Tree/AA/BB/CC
+29M     Tree/AA/BB
+38M     Tree/AA
+86M     Tree
+</pre>
+
+<p>Now, let's archive the ACLs into a file in our home directory:</p>
+
+<pre>
+[tristan@fc2 tristan]$ <b>getfacl -R Tree > Tree.facl</b>
+[tristan@fc2 tristan]$ <b>ls -l Tree.facl</b>
+-rw-rw-r--  1 tristan tristan 120550 Jun  2 12:08 Tree.facl
+</pre>
+
+<p>Now, we will simulate restoring the files from CD without ACLs by stripping all of the ACLs off:</p>
+
+<pre>
+[tristan@fc2 tristan]$ <b>setfacl -R -b Tree</b>
+</pre>
+
+<p>Now we can restore all of the ACL entries with one command:</p>
+
+<pre>
+[tristan@fc2 tristan]$ <b>setfacl --restore Tree.facl</b>
+</pre>
+
+<h3 id="archive">Archive and Restore Files with ACLs</h3>
+
+<p>What if you want to archive/backup files or directories with ACLs?  Besides <tt>cp</tt>, what is there?
+Unfortunately, <tt>tar</tt>, <tt>cpio</tt>, <tt>pax</tt>, and <tt>dump</tt> will not save and restore ACL 
+information.  You can use the <tt>setfacl --restore</tt> mechanism in conjunction with a standard archiving/
+backup system, but that is far from ideal.  The answer is <tt>star</tt>, a TAR-like utility that is included 
+in the Fedora Core 2 distribution.</p>
+
+<p>Quotes from Star's author:</p>
+
+<ul class="nobull">
+ <li><i>Star is the fastest known implementation of a tar archiver.</i></li>
+ <li><i>Star is even faster than ufsdump in nearly all cases.</i></li>
+</ul>
+
+<p>Sounds interesting, doesn't it?</p>
+
+<p>We can archive the entire <tt>/home/tristan/Tree</tt> directory tree from our previous example.  We have 
+to use the <tt>acl</tt> and <tt>-Hexustar</tt> options in order to archive and restore the ACL data.  Here 
+we go:</p>
+
+<pre>
+[tristan@fc2 /]$ <b>cd /home/tristan</b>
+
+[tristan@fc2 tristan]$ <b>star -Hexustar -acl -c f=Tree.star Tree</b>
+star: 8201 blocks + 0 bytes (total of 83978240 bytes = 82010.00k).
+</pre>
+
+<p>Now we will simulate losing our files and restoring them from a Star archive:</p>
+
+<pre>
+[tristan@fc2 tristan]$ <b>rm -rf Tree</b>
+
+[tristan@fc2 tristan]$ <b>star -acl -x f=Tree.star</b>
+star: 8201 blocks + 0 bytes (total of 83978240 bytes = 82010.00k).
+</pre>
+
+<p>When you check out the <tt>/home/tristan/Tree</tt> directory tree, you will find that it has been 
+restored along with all the ACLs!</p>
+
+<div class="info">
+<h3>rdiff-backup</h3>
+
+<p>If you want to use a disk-to-disk backup instead of a tape archiver, consider using 
+<a href="http://www.nongnu.org/rdiff-backup/">rdiff-backup</a>.  The stable branch now  
+supports ACLs.<br /><br /></p>
+</div>
+                                                                                                                             
+<h3 id="XFS-notes">XFS Notes - Setting Up an XFS Filesystem with ACLs</h3>
+
+<p>XFS natively supports POSIX.1e ACLs. Unless you installed Fedora Core 2 with the XFS option, you will 
+need to install the XFS RPM packages in order to use XFS.  They are located on FC-2 ISO disk #4, in the 
+<tt>Fedora/RPMS</tt> directory.  You will need to install the following packages:</p>
+
+<ul>
+	<li><tt>xfsprogs-2.6.13-1.i386.rpm</tt></li>
+	<li><tt>xfsprogs-devel-2.6.13-1.i386.rpm</tt></li>
+</ul>
+
+<p>Use the <tt>rpm -ivh xfsprogs*rpm</tt> command and you will soon be ready to go.</p>
+
+<p>You will need a spare partition for your XFS filesystem.  In my case, I created a spare partition 
+as <tt>/dev/hda9</tt>.  You must now create an XFS filesystem:</p>
+
+<pre>
+[root@fc2 root]# <b>mkfs.xfs -i size=512 -f -L "/XFS" /dev/hda9</b>
+meta-data=/dev/hda9              isize=512    agcount=8, agsize=61046 blks
+         =                       sectsz=512
+data     =                       bsize=4096   blocks=488368, imaxpct=25
+         =                       sunit=0      swidth=0 blks, unwritten=1
+naming   =version 2              bsize=4096
+log      =internal log           bsize=4096   blocks=2560, version=1
+         =                       sectsz=512   sunit=0 blks
+realtime =none                   extsz=65536  blocks=0, rtextents=0
+</pre>
+
+<p>The <tt>-i</tt> option is used to specify the size of the inodes.  256 is the default, but 512 bytes per 
+inode significantly increases the speed of ACL lookups.</p>
+
+<p>Now, create a directory to act as the mountpoint:</p>
+
+<pre>
+[root@fc2 root]# <b>mkdir /XFS</b>
+</pre>
+
+<p>Now, we have to actually mount the new filesystem.  Unlike EXT2 and EXT3, no "acl" option is necessary.  
+XFS assumes that you want ACLs.  Example:</p>
+
+<pre>
+[root@fc2 root]# <b>mount -v -t xfs /dev/hda9 /XFS</b>
+/dev/hda9 on /XFS type xfs (rw)
+
+[root@fc2 root]# <b>df -h</b>
+Filesystem            Size  Used Avail Use% Mounted on
+/dev/hda2             4.2G  197M  3.8G   5% /
+/dev/hda1              97M  5.9M   86M   7% /boot
+/dev/hda5             9.7G  128M  9.0G   2% /home
+/dev/hda7             985M   17M  919M   2% /tmp
+/dev/hda3              15G  3.2G   11G  23% /usr
+/dev/hda6             4.9G  184M  4.4G   4% /var
+/dev/hdd1              29G   11G   17G  38% /Data
+<strong>/dev/hda9             1.9G  160K  1.9G   1% /XFS</strong>
+</pre>
+
+<p>Alternatively, you could have used the mount command with the disk label "/XFS" that was added when you 
+created the XFS filesystem.  Example:</p>
+
+<pre>
+[root@fc2 root]# <b>mount -v -t xfs -L "/XFS" /XFS</b>
+mount: mounting /dev/hda9
+/dev/hda9 on /XFS type xfs (rw)
+</pre>
+
+<p>The last step is to add an entry to <tt>/etc/fstab</tt> so that the filesystem/partition will be mounted 
+automatically during system boot.  Here is a sample entry:</p>
+
+<pre class="conf">
+LABEL=/XFS          /XFS             xfs     rw,noatime    0 2
+</pre>
+
+<p>You can now start using the filesystem with ACLs.</p>
+
+<h3 id="finalnotes">Final Notes</h3>
+
+<p>There are limits to how many ACL entries can be applied to each file or directory.  The number is 
+filesystem dependent.  EXT2 and EXT3 can have up to 32 entries, and XFS can have up to 25.  Reiser and JFS 
+can have over 8,000.</p>
+
+<p>Enabling and using ACLs on a filesystem can reduce performance.  It does not make sense to use ACLs for 
+the root partition ( / ), <tt>/boot</tt>, <tt>/usr</tt>, <tt>/var</tt>, etc.  I can see ACLs being very 
+useful in <tt>/home</tt> and other user data partitions.</p>
+
+<p>The only way to get familiar with Linux ACLs is to practice using them.  Have fun with it!</p>
+
+<h3 id="resource">Additional Resources</h3>
+
+<ul>
+  
+  <li><a href="http://www.suse.de/~agruen/acl/linux-acls/online/">
+  Andreas Grünbacher's "POSIX Access Control Lists on Linux" whitepaper</a>
+   &nbsp;&nbsp;&nbsp;<a href="POSIX_ACL_on_Linux.html">(local copy)</a></li>
+  <li><a href="http://networking.earthweb.com/netsysm/article.php/10954_3077971_1">Excellent article on Linux ACLs</a> by Carla Schroeder</li>
+  <li><a href="http://acl.bestbits.at/">Linux ACL Homepage</a></li>
+  <li><a href="http://www.nongnu.org/rdiff-backup/">rdiff-backup page</a></li>
+  <li><tt>man getfacl</tt></li>
+  <li><tt>man setfacl</tt></li>
+  <li><tt>man acl</tt></li>
+  <li><tt>man star</tt></li>
+  <li><tt>/usr/share/doc/star-1.5a25</tt> documentation</li>
+  <li><a href="star-acl-readme.txt">Star ACL README file</a></li>
+</ul>
+
+<div><br />
+ <p><i>Last updated:  2005-09-22</i></p>
+<br /></div>  
+
+<table class="banner">
+ <tr>
+  <td class="banner"><h2>Using ACLs with Fedora Core 2 &nbsp;&nbsp;(Linux Kernel 2.6.5)</h2></td>
+  <td class="banner" align="right"> | <a href="../linux.html">Back to Index</a> | </td>
+ </tr>
+</table> 
+
+</body>
+</html>

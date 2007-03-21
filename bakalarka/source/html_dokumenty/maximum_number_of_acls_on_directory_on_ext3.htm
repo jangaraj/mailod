@@ -1,0 +1,97 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Acl-Devel] Maximum number of acls on directory on ext3: 28? 
+	(bs does not matter, 1024/2048/4096 tested)
+   </TITLE>
+   <LINK REL="Index" HREF="index.html" >
+   <LINK REL="made" HREF="mailto:acl-devel%40bestbits.at?Subject=%5BAcl-Devel%5D%20Maximum%20number%20of%20acls%20on%20directory%20on%20ext3%3A%2028%3F%20%0A%09%28bs%20does%20not%20matter%2C%201024/2048/4096%20tested%29&In-Reply-To=200501231434.48168.agruen%40suse.de">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="001828.html">
+   <LINK REL="Next"  HREF="001832.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Acl-Devel] Maximum number of acls on directory on ext3: 28? 
+	(bs does not matter, 1024/2048/4096 tested)</H1>
+    <B>Jochen Tuchbreiter</B> 
+    <A HREF="mailto:acl-devel%40bestbits.at?Subject=%5BAcl-Devel%5D%20Maximum%20number%20of%20acls%20on%20directory%20on%20ext3%3A%2028%3F%20%0A%09%28bs%20does%20not%20matter%2C%201024/2048/4096%20tested%29&In-Reply-To=200501231434.48168.agruen%40suse.de"
+       TITLE="[Acl-Devel] Maximum number of acls on directory on ext3: 28? 
+	(bs does not matter, 1024/2048/4096 tested)">jt at domainfactory.de
+       </A><BR>
+    <I>Sun Jan 23 17:10:39 CET 2005</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="001828.html">[Acl-Devel] Maximum number of acls on directory on ext3: 28? (bs
+	does not matter, 1024/2048/4096 tested)
+</A></li>
+        <LI>Next message: <A HREF="001832.html">[Acl-Devel] bug when running setfacl recursively
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#1829">[ date ]</a>
+              <a href="thread.html#1829">[ thread ]</a>
+              <a href="subject.html#1829">[ subject ]</a>
+              <a href="author.html#1829">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>For the sake of completeness the results of the changes:
+
+[cut]
+
+&gt;&gt;<i> If I try to set more than 28 acl-entries of one type on any given
+</I>&gt;&gt;<i> directory
+</I>&gt;&gt;<i> setfacl returns:
+</I>&gt;&gt;<i> setfacl: /tmp/aclnotest: Invalid argument
+</I>
+[cut]
+
+&gt;&gt;<i> Is this expected behaviour or does it look like a problem? Can I somehow
+</I>&gt;&gt;<i> increase this limit? (ie: Blocksize is not the prob, I need to increase
+</I>&gt;&gt;<i> some kernel-variable or something).
+</I>
+&gt;<i> It's an arbitrary limit; see EXT3_ACL_MAX_ENTRIES in
+</I>&gt;<i> include/linux/ext3_acl.h.
+</I>&gt;<i> Increase this setting, or take it out altogether (and remove the check in
+</I>&gt;<i> the
+</I>&gt;<i> code). I'll request to remove the limit in 2.6 soon, too.
+</I>
+Ok, I increased this to some ridiculus high value and was able to add
+about 250 entries with block size 2048 and about 500 entries with block
+size 4096. Whenever I reach the block limit I get
+
+setfacl: /acltest/number: No space left on device
+
+as you suggested off-list.
+
+So: Works like a charm for me.
+
+regards,
+Jochen
+</PRE>
+
+
+
+
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="001828.html">[Acl-Devel] Maximum number of acls on directory on ext3: 28? (bs
+	does not matter, 1024/2048/4096 tested)
+</A></li>
+	<LI>Next message: <A HREF="001832.html">[Acl-Devel] bug when running setfacl recursively
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#1829">[ date ]</a>
+              <a href="thread.html#1829">[ thread ]</a>
+              <a href="subject.html#1829">[ subject ]</a>
+              <a href="author.html#1829">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="http://acl.bestbits.at/mailman/listinfo/acl-devel">More information about the acl-devel
+mailing list</a><br>
+</body></html>

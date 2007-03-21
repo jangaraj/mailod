@@ -1,0 +1,303 @@
+
+Link Management Protocol (LMP) Parameters per [RFC-ietf-ccamp-lmp-10.txt]
+
+(last updated 28 May 2004)
+
+LMP defines the following name spaces:
+
+   - LMP Message Type.
+   - LMP Object Class.
+   - LMP Object Class type (C-Type). These are unique within the
+     Object Class.
+   - LMP Sub-object Class type (Type). These are unique within the
+     Object Class.
+
+LMP Message Type Name Space
+
+ Value    Description                         Reference
+-------   ---------------------------------   ---------
+      0   Reserved
+      1   Config message                      [RFC-ietf-ccamp-lmp-10.txt]
+      2   ConfigAck message                   [RFC-ietf-ccamp-lmp-10.txt]
+      3   ConfigNack message                  [RFC-ietf-ccamp-lmp-10.txt]
+      4   Hello message                       [RFC-ietf-ccamp-lmp-10.txt]
+      5   BeginVerify message                 [RFC-ietf-ccamp-lmp-10.txt]
+      6   BeginVerifyAck message              [RFC-ietf-ccamp-lmp-10.txt]
+      7   BeginVerifyNack message             [RFC-ietf-ccamp-lmp-10.txt]
+      8   EndVerify message                   [RFC-ietf-ccamp-lmp-10.txt]
+      9   EndVerifyAck message                [RFC-ietf-ccamp-lmp-10.txt]
+     10   Test message                        [RFC-ietf-ccamp-lmp-10.txt]
+     11   TestStatusSuccess message           [RFC-ietf-ccamp-lmp-10.txt]
+     12   TestStatusFailure message           [RFC-ietf-ccamp-lmp-10.txt]
+     13   TestStatusAck message               [RFC-ietf-ccamp-lmp-10.txt]
+     14   LinkSummary message                 [RFC-ietf-ccamp-lmp-10.txt]
+     15   LinkSummaryAck message              [RFC-ietf-ccamp-lmp-10.txt]
+     16   LinkSummaryNack message             [RFC-ietf-ccamp-lmp-10.txt]
+     17   ChannelStatus message               [RFC-ietf-ccamp-lmp-10.txt]
+     18   ChannelStatusAck message            [RFC-ietf-ccamp-lmp-10.txt]
+     19   ChannelStatusRequest message        [RFC-ietf-ccamp-lmp-10.txt]
+     20   ChannelStatusResponse message       [RFC-ietf-ccamp-lmp-10.txt]
+     21   TraceMonitor message                [RFC-ietf-ccamp-lmp-test-sonet-sdh-04.txt]
+     22   TraceMonitorAck message             [RFC-ietf-ccamp-lmp-test-sonet-sdh-04.txt]
+     23   TraceMonitorNack message            [RFC-ietf-ccamp-lmp-test-sonet-sdh-04.txt]
+     24   TraceMismatch message               [RFC-ietf-ccamp-lmp-test-sonet-sdh-04.txt]
+     25   TraceMismatchAck message            [RFC-ietf-ccamp-lmp-test-sonet-sdh-04.txt]
+     26   TraceReq message                    [RFC-ietf-ccamp-lmp-test-sonet-sdh-04.txt]
+     27   TraceReport message                 [RFC-ietf-ccamp-lmp-test-sonet-sdh-04.txt]
+     28   TraceReqNack message                [RFC-ietf-ccamp-lmp-test-sonet-sdh-04.txt]
+     29   InsertTrace message                 [RFC-ietf-ccamp-lmp-test-sonet-sdh-04.txt]
+     30   InsertTraceAck message              [RFC-ietf-ccamp-lmp-test-sonet-sdh-04.txt]
+     31   InsertTraceNack message             [RFC-ietf-ccamp-lmp-test-sonet-sdh-04.txt]
+ 32-127   Unassigned (via Standards Action)   
+128-247   Unassigned (via expert review)      
+278-255   Private Use 
+
+
+LMP Object Class name space and Class type (C-Type)
+
+ Value    Description                         Reference
+-------   ---------------------------------   ---------
+      0   Reserved
+
+      1   CCID                                [RFC-ietf-ccamp-lmp-10.txt]
+
+          CCID Object Class type name space 
+           C-Type   Description               Reference
+           ------   ------------------------  ---------         
+                0   Reserved
+                1   LOCAL_CCID                [RFC-ietf-ccamp-lmp-10.txt]
+                2   REMOTE_CCID               [RFC-ietf-ccamp-lmp-10.txt]
+            3-111   Unassigned (Standards Action)
+          112-119   Unassigned (Expert Review)
+          120-127   Private Use
+
+
+      2   NODE_ID                             [RFC-ietf-ccamp-lmp-10.txt]
+
+          NODE_ID Object Class type name space 
+           C-Type   Description               Reference
+           ------   ------------------------  ---------         
+                0   Reserved
+                1   LOCAL_NODE_ID             [RFC-ietf-ccamp-lmp-10.txt]
+                2   REMOTE_NODE_ID            [RFC-ietf-ccamp-lmp-10.txt]
+            3-111   Unassigned (Standards Action)
+          112-119   Unassigned (Expert Review)
+          120-127   Private Use
+
+
+      3   LINK_ID                             [RFC-ietf-ccamp-lmp-10.txt]
+
+          LINK_ID Object Class type name space 
+           C-Type   Description               Reference
+           ------   ------------------------  ---------         
+                0   Reserved
+                1   IPv4 LOCAL_LINK_ID        [RFC-ietf-ccamp-lmp-10.txt]
+                2   IPv4 REMOTE_LINK_ID       [RFC-ietf-ccamp-lmp-10.txt]
+                3   IPv6 LOCAL_LINK_ID        [RFC-ietf-ccamp-lmp-10.txt]
+                4   IPv6 REMOTE_LINK_ID       [RFC-ietf-ccamp-lmp-10.txt]
+                5   Unnumbered LOCAL_LINK_ID  [RFC-ietf-ccamp-lmp-10.txt]
+                6   Unnumbered REMOTE_LINK_ID [RFC-ietf-ccamp-lmp-10.txt]
+            7-111   Unassigned (Standards Action)
+          112-119   Unassigned (Expert Review)
+          120-127   Private Use
+
+
+      4   INTERFACE_ID                             [RFC-ietf-ccamp-lmp-10.txt]
+
+          INTERFACE_ID Object Class type name space 
+           C-Type   Description                    Reference
+           ------   ------------------------       ---------         
+                0   Reserved
+                1   IPv4 LOCAL_INTERFACE_ID        [RFC-ietf-ccamp-lmp-10.txt]
+                2   IPv4 REMOTE_INTERFACE_ID       [RFC-ietf-ccamp-lmp-10.txt]
+                3   IPv6 LOCAL_INTERFACE_ID        [RFC-ietf-ccamp-lmp-10.txt]
+                4   IPv6 REMOTE_INTERFACE_ID       [RFC-ietf-ccamp-lmp-10.txt]
+                5   Unnumbered LOCAL_INTERFACE_ID  [RFC-ietf-ccamp-lmp-10.txt]
+                6   Unnumbered REMOTE_INTERFACE_ID [RFC-ietf-ccamp-lmp-10.txt]
+            7-111   Unassigned (Standards Action)
+          112-119   Unassigned (Expert Review)
+          120-127   Private Use
+
+
+      5   MESSAGE_ID                               [RFC-ietf-ccamp-lmp-10.txt]
+
+          MESSAGE_ID Object Class type name space 
+           C-Type   Description                    Reference
+           ------   ------------------------       ---------         
+                0   Reserved
+                1   MESSAGE_ID                     [RFC-ietf-ccamp-lmp-10.txt]
+                2   MESSAGE_ID_ACK                 [RFC-ietf-ccamp-lmp-10.txt]
+            3-111   Unassigned (Standards Action)
+          112-119   Unassigned (Expert Review)
+          120-127   Private Use
+
+
+      6   CONFIG                                   [RFC-ietf-ccamp-lmp-10.txt]
+
+          CONFIG Object Class type name space 
+           C-Type   Description                    Reference
+           ------   ------------------------       ---------         
+                0   Reserved
+                1   HELLO_CONFIG                   [RFC-ietf-ccamp-lmp-10.txt]
+                2   LMP-WDM_CONFIG                 [RFC-ietf-ccamp-lmp-wdm-03.txt]
+            3-111   Unassigned (Standards Action)
+          112-119   Unassigned (Expert Review)
+          120-127   Private Use
+
+
+      7   HELLO                                    [RFC-ietf-ccamp-lmp-10.txt]
+
+          HELLO Object Class type name space 
+           C-Type   Description                    Reference
+           ------   ------------------------       ---------         
+                0   Reserved
+                1   HELLO                          [RFC-ietf-ccamp-lmp-10.txt]
+            2-111   Unassigned (Standards Action)
+          112-119   Unassigned (Expert Review)
+          120-127   Private Use
+
+
+      8   BEGIN_VERIFY                             [RFC-ietf-ccamp-lmp-10.txt]
+
+          BEGIN_VERIFY Object Class type name space 
+           C-Type   Description                    Reference
+           ------   ------------------------       ---------         
+                0   Reserved
+                1   Type 1                         [RFC-ietf-ccamp-lmp-10.txt]
+            2-111   Unassigned (Standards Action)
+          112-119   Unassigned (Expert Review)
+          120-127   Private Use
+
+
+      9   BEGIN_VERIFY_ACK                         [RFC-ietf-ccamp-lmp-10.txt]
+
+          BEGIN_VERIFY_ACK Object Class type name space 
+           C-Type   Description                    Reference
+           ------   ------------------------       ---------         
+                0   Reserved
+                1   Type 1                         [RFC-ietf-ccamp-lmp-10.txt]
+            2-111   Unassigned (Standards Action)
+          112-119   Unassigned (Expert Review)
+          120-127   Private Use
+ 
+
+     10   VERIFY_ID                                [RFC-ietf-ccamp-lmp-10.txt]
+
+          VERIFY_ID Object Class type name space 
+           C-Type   Description                    Reference
+           ------   ------------------------       ---------         
+                0   Reserved
+                1   Type 1                         [RFC-ietf-ccamp-lmp-10.txt]
+            2-111   Unassigned (Standards Action)
+          112-119   Unassigned (Expert Review)
+          120-127   Private Use
+
+
+     11   TE_LINK                                  [RFC-ietf-ccamp-lmp-10.txt]
+
+          TE_LINK Object Class type name space 
+           C-Type   Description                    Reference
+           ------   ------------------------       ---------         
+                0   Reserved
+                1   IPv4 TE_LINK                   [RFC-ietf-ccamp-lmp-10.txt]
+                2   IPv6 TE_LINK                   [RFC-ietf-ccamp-lmp-10.txt]
+                3   Unnumbered TE_LINK             [RFC-ietf-ccamp-lmp-10.txt]
+            4-111   Unassigned (Standards Action)
+          112-119   Unassigned (Expert Review)
+          120-127   Private Use
+
+
+     12   DATA_LINK                                [RFC-ietf-ccamp-lmp-10.txt]
+
+          DATA_LINK Object Class type name space 
+           C-Type   Description                    Reference
+           ------   ------------------------       ---------         
+                0   Reserved
+                1   IPv4 DATA_LINK                 [RFC-ietf-ccamp-lmp-10.txt]
+                2   IPv6 DATA_LINK                 [RFC-ietf-ccamp-lmp-10.txt]
+                3   Unnumbered DATA_LINK           [RFC-ietf-ccamp-lmp-10.txt]
+            4-111   Unassigned (Standards Action)
+          112-119   Unassigned (Expert Review)
+          120-127   Private Use
+
+                    DATA_LINK Sub-object Class name space 
+                    Value    Description              Reference
+                    -------  ---------------------    ---------   
+                          0  Reserved
+                          1  Interface Switching Type [RFC-ietf-ccamp-lmp-10.txt]
+                          2  Wavelength               [RFC-ietf-ccamp-lmp-10.txt]     
+                          3  Link_GroupId             [RFC-ietf-ccamp-lmp-wdm-03.txt]
+                          4  SRLG                     [RFC-ietf-ccamp-lmp-wdm-03.txt]
+                          5  BER_Estimate             [RFC-ietf-ccamp-lmp-wdm-03.txt]
+                          6  Optical_Protection       [RFC-ietf-ccamp-lmp-wdm-03.txt]
+                          7  Total_Span_Length        [RFC-ietf-ccamp-lmp-wdm-03.txt]
+                          8  Administrative_Group     [RFC-ietf-ccamp-lmp-wdm-03.txt]
+                      9-127  Unassigned (Standards Action)
+                    128-247  Unassigned (Expert Review)
+                    248-255  Private Use.
+
+     13   CHANNEL_STATUS                           [RFC-ietf-ccamp-lmp-10.txt]
+
+          CHANNEL_STATUS Object Class type name space 
+           C-Type   Description                    Reference
+           ------   ------------------------       ---------         
+                0   Reserved
+                1   IPv4 INTERFACE_ID              [RFC-ietf-ccamp-lmp-10.txt]
+                2   IPv6 INTERFACE_ID              [RFC-ietf-ccamp-lmp-10.txt]
+                3   Unnumbered INTERFACE_ID        [RFC-ietf-ccamp-lmp-10.txt]
+                4   LINK_GROUP                     [RFC-ietf-ccamp-lmp-wdm-03.txt]
+            5-111   Unassigned (Standards Action)
+          112-119   Unassigned (Expert Review)
+          120-127   Private Use
+
+
+     14   CHANNEL_STATUS_REQUEST                   [RFC-ietf-ccamp-lmp-10.txt]
+
+          CHANNEL_STATUS_REQUEST Object Class type name space 
+           C-Type   Description                    Reference
+           ------   ------------------------       ---------         
+                0   Reserved
+                1   IPv4 INTERFACE_ID              [RFC-ietf-ccamp-lmp-10.txt]
+                2   IPv6 INTERFACE_ID              [RFC-ietf-ccamp-lmp-10.txt]
+                3   Unnumbered INTERFACE_ID        [RFC-ietf-ccamp-lmp-10.txt]
+            4-111   Unassigned (Standards Action)
+          112-119   Unassigned (Expert Review)
+          120-127   Private Use
+
+  15-19   Unassigned
+
+     20   ERROR_CODE                               [RFC-ietf-ccamp-lmp-10.txt]
+
+          ERROR_CODE Object Class type name space 
+           C-Type   Description                    Reference
+           ------   ------------------------       ---------         
+                0   Reserved
+                1   BEGIN_VERIFY_ERROR             [RFC-ietf-ccamp-lmp-10.txt]
+                2   LINK_SUMMARY_ERROR             [RFC-ietf-ccamp-lmp-10.txt]
+                3   TRACE_ERROR                    [RFC-ietf-ccamp-lmp-test-sonet-sdh-04.txt]
+            4-111   Unassigned (Standards Action)
+          112-119   Unassigned (Expert Review)
+          120-127   Private Use
+
+     21   TRACE                                    [RFC-ietf-ccamp-lmp-test-sonet-sdh-04.txt]
+          
+          TRACE Object Class name space and Class type (C-Type):
+           C-Type   Description                    Reference
+           ------   ------------------------       --------- 
+                0   Reserved
+                1   Type 1                         [RFC-ietf-ccamp-lmp-test-sonet-sdh-04.txt]
+
+
+     22   TRACE REQ                                [RFC-ietf-ccamp-lmp-test-sonet-sdh-04.txt]
+          
+          TRACE REQ Object Class name space and Class type (C-Type):
+           C-Type   Description                    Reference
+           ------   ------------------------       --------- 
+                0   Reserved
+                1   Type 1                         [RFC-ietf-ccamp-lmp-test-sonet-sdh-04.txt]
+
+
+ 23-127   Unassigned (Standards Action)
+128-247   Unassigned (Expert review)
+278-255   Private Use 
+

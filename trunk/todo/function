@@ -1,0 +1,7 @@
+getacl - urci ci je mozne pracovat s acl pravami, inak STD
+findfile - najde email v danom maildire uzivatela - problem s imapom bo ten meni nazov suboru pred precitaniim a po precitani
+db_request - request na db ci uz je zaznam s danym hasv v db - casove okno
+hash - hashuje body cast emailu - nie md5 bo tu je mozne vytvorit kolizie - bezpecnost
+get_number_acls - vrati pocet moznych aclie - depend on FS
+setacl - nastavi acl
+hidden_private_info - skryje v hlavicke emailu provatne informacie

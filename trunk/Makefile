@@ -5,4 +5,4 @@ compile:
 	gcc -g -Wall -o xmailod mailod.c 
 execute:
 	./xmailod
-	./xui -i
+

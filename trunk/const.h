@@ -1,1 +1,1 @@
-#define BUFFER_SIZE 256			//size of reading( writing email buffer
+#define BUFFER_SIZE 8			//size of reading( writing email buffer

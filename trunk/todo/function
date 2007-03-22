@@ -5,6 +5,7 @@ hash - hashuje body cast emailu - nie md5 bo tu je mozne vytvorit kolizie - bezp
 get_number_acls - vrati pocet moznych aclie - depend on FS
 setacl - nastavi acl
 hidden_private_info - skryje v hlavicke emailu provatne informacie
+link email - musi byt locknuty file?
 
 problemy, ktore je potrebne riesit
 nie je dostupna db - error log -> std

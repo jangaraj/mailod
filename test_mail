@@ -1,0 +1,25 @@
+User-Agent: Thunderbird 1.5.0.10 (Windows/20070221)
+MIME-Version: 1.0
+To: MARTIN Benoni <benoni.martin@arcelor.com>
+Cc: "R. DuFresne" <dufresne@sysinfo.com>, pen-test@securityfocus.com
+Subject: Re: TCP stack smashing
+References: <DF7AADAE14EE7241968B0A67F461CD93011D5FCD@DUN-MXB-V09.msad.arcelor.net>
+In-Reply-To: <DF7AADAE14EE7241968B0A67F461CD93011D5FCD@DUN-MXB-V09.msad.arcelor.net>
+X-Enigmail-Version: 0.94.2.0
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 8bit
+Resent-Message-Id: <20070323214327.91321237992@outgoing3.securityfocus.com>
+Resent-Date: Fri, 23 Mar 2007 14:43:27 -0700 (MST)
+Resent-From: pen-test-return-1078483821@securityfocus.com
+
+Try http://isic.sourceforge.net/ for version 0.07
+
+MARTIN Benoni schrieb:
+> Last version is 0.6 and is available here : http://www.packetfactory.net/Projects/ISIC/ 
+> 
+> -----Message d'origine-----
+> De : listbounce@securityfocus.com [mailto:listbounce@securityfocus.com] De la part de R. DuFresne
+> Envoyé : mardi 20 mars 2007 00:28
+> À : crazy frog crazy frog
+> Cc : Nicolas RUFF; pen-test@securityfocus.com; bpmlist@sonic.net; pen-test-return-1078483754@securityfocus.com
+> Objet : Re: TCP stack smashing

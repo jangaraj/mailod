@@ -6,3 +6,5 @@ typedef struct {
 	int hardlink;	//ulozit ako hardlinku
 } email;
 
+email *readmail(void);
+

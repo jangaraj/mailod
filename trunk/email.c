@@ -26,11 +26,6 @@ email *readmail(void){
 		exit (1);
 	}
 	*(reading_email_head)='\0';
-/*	if((reading_email_body=(char *) malloc(sizeof(char)))==NULL) {
-		fprintf(stderr,"Error, malloc of char of reading email\n");
-		exit (1);
-	}
-	*(reading_email_body)='\0';*/
 	while (0<(read_size = read(0, buffer, BUFFER_SIZE))) {
 		if(read_size<0) {
 		fprintf(stderr, "Error reading input file\n");
@@ -49,23 +44,17 @@ email *readmail(void){
 		exit (1);
 	}
 	length_position = position - reading_email_all;
-	//printf("Pozicia dividera-dlzka headu: %d\n", length_position);
 	if((reading_email_head=(char *) realloc(reading_email_head, length_position*sizeof(char)))==NULL) {
 		fprintf(stderr,"Error, realloc reading_email_head\n");
 		exit (1);
 	}
 	strncat(reading_email_head, reading_email_all, length_position);
-	//printf("strlen-position %d\n", strlen(position));
-	//printf("brak 55\n");
-	//printf("mallockujem na body: %d\n", (strlen(position)+1));
-	/*if((reading_email_body=(char *) malloc((strlen(position)+1)*sizeof(char)))==NULL) {
+	if((reading_email_body=(char *) malloc((strlen(position)+1)*sizeof(char)))==NULL) {
 		fprintf(stderr, "Error, malloc reading_email_body\n");
 		exit (1);
-	}*/
-	//printf("brak 59\n");
-	reading_email_body = strcpy(reading_email_all, (position-(2*sizeof(char))));
-	//printf("dlzka headu: %d\ndlzka body: %d\n", strlen(reading_email_head), strlen(reading_email_body));
-	//TODO spravne uvolnit reading_email_all - pozor daco je v body
+	}
+	*reading_email_body = '\0';
+	strcat(reading_email_body, position+2);
 	free((void *) reading_email_all);
 	read_email->head = reading_email_head;
 	read_email->body = reading_email_body;

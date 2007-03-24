@@ -11,10 +11,12 @@ int main(int argc, char* argv[]) {
 	p_new_email = readmail();
 	p_new_email->hash = hash_text(p_new_email->body);
 	printf(">>>>>>>>>>>>>>>>>>>>>>>>Toto je nacitany mail->head z email struktury:\n%s\n", p_new_email->head);
-	printf(">>>>>>>>>>>>>>>>>>>>>>>>Toto je nacitany mail->body z email struktury:\n%s", p_new_email->body);
+	printf(">>>>>>>>>>>>>>>>>>>>>>>>Toto je nacitany mail->body z email struktury:\n%s\n", p_new_email->body);
+	printf(">>>>>>>>>>>>>>>>>>>>>>>>Toto je nacitany mail->hash z email struktury:\n%s\n", p_new_email->hash);
 
 
 
 	//TODO uvolnit alokovanu pamat
+	free((void *) p_new_email);
 	return 0;
 }

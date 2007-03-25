@@ -33,13 +33,19 @@ int main(int argc, char* argv[]) {
 
 	new_email = readmail();
 	new_email->hash = hash_text(new_email->body);
-	ident_email = select_by_hash(conf_struct, new_email->hash);
+	//printf("brrrrrrrrrrrrrrrrrrrrrrrrrrrr\n");
+	if((ident_email = select_by_hash(conf_struct, new_email->hash))==NULL) {
+		//TODO vratilo sa mi NULL cize ulozit standardne email
+	}
+	else {
+		//TODO linkovat email
+	}
 	printf("FS IDENT EMAILU: %s\n", ident_email->filesystem);
 
 	
-	//printf(">>>>>>>>>>>>>>>>>>>>>>>>Toto je nacitany mail->head z email struktury:\n%s\n", new_email->head);
-	//printf(">>>>>>>>>>>>>>>>>>>>>>>>Toto je nacitany mail->body z email struktury:\n%s\n", new_email->body);
-	//printf(">>>>>>>>>>>>>>>>>>>>>>>>Toto je nacitany mail->hash z email struktury:\n%s\n", new_email->hash);
+	printf(">>>>>>>>>>>>>>>>>>>>>>>>Toto je nacitany mail->head z email struktury:\n%s\n", new_email->head);
+	printf(">>>>>>>>>>>>>>>>>>>>>>>>Toto je nacitany mail->body z email struktury:\n%s\n", new_email->body);
+	printf(">>>>>>>>>>>>>>>>>>>>>>>>Toto je nacitany mail->hash z email struktury:\n%s\n", new_email->hash);
 
 
 

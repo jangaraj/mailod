@@ -1,7 +1,8 @@
-database driver	mysql
-database host	localhost
-database username	xxx
-database password	xxx
-database name	xxx
-time window	600	
-log level	1
+#param TAB value
+database_driver	mysql
+database_host	localhost
+database_username	xxx
+database_password	xxx
+database_name	xxx
+time_window	600	
+log_level	1

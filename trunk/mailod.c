@@ -13,16 +13,25 @@ int main(int argc, char* argv[]) {
 		fprintf(stderr, "Error, malloc config structure\n");
 		exit (1);
 	}
-	if((conf_struct=readconf(CONFIG_FILE, conf_struct))!=0) {
+	if(readconf(CONFIG_FILE, conf_struct)!=0) {
 		fprintf(stderr,"Error, parse config file\n");
 		exit (1);
 	}
+	printf("Setting - db_driver: %s\n",conf_struct->db_driver);
+	printf("Setting - db_username: %s\n",conf_struct->db_username);
+	printf("Setting - db_password: %s\n",conf_struct->db_password);
+	printf("Setting - db_name: %s\n",conf_struct->db_name);
+	printf("Setting - db_host: %s\n",conf_struct->db_host);
+	printf("Setting - time_window: %d\n",conf_struct->time_window);
+	printf("Setting - log_level: %d\n",conf_struct->log_level);
+
 	p_new_email = readmail();
 	p_new_email->hash = hash_text(p_new_email->body);
-	printf(">>>>>>>>>>>>>>>>>>>>>>>>Toto je nacitany mail->head z email struktury:\n%s\n", p_new_email->head);
+	
+	/*printf(">>>>>>>>>>>>>>>>>>>>>>>>Toto je nacitany mail->head z email struktury:\n%s\n", p_new_email->head);
 	printf(">>>>>>>>>>>>>>>>>>>>>>>>Toto je nacitany mail->body z email struktury:\n%s\n", p_new_email->body);
 	printf(">>>>>>>>>>>>>>>>>>>>>>>>Toto je nacitany mail->hash z email struktury:\n%s\n", p_new_email->hash);
-
+*/
 
 
 	//TODO uvolnit alokovanu pamat

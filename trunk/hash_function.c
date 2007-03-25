@@ -148,6 +148,5 @@ char *hash_text(char *text) {
 	sha256_final(&ctx,hash); 
 	for (idx=0; idx < 32; idx++)
 	  sprintf((hash_out+(2*idx)),"%02x",hash[idx]); 
-	//TODO urobit pointrovany string
 	return hash_out;
 }

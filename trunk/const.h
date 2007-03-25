@@ -2,7 +2,7 @@
 #define VERS "0.0.21"			
 #define BUFFER_SIZE 8				//size of reading( writing email buffer
 #define DIVIDER_HEAD_BODY "\n\n"	//divider email head and email body
-#define CONFIG_FILE "setting"
+#define CONFIG_FILE "setting_true"
 #define DB_DRIVER "database_driver"
 #define DB_HOST	 "database_host"
 #define DB_USERNAME "database_username"
@@ -15,3 +15,4 @@
 #define WARN	 2
 #define INFO	 1
 #define RUN	 0
+//#define LENGTH_FILESYSTEM 254	//lenght of string filesystem

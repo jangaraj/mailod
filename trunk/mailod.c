@@ -6,9 +6,10 @@
 #include "hash_function.h"	//hash function
 #include "common_function.h"	//read conf file
 #include "logging.h"		//logging function
+#include "database_function.h"
 
 int main(int argc, char* argv[]) {
-	email *p_new_email;
+	email *new_email, *ident_email;
 	config *conf_struct;
 	
 	if((conf_struct=(config *) malloc(sizeof(config)))==NULL) {
@@ -30,16 +31,19 @@ int main(int argc, char* argv[]) {
 	printf("Setting - debug: %d\n",conf_struct->debug);
 
 
-	p_new_email = readmail();
-	p_new_email->hash = hash_text(p_new_email->body);
+	new_email = readmail();
+	new_email->hash = hash_text(new_email->body);
+	ident_email = select_by_hash(conf_struct, new_email->hash);
+	printf("FS IDENT EMAILU: %s\n", ident_email->filesystem);
+
 	
-	/*printf(">>>>>>>>>>>>>>>>>>>>>>>>Toto je nacitany mail->head z email struktury:\n%s\n", p_new_email->head);
-	printf(">>>>>>>>>>>>>>>>>>>>>>>>Toto je nacitany mail->body z email struktury:\n%s\n", p_new_email->body);
-	printf(">>>>>>>>>>>>>>>>>>>>>>>>Toto je nacitany mail->hash z email struktury:\n%s\n", p_new_email->hash);
-*/
+	//printf(">>>>>>>>>>>>>>>>>>>>>>>>Toto je nacitany mail->head z email struktury:\n%s\n", new_email->head);
+	//printf(">>>>>>>>>>>>>>>>>>>>>>>>Toto je nacitany mail->body z email struktury:\n%s\n", new_email->body);
+	//printf(">>>>>>>>>>>>>>>>>>>>>>>>Toto je nacitany mail->hash z email struktury:\n%s\n", new_email->hash);
+
 
 
 	//TODO uvolnit alokovanu pamat
-	free((void *) p_new_email);
+	free((void *) new_email);
 	return 0;
 }

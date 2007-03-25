@@ -1,3 +1,7 @@
-dbname
-dblogin
-dbpass
+database driver	mysql
+database host	localhost
+database username	xxx
+database password	xxx
+database name	xxx
+time window	600	
+log level	1

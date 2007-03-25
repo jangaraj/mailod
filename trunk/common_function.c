@@ -25,7 +25,7 @@ int readconf( char conffile[], config *conf ) {
 		if((parm == NULL) || (val == NULL)) {
 			fprintf(stderr,"Error, invalid config line number: %d\n", line);
 			if(parm != NULL) {
-				fprintf( stderr,"Error,  %s does not have a value!\n", parm );
+				fprintf( stderr,"Error, %s does not have a value!\n", parm );
 			}
 			fclose(fp);
 			return 1;
@@ -49,24 +49,34 @@ int readconf( char conffile[], config *conf ) {
 		}
 		if( (strcasecmp(TIME_WINDOW, parm)) == 0 ) {
 			conf->time_window = atoi(val);
+			if(conf->time_window<0) {
+				fprintf(stderr, "Error, <param> %s at line %d has invalid value %d\n", TIME_WINDOW, line, conf->time_window);
+				return 1;
+			}
 		}
 		if( (strcasecmp(LOG_LEVEL, parm)) == 0 ) {
 			conf->log_level = atoi(val);
+			if((conf->log_level<0) || (conf->log_level>6)) {
+				fprintf(stderr, "Error, <param> %s at line %d has invalid value %d\n", LOG_LEVEL, line, conf->log_level);
+				return 1;
+			}
+
 		}
+		if( (strcasecmp(LOG_STDERR, parm)) == 0 ) {
+			conf->debug = atoi(val);
+			if((conf->debug<0) || (conf->debug>1)) {
+				fprintf(stderr, "Error, <param> %s at line %d has invalid value %d\n", LOG_STDERR, line, conf->debug);
+				return 1;
+			}
+		}
+
 	}
 	fclose(fp);
 	/*
 	if( !conf->db_driver ) {
-		fprintf(stderr,"Error, missing LDAPSERVER <param> in %s\n", conffile );
+		fprintf(stderr,"Error, missing db_driver <param> in %s\n", conffile );
 		return 1;
 	}
-	if( !conf->is_ldapPort ) {
-		fprintf(stderr,"- missing LDAPPORT <param> in %s\n", conffile );
-		return 1;
-	}
-	if( !conf->is_searchBase ) {
-		fprintf(stderr,"- missing SEARCHBASE <param> in %s\n", conffile );
-		return 1;
 	}*/
 	return 0;
 }

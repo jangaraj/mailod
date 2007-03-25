@@ -6,6 +6,9 @@ get_number_acls - vrati pocet moznych aclie - depend on FS
 setacl - nastavi acl
 hidden_private_info - skryje v hlavicke emailu provatne informacie
 link email - musi byt locknuty file?
+DONE test na hodnoty v konfiguracnom subore - tie inty
+osetrit stav ked mail ma heade aj divider ale nema body - vyhodi error (invalid pointer) free()
+prerobit fprintf(stderr,... na logging(....
 
 problemy, ktore je potrebne riesit
 nie je dostupna db - error log -> std

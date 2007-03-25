@@ -20,7 +20,7 @@ int readconf( char conffile[], config *conf ) {
 		line++;
 		strip(buf);
 		if(buf[0]=='#' || buf[0]=='\0' ) continue;
-		parm = strtok( buf, " " );
+		parm = strtok( buf, "\t" );
 		val = strtok( NULL, "" );
 		if((parm == NULL) || (val == NULL)) {
 			fprintf(stderr,"Error, invalid config line number: %d\n", line);
@@ -33,19 +33,19 @@ int readconf( char conffile[], config *conf ) {
 		strip(parm);
 		strip(val);
 		if((strcasecmp(DB_DRIVER, parm))==0) {
-			strncpy( conf->db_driver, val, 200 );
+			strcpy( conf->db_driver, val );
 		}
 		if( (strcasecmp(DB_HOST, parm)) == 0 ) {
-			strncpy( conf->db_host, val, 1024 );
+			strcpy( conf->db_host, val );
 		}
 		if((strcasecmp(DB_USERNAME, parm))==0) {
-			strncpy( conf->db_username, val, 200 );
+			strcpy( conf->db_username, val );
 		}
 		if( (strcasecmp(DB_PASSWORD, parm)) == 0 ) {
-			strncpy( conf->db_password, val, 1024 );
+			strcpy( conf->db_password, val );
 		}
 		if((strcasecmp(DB_NAME, parm))==0) {
-			strncpy( conf->db_name, val, 200 );
+			strcpy( conf->db_name, val );
 		}
 		if( (strcasecmp(TIME_WINDOW, parm)) == 0 ) {
 			conf->time_window = atoi(val);

@@ -1,9 +1,9 @@
 #include <stdio.h>
-#include </home/vlk/bin/libdbi/include/dbi/dbi.h>
+#include </home/vlk/bin/include/dbi/dbi.h>
 
 
 
-int main() {
+int xmain() {
     dbi_conn conn;
     dbi_result result;
     double threshold = 4.333333;

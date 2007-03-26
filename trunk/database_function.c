@@ -26,10 +26,8 @@ email *select_by_hash(config *conf, char hash_value[]) {
 		//TODO select podla hashu, time_window, a hardlinks(zavisi od FS)
 		sprintf(sql,"SELECT * FROM `mailod` WHERE `body_hash`='%s' AND `timestamp`>'(NOW()+INTERVAL -%d SECOND)' ORDER BY `email_id` LIMIT 1",hash_value, conf->time_window);
 		printf("SQL: %s\n",sql);
-		//printf("db connectnute\n");
 	   	result = dbi_conn_query(conn,sql);
     	if (result) {
-			//printf("mam selectnutych riadkov: %d\n",dbi_result_get_numrows(result));
 			if((dbi_result_get_numrows(result))<1) return NULL;		//0 selected rows
 			if((ident_email=(email *) malloc(sizeof(email)))==NULL) {
 				fprintf(stderr, "Error, mallock ident_email\n");

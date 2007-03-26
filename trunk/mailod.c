@@ -1,3 +1,10 @@
+/*
+ * Bachelor theses: Optimalization of the Usage of Computer Systems in E-mail
+ * Author: Jan Garaj
+ * Supervisor: Ing. Jan Mate
+ * Date: now();
+ */
+
 #include <stdio.h>
 #include <stdlib.h>			//exit
 #include <unistd.h>

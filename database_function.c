@@ -8,7 +8,7 @@ email *select_by_hash(config *conf, char hash_value[]) {
 	dbi_conn conn;
     dbi_result result;
 	email *ident_email;
-	char *sql;
+	char sql[1024];  //TODO betonovana konstanta 1024
 
 	ident_email=NULL;
 	dbi_initialize(NULL);
@@ -24,23 +24,23 @@ email *select_by_hash(config *conf, char hash_value[]) {
     }
     else {
 		//TODO select podla hashu, time_window, a hardlinks(zavisi od FS)
-		//sprintf(sql,"SELECT * FROM `mailod` WHERE `body_hash`='%s'",hash_value);
-		//printf("SQL: %s\n",sql);
+		sprintf(sql,"SELECT * FROM `mailod` WHERE `body_hash`='%s' AND `timestamp`>'(NOW()+INTERVAL -%d SECOND)' ORDER BY `email_id` LIMIT 1",hash_value, conf->time_window);
+		printf("SQL: %s\n",sql);
+		//printf("db connectnute\n");
 	   	result = dbi_conn_query(conn,sql);
     	if (result) {
+			//printf("mam selectnutych riadkov: %d\n",dbi_result_get_numrows(result));
+			if((dbi_result_get_numrows(result))<1) return NULL;		//0 selected rows
 			if((ident_email=(email *) malloc(sizeof(email)))==NULL) {
 				fprintf(stderr, "Error, mallock ident_email\n");
 				return NULL;
 			}
 			while (dbi_result_next_row(result)) {
-	  			ident_email->filesystem = dbi_result_get_string(result, "filesystem");
-	 	  		ident_email->hardlinks = dbi_result_get_uint(result, "number_hardlinks");
+	  			ident_email->hardlinks = dbi_result_get_uint(result, "number_hardlinks");
+  				ident_email->filesystem = (char *) dbi_result_get_string(result, "filesystem");
 			}
 			dbi_result_free(result);
 		}
-		//else {
-		//	printf("query zial nic nevratil, mas to pokazene");	
-		//}
 		dbi_conn_close(conn);
 	}
 	dbi_shutdown();

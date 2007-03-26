@@ -10,6 +10,17 @@ DONE test na hodnoty v konfiguracnom subore - tie inty
 osetrit stav ked mail ma heade aj divider ale nema body - vyhodi error (invalid pointer) free()
 prerobit fprintf(stderr,... na logging(....
 prerobit libdbi na nonabsolute cesty (pocitat s tym ze to bude v lib systemu ie usera)
+zamky na databazu: if ( ! dbi_conn_ping(conn) && ! open_connection())  return NULL;
+
+ACL:
+extattr(3)
+extattr(2)
+getfacl
+setfacl
+#include <sys/extattr.h>
+#include <libutil.h>
+http://acl.bestbits.at/cgi-man/acl.5
+http://www.google.com/codesearch?hl=en&q=+lang:c+getfacl+show:BifF4N4GmnI:25wEVj2UXDQ:iZQwbHxwCjI&sa=N&cd=1&ct=rc&cs_p=http://gentoo.osuosl.org/distfiles/freebsd-bin-6.1.tar.bz2&cs_f=bin/getfacl/getfacl.c#a0
 
 problemy, ktore je potrebne riesit
 nie je dostupna db - error log -> std

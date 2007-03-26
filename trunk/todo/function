@@ -11,6 +11,7 @@ osetrit stav ked mail ma heade aj divider ale nema body - vyhodi error (invalid 
 prerobit fprintf(stderr,... na logging(....
 prerobit libdbi na nonabsolute cesty (pocitat s tym ze to bude v lib systemu ie usera)
 zamky na databazu: if ( ! dbi_conn_ping(conn) && ! open_connection())  return NULL;
+kde zistit kde sa bude ukladat email - home(etc/passwd) maildir(conf postfixu)
 
 ACL:
 extattr(3)

@@ -28,7 +28,7 @@ int main(int argc, char* argv[]) {
 		exit (1);
 	}
 	start_log(conf_struct);
-	printf("Setting - db_driver: %s\n",conf_struct->db_driver);
+/*	printf("Setting - db_driver: %s\n",conf_struct->db_driver);
 	printf("Setting - db_username: %s\n",conf_struct->db_username);
 	printf("Setting - db_password: %s\n",conf_struct->db_password);
 	printf("Setting - db_name: %s\n",conf_struct->db_name);
@@ -36,7 +36,7 @@ int main(int argc, char* argv[]) {
 	printf("Setting - time_window: %d\n",conf_struct->time_window);
 	printf("Setting - log_level: %d\n",conf_struct->log_level);
 	printf("Setting - debug: %d\n",conf_struct->debug);
-
+*/
 
 	new_email = readmail();
 	new_email->hash = hash_text(new_email->body);
@@ -51,8 +51,8 @@ int main(int argc, char* argv[]) {
 	}
 	
 	
-	/*printf(">>>>>>>>>>>>>>>>>>>>>>>>Toto je nacitany mail->head z email struktury:\n%s\n", new_email->head);
-	printf(">>>>>>>>>>>>>>>>>>>>>>>>Toto je nacitany mail->body z email struktury:\n%s\n", new_email->body);
+	printf(">>>>>>>>>>>>>>>>>>>>>>>>Toto je nacitany mail->head z email struktury:\n%s\n", new_email->head);
+/*	printf(">>>>>>>>>>>>>>>>>>>>>>>>Toto je nacitany mail->body z email struktury:\n%s\n", new_email->body);
 	printf(">>>>>>>>>>>>>>>>>>>>>>>>Toto je nacitany mail->hash z email struktury:\n%s\n", new_email->hash);
 */
 

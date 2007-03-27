@@ -12,6 +12,14 @@ prerobit fprintf(stderr,... na logging(....
 prerobit libdbi na nonabsolute cesty (pocitat s tym ze to bude v lib systemu ie usera)
 zamky na databazu: if ( ! dbi_conn_ping(conn) && ! open_connection())  return NULL;
 kde zistit kde sa bude ukladat email - home(etc/passwd) maildir(conf postfixu)
+fcntl - zamky na subor
+
+#include <time.h>       /* time() ctime() time_t */
+#include <fcntl.h>      /* fcntl() struct flock O_RDONLY O_WRONLY
+		                 /* O_APPEND O_CREAT O_EXCL */
+#include <grp.h>        /* getgrgid() struct group */
+#include <pwd.h>        /* getpwuid() getpwnam() struct passwd */
+
 
 ACL:
 extattr(3)

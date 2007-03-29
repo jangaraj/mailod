@@ -8,4 +8,8 @@ database_name	xxx
 time_window	600	
 log_level	0	
 #debug 1 - log also to stderr
-debug	1	
+debug	1
+#TODO  default hodnota v const.h
+port	6666
+#TODO how many pending connections
+backlog	10

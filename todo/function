@@ -1,25 +1,22 @@
 getacl - urci ci je mozne pracovat s acl pravami, inak STD
-findfile - najde email v danom maildire uzivatela - problem s imapom bo ten meni nazov suboru pred precitaniim a po precitani
 db_request - request na db ci uz je zaznam s danym hasv v db - casove okno
 DONE hash - hashuje body cast emailu - nie md5 bo tu je mozne vytvorit kolizie - bezpecnost
 get_number_acls - vrati pocet moznych aclie - depend on FS alebo napevno zabetonovat?
 setacl - nastavi acl
 hidden_private_info - skryje v hlavicke emailu provatne informacie
-link email - musi byt locknuty file?
+link email - musi byt locknuty file
 DONE test na hodnoty v konfiguracnom subore - tie inty
 osetrit stav ked mail ma heade aj divider ale nema body - vyhodi error (invalid pointer) free()
 prerobit fprintf(stderr,... na logging(....
-prerobit libdbi na nonabsolute cesty (pocitat s tym ze to bude v lib systemu ie usera)
-zamky na databazu: if ( ! dbi_conn_ping(conn) && ! open_connection())  return NULL;
+prerobit libdbi na nonabsolute cesty (pocitat s tym ze to bude v lib systemu usera) - kontorlovat pri starte demona
 kde zistit kde sa bude ukladat email - home(etc/passwd) maildir(conf postfixu)
-fcntl - zamky na subor
 
+fcntl - zamky na subor
 #include <time.h>       /* time() ctime() time_t */
 #include <fcntl.h>      /* fcntl() struct flock O_RDONLY O_WRONLY
 		                 /* O_APPEND O_CREAT O_EXCL */
 #include <grp.h>        /* getgrgid() struct group */
 #include <pwd.h>        /* getpwuid() getpwnam() struct passwd */
-
 
 ACL:
 extattr(3)
@@ -36,3 +33,31 @@ nie je dostupna db - error log -> std
 nie su dostupne acl - error log -> std
 testovat nad roznymi kodovaniami - large file - nestandardne formaty emailu (bez oddelovaca head body)
 osetrit chyby - bounce - logy - STD
+
+Problemy z konzultacii:
+1.) select a write to db
+co najkratsie az po urceni kde budem ukladat - robit cez transakcie
+transakcia - select hash
+ak ano end transakcia
+inak insert
+end transakcia
+2.) demonizacia
+riesit cez socket alebo port - fork
+3.) 2 demoni chcu naraz urobit hardlink
+zamykanie suborov
+4.) bezi pod userom POSTMASTER
+homy musia mat wx na zapis do maildirov
+vlastnikom emailu je POSTMASTER
+prvy email sa ulozi prvemu dorucenemu userovi
++ACL pridane pre userov ktorym prisli emaily
+pri starte demona skontrolovat prava a ak su nevhodne die
+5.) komu ulozit - neriesit aliasy
+6.) IMAP  a zmena nazvu
+da asi iba daky priznak na koniec mena
+7.) prepojenie s procmailom(maildoropom)
+procmsil prida osobitny zaznam do hlavicky
+X-xdir: 
+podla ktoreho bude matchovat mailod do ktoreho maildiru ma ulozit email
+ked tam dany maildir nebude vytovirt novy - ako to robi procmail
+
+

@@ -6,7 +6,7 @@
 #include "const.h"
 
 email *readmail(void){
-	char buffer[BUFFER_SIZE], *reading_email_all, *reading_email_head, *reading_email_body, *position;	
+	char buffer[BUFFER_SIZE], *reading_email_all, *reading_email_head, *reading_email_body, *reading_email_to, *position, *position2;	
 	int read_size, nblock, length_position;
 	email *read_email;
 
@@ -38,6 +38,7 @@ email *readmail(void){
 		strncat(reading_email_all, buffer, read_size);
 		nblock++;							//counter na citaci cyklus - pocet alokovanych blokov
 	}
+	//divide head from all
 	position = strstr(reading_email_all, DIVIDER_HEAD_BODY);
 	if(position==NULL) {
 		fprintf(stderr,"Error, dividing email to head and body\n");
@@ -55,9 +56,33 @@ email *readmail(void){
 	}
 	*reading_email_body = '\0';
 	strcat(reading_email_body, position+2);
+	//determinate to: local user
+	position = strstr(reading_email_all, PARSE_TO);
+	if(position==NULL) {
+		fprintf(stderr,"Error, not found in mail header parse string %s\n",PARSE_TO);
+		exit (1);
+	}
+	//TODO odeknut "To: "
+	position2 = strstr(position+4, "\n");
+	if(position2==NULL) {
+		fprintf(stderr,"Error, in email header - parse string %s\n",PARSE_TO);
+		exit (1);
+	}
+	length_position = position2 - position;
+	if((reading_email_to=(char *) malloc(length_position*sizeof(char)))==NULL) {
+		fprintf(stderr,"Error, malloc reading_email_to\n");
+		exit (1);
+	}
+	//printf("Druhe To parse je %s\n",position2);
+	printf("lenght To: %d\n",length_position);
+	strncat(reading_email_to, position+4, length_position);
+
+	//printf("To je tu: %s\n",position);
+
 	free((void *) reading_email_all);
 	read_email->head = reading_email_head;
 	read_email->body = reading_email_body;
+	read_email->to = reading_email_to;
 
 	return read_email;
 }

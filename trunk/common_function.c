@@ -69,9 +69,24 @@ int readconf( char conffile[], config *conf ) {
 				return 1;
 			}
 		}
+		if( (strcasecmp(CON_PORT, parm)) == 0 ) {
+			conf->port = atoi(val);
+			if((conf->port<0) || (conf->port>65535)) {
+				fprintf(stderr, "Error, <param> %s at line %d has invalid value %d\n", CON_PORT, line, conf->debug);
+				return 1;
+			}
+		}
+		if( (strcasecmp(CON_BACK, parm)) == 0 ) {
+			conf->backlog = atoi(val);
+			if(conf->backlog<0) {
+				fprintf(stderr, "Error, <param> %s at line %d has invalid value %d\n", CON_BACK, line, conf->debug);
+				return 1;
+			}
+		}
 
 	}
 	fclose(fp);
+	//TODO ak daco potrebne nensatavene default hodnotu z const.h
 	/*
 	if( !conf->db_driver ) {
 		fprintf(stderr,"Error, missing db_driver <param> in %s\n", conffile );

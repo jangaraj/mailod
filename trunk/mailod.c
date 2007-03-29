@@ -36,7 +36,10 @@ int main(int argc, char* argv[]) {
 	printf("Setting - time_window: %d\n",conf_struct->time_window);
 	printf("Setting - log_level: %d\n",conf_struct->log_level);
 	printf("Setting - debug: %d\n",conf_struct->debug);
-*/
+	printf("Setting - port: %d\n",conf_struct->port);
+	printf("Setting - backlog: %d\n",conf_struct->backlog);
+	*/
+
 
 	new_email = readmail();
 	new_email->hash = hash_text(new_email->body);
@@ -51,10 +54,11 @@ int main(int argc, char* argv[]) {
 	}
 	
 	
-	printf(">>>>>>>>>>>>>>>>>>>>>>>>Toto je nacitany mail->head z email struktury:\n%s\n", new_email->head);
-/*	printf(">>>>>>>>>>>>>>>>>>>>>>>>Toto je nacitany mail->body z email struktury:\n%s\n", new_email->body);
-	printf(">>>>>>>>>>>>>>>>>>>>>>>>Toto je nacitany mail->hash z email struktury:\n%s\n", new_email->hash);
+//	printf(">>>>>>>>>>>>>>>>>>>>>>>>Toto je mail->head z email struktury:\n%s\n", new_email->head);
+/*	printf(">>>>>>>>>>>>>>>>>>>>>>>>Toto je mail->body z email struktury:\n%s\n", new_email->body);
+	printf(">>>>>>>>>>>>>>>>>>>>>>>>Toto je mail->hash z email struktury:\n%s\n", new_email->hash);
 */
+	printf(">>>>>>>>>>>>>>>>>>>>>>>>Toto je mail->to z email struktury:\n%s\n", new_email->to);
 
 
 	//TODO uvolnit alokovanu pamat

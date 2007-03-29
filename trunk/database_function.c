@@ -23,9 +23,9 @@ email *select_by_hash(config *conf, char hash_value[]) {
 	return NULL;
     }
     else {
-		//TODO select podla hashu, time_window, a hardlinks(zavisi od FS)
+		//TODO TRANSAKCIE
 		sprintf(sql,"SELECT * FROM `mailod` WHERE `body_hash`='%s' AND `timestamp`>(NOW()+INTERVAL -%d MINUTE) AND `number_hardlinks`<'1000' ORDER BY `email_id` LIMIT 1",hash_value, conf->time_window);
-		printf("SQL: %s\n",sql);
+		//printf("SQL: %s\n",sql);
 	   	result = dbi_conn_query(conn,sql);
     	if (result) {
 			if((dbi_result_get_numrows(result))<1) return NULL;		//0 selected rows

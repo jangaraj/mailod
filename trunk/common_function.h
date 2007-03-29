@@ -10,6 +10,8 @@ typedef struct {
 	int time_window;
 	int log_level;
 	int debug;
+	int port;
+	int backlog;
 } config;
 
 int readconf(char conffile[], config *conf );

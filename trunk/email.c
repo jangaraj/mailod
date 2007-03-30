@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <pwd.h>
 #include "email.h"
 #include "const.h"
 
@@ -62,10 +63,15 @@ email *readmail(void){
 		fprintf(stderr,"Error, not found in mail header parse string %s\n",PARSE_TO);
 		exit (1);
 	}
-	//TODO odeknut "To: "
-	position2 = strstr(position+4, "\n");
+	//ak je adresat v <mailaddress> najdem zobacik ina prvu " "
+	//TODO vytiahnut local usera aj ked nie je v zobacikoch
+	if((position=strstr(position,"<"))==NULL) {
+		fprintf(stderr,"Error parse local user - only <local@user.tld> is allowed now\n");
+		exit (1);
+	}
+	position2 = strstr(position,"@");
 	if(position2==NULL) {
-		fprintf(stderr,"Error, in email header - parse string %s\n",PARSE_TO);
+		fprintf(stderr,"Error, in email header - parse string @\n");
 		exit (1);
 	}
 	length_position = position2 - position;
@@ -73,16 +79,14 @@ email *readmail(void){
 		fprintf(stderr,"Error, malloc reading_email_to\n");
 		exit (1);
 	}
-	//printf("Druhe To parse je %s\n",position2);
-	printf("lenght To: %d\n",length_position);
-	strncat(reading_email_to, position+4, length_position);
-
-	//printf("To je tu: %s\n",position);
-
+	position++;
+	*reading_email_to = '\0';
+	strncat(reading_email_to, position, length_position-1);
 	free((void *) reading_email_all);
 	read_email->head = reading_email_head;
 	read_email->body = reading_email_body;
 	read_email->to = reading_email_to;
+	read_email->homedir = (getpwnam(reading_email_to)->pw_dir);
 
 	return read_email;
 }

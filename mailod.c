@@ -11,7 +11,7 @@
 #include "const.h"			//BUFFER_SIZE
 #include "email.h"			//email struct
 #include "hash_function.h"	//hash function
-#include "common_function.h"	//read conf file
+#include "common_function.h"//read conf file
 #include "logging.h"		//logging function
 #include "database_function.h"
 
@@ -59,6 +59,7 @@ int main(int argc, char* argv[]) {
 	printf(">>>>>>>>>>>>>>>>>>>>>>>>Toto je mail->hash z email struktury:\n%s\n", new_email->hash);
 */
 	printf(">>>>>>>>>>>>>>>>>>>>>>>>Toto je mail->to z email struktury:\n%s\n", new_email->to);
+	printf(">>>>>>>>>>>>>>>>>>>>>>>>Toto je mail->homedir z email struktury:\n%s\n", new_email->homedir);
 
 
 	//TODO uvolnit alokovanu pamat

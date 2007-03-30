@@ -34,7 +34,7 @@ email *select_by_hash(config *conf, char hash_value[]) {
 				return NULL;
 			}
 			while (dbi_result_next_row(result)) {
-	  			ident_email->hardlinks = dbi_result_get_uint(result, "number_hardlinks");
+	  			//ident_email->hardlink = dbi_result_get_uint(result, "number_hardlinks");
 				//TODO zle vypisuje filesystems - pretypovane z const char
   				ident_email->filesystem = (char *) dbi_result_get_string(result, "filesystem");
 			}

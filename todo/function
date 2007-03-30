@@ -55,7 +55,7 @@ pri starte demona skontrolovat prava a ak su nevhodne die
 6.) IMAP  a zmena nazvu
 da asi iba daky priznak na koniec mena
 7.) prepojenie s procmailom(maildoropom)
-procmsil prida osobitny zaznam do hlavicky
+procmail prida osobitny zaznam do hlavicky
 X-xdir: 
 podla ktoreho bude matchovat mailod do ktoreho maildiru ma ulozit email
 ked tam dany maildir nebude vytovirt novy - ako to robi procmail

@@ -3,6 +3,7 @@
 
 AC_PREREQ(2.61)
 AC_INIT(mailod, 0.1, garaj@fei.sk)
+AM_INIT_AUTOMAKE(mailod, 0.1)
 AC_CONFIG_SRCDIR([src/mailod.c])
 AC_CONFIG_HEADER([config.h])
 
@@ -25,7 +26,5 @@ AC_FUNC_MALLOC
 AC_FUNC_REALLOC
 AC_CHECK_FUNCS([inet_ntoa memset socket strcasecmp strstr])
 
-AC_CONFIG_FILES([doc/Makefile
-                 man/Makefile
-                 src/Makefile])
-AC_OUTPUT
+AC_CONFIG_FILES([src/Makefile])
+#AC_OUTPUT(Makefile src/Makefile)

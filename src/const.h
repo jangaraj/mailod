@@ -22,6 +22,7 @@
 #define BACKLOG 10	 				// how many pending connections queue will hold
 #define PARSE_TO "To: "				//parse string to determinate local user
 #define PARSE_MAILDIR "X-Mailod-dir"//special email header - email saved in maildir/<value> of this <para> - inserted by MDA(procmail, maildrop)
-#define MAILDIR ".maildir"			//name of maildir - depend on setting postfix
+#define MAILDIR "/.maildir"			//name of maildir - depend on setting postfix
 #define CUR "cur"					//folder of readed emails
-#define NEW "new"					//folder if new emails
+#define NEW "/new"					//folder if new emails
+#define INBOX "/.maildir/.new/"		//for stat in write_email

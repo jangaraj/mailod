@@ -5,6 +5,8 @@
 #include <pwd.h>
 #include <time.h>
 #include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
 
 #include "email.h"
 #include "const.h"
@@ -101,7 +103,39 @@ email *readmail(void)
 
 int write_email(email *new_email) 
 {
-	char *filenamei;
+	char *filepath;
+	static time_t t;
+	static char name[MAXHOSTNAMELEN];
+	struct stat filestat;
+
+	//unique filename template: time.pid.hostname
+	//t - 10 chars
+	//getpid - 5 chars
+	//hostname MAXHOSTNAMELEN chars
+	if((filepath = (char *) malloc((strlen(new_email->homedir)+strlen(INBOX)+17+MAXHOSTNAMELEN)*sizeof(char)))==NULL) {
+		fprintf(stderr,"Error malloc filename\n");
+		return 1;
+	}
+do {
+	t = time((time_t*)0);
+	//TODO safehostname - bez badchars
+	gethostname(name,MAXHOSTNAMELEN);
+	name[MAXHOSTNAMELEN-1] = '\0';
+	sprintf(filepath,"%s%s%d.%d.",new_email->homedir,INBOX,(int) t,getpid());
+	if(strlen(filepath)+strlen(name)>17+MAXHOSTNAMELEN) {
+printf("Reealocujem filename bo mam malo size\n");
+		//realloc filename to new bigger size
+		if((filepath = (char *) realloc(filepath, strlen(filepath)+strlen(name)))==NULL) {
+				fprintf(stderr,"Error realloc filepath\n");
+				return 1;
+		}
+	}
+	strcat(filepath,name);
+printf("Meno suboru bude: %s\n",filepath);
+//O_WRONLY|O_CREAT|O_EXCL
+
+} while(stat(filepath,&filestat)!=-1);  //generujem meno suboru pokial este neexistuje
+
 
 	return 0;
 }

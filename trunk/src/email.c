@@ -7,6 +7,7 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
+//#include <fstab.h>
 
 #include "email.h"
 #include "const.h"
@@ -110,6 +111,8 @@ int write_email(email *new_email)
 	static time_t t;
 	static char name[MAXHOSTNAMELEN];
 	struct stat filestat;
+//	struct fstab *info_file;
+//	struct mntentchn *info_file;
 	int fw, i;
 
 	//unique filename template: time.pid.hostname
@@ -160,6 +163,10 @@ printf("Meno suboru bude: %s\n",filepath);
 		return 1;
 	}
 	new_email->filepath = filepath;
+	//TODO vytiahnut aj filesysytem na ktorom je ulozeny aby som ho mohol insertnut do db
+	//nefungen
+	//info_file = getfsfile(filepath);
+//	printf("fs_spec %s\n,fs_file %s\n",info_file->fs_spec,info_file->fs_file);
 
 
 

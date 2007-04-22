@@ -52,8 +52,8 @@ email *readmail(void)
 	read_email->size = nblock*BUFFER_SIZE+read_size;
 	//divide head from all
 	position = strstr(reading_email_all, DIVIDER_HEAD_BODY);
-	position++;
-	position++;
+	//position = position+2*sizeof(char);
+//	position++;
 	if(position==NULL) {
 		fprintf(stderr,"Error, dividing email to head and body\n");
 		exit (1);
@@ -110,7 +110,7 @@ int write_email(email *new_email)
 	static time_t t;
 	static char name[MAXHOSTNAMELEN];
 	struct stat filestat;
-	int fw;
+	int fw, i;
 
 	//unique filename template: time.pid.hostname
 	//t - 10 chars
@@ -120,14 +120,14 @@ int write_email(email *new_email)
 		fprintf(stderr,"Error malloc filename\n");
 		return 1;
 	}
-	do {
+	do {							//generovanie nazvu suboru, ktory neexistuje
 		t = time((time_t*)0);
 		//TODO safehostname - bez badchars
 		gethostname(name,MAXHOSTNAMELEN);
 		name[MAXHOSTNAMELEN-1] = '\0';
 		sprintf(filepath,"%s%s%d.%d.",new_email->homedir,INBOX,(int) t,getpid());
 		if(strlen(filepath)+strlen(name)>17+MAXHOSTNAMELEN) {
-			//realloc filename to new bigger size
+			//realloc filepath na vacsiu velkost
 			if((filepath = (char *) realloc(filepath, strlen(filepath)+strlen(name)))==NULL) {
 				fprintf(stderr,"Error realloc filepath\n");
 				return 1;
@@ -136,18 +136,30 @@ int write_email(email *new_email)
 		strcat(filepath,name);
 printf("Meno suboru bude: %s\n",filepath);
 	} while(stat(filepath,&filestat)!=-1);  //generujem meno suboru pokial este neexistuje
+	//otvorenie suboru
+	//TODO zamykanie suboru - musi byt? link()
 	if((fw = open(filepath,O_WRONLY|O_CREAT|O_EXCL, S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP))==-1) {
 		fprintf(stderr,"Error opening email file in user's homedir\n");
 		return 1;
 	}
-	//TODO test na spravne zapisany size
-	write(fw, new_email->head, strlen(new_email->head)); 
-	write(fw, new_email->body, strlen(new_email->body)); 
+	//zapis jednotlivych casti emailu do suboru
+	if((i = strlen(new_email->head)) != write(fw, new_email->head,i)) {
+		fprintf(stderr,"Error, writing email head\n");
+		return 1;
+	}
+	if((i = strlen(DIVIDER_HEAD_BODY)) != write(fw, DIVIDER_HEAD_BODY,i)) {
+		fprintf(stderr,"Error, writing email divider\n");
+		return 1;
+	}
+	if((i = strlen(new_email->body)) != write(fw, new_email->body,i)) {
+			fprintf(stderr,"Error, writing email body\n");
+	}
+	//zavretie suboru
 	if(close(fw)!=0) {
 		fprintf(stderr,"Error, close email file in user's homedir\n");
 		return 1;
 	}
-
+	new_email->filepath = filepath;
 
 
 

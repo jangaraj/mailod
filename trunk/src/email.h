@@ -7,6 +7,7 @@ typedef struct {
 	char *filesystem;//filesystem where stored email file
 	char *to;		//local user
 	char *homedir;	//homedir of local user
+	char *filepath;	//cesta k emailu spolu s nazvom suboru
 	int hardlink;	//ulozit ako hardlinku
 	int size;		//velkost celeho emailu
 } email;

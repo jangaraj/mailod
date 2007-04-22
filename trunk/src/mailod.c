@@ -46,7 +46,7 @@ int main(int argc, char* argv[]) {
 	if((ident_email = select_by_hash(conf_struct, new_email->hash))==NULL) {
 		//TODO vratilo sa mi NULL cize ulozit standardne email
 		printf("nemam ident email. Idem ho zapisat to filesystema  do DB.\n");
-		if(write_email(new_email)==NULL) {
+		if(write_email(new_email)!=0) {
 			fprintf(stderr,"Error writing email\n");
 			return 1;
 		}

@@ -45,12 +45,15 @@ int main(int argc, char* argv[]) {
 	new_email->hash = hash_text(new_email->body);
 	if((ident_email = select_by_hash(conf_struct, new_email->hash))==NULL) {
 		//TODO vratilo sa mi NULL cize ulozit standardne email
-		printf("nemam ident email\n");
+		printf("nemam ident email. Idem ho zapisat to filesystema  do DB.\n");
+		if(write_email(new_email)==NULL) {
+			fprintf(stderr,"Error writing email\n");
+			return 1;
+		}
 	}
 	else {
 		//TODO linkovat email
 		printf("Mam IDENT EMAIL - fs: %s\n", ident_email->filesystem);
-
 	}
 	
 	

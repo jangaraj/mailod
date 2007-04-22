@@ -3,10 +3,18 @@
 #include <string.h>
 #include <unistd.h>
 #include <pwd.h>
+#include <time.h>
+#include <sys/types.h>
+
 #include "email.h"
 #include "const.h"
 
-email *readmail(void){
+#ifndef MAXHOSTNAMELEN
+#define MAXHOSTNAMELEN 64
+#endif
+
+email *readmail(void)
+{
 	char buffer[BUFFER_SIZE], *reading_email_all, *reading_email_head, *reading_email_body, *reading_email_to, *position, *position2;	
 	int read_size, nblock, length_position;
 	email *read_email;
@@ -89,4 +97,11 @@ email *readmail(void){
 	read_email->homedir = (getpwnam(reading_email_to)->pw_dir);
 
 	return read_email;
+}
+
+int write_email(email *new_email) 
+{
+	char *filenamei;
+
+	return 0;
 }

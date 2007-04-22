@@ -49,8 +49,11 @@ email *readmail(void)
 		strncat(reading_email_all, buffer, read_size);
 		nblock++;							//counter na citaci cyklus - pocet alokovanych blokov
 	}
+	read_email->size = nblock*BUFFER_SIZE+read_size;
 	//divide head from all
 	position = strstr(reading_email_all, DIVIDER_HEAD_BODY);
+	position++;
+	position++;
 	if(position==NULL) {
 		fprintf(stderr,"Error, dividing email to head and body\n");
 		exit (1);
@@ -107,6 +110,7 @@ int write_email(email *new_email)
 	static time_t t;
 	static char name[MAXHOSTNAMELEN];
 	struct stat filestat;
+	int fw;
 
 	//unique filename template: time.pid.hostname
 	//t - 10 chars
@@ -116,25 +120,35 @@ int write_email(email *new_email)
 		fprintf(stderr,"Error malloc filename\n");
 		return 1;
 	}
-do {
-	t = time((time_t*)0);
-	//TODO safehostname - bez badchars
-	gethostname(name,MAXHOSTNAMELEN);
-	name[MAXHOSTNAMELEN-1] = '\0';
-	sprintf(filepath,"%s%s%d.%d.",new_email->homedir,INBOX,(int) t,getpid());
-	if(strlen(filepath)+strlen(name)>17+MAXHOSTNAMELEN) {
-printf("Reealocujem filename bo mam malo size\n");
-		//realloc filename to new bigger size
-		if((filepath = (char *) realloc(filepath, strlen(filepath)+strlen(name)))==NULL) {
+	do {
+		t = time((time_t*)0);
+		//TODO safehostname - bez badchars
+		gethostname(name,MAXHOSTNAMELEN);
+		name[MAXHOSTNAMELEN-1] = '\0';
+		sprintf(filepath,"%s%s%d.%d.",new_email->homedir,INBOX,(int) t,getpid());
+		if(strlen(filepath)+strlen(name)>17+MAXHOSTNAMELEN) {
+			//realloc filename to new bigger size
+			if((filepath = (char *) realloc(filepath, strlen(filepath)+strlen(name)))==NULL) {
 				fprintf(stderr,"Error realloc filepath\n");
 				return 1;
+			}
 		}
-	}
-	strcat(filepath,name);
+		strcat(filepath,name);
 printf("Meno suboru bude: %s\n",filepath);
-//O_WRONLY|O_CREAT|O_EXCL
+	} while(stat(filepath,&filestat)!=-1);  //generujem meno suboru pokial este neexistuje
+	if((fw = open(filepath,O_WRONLY|O_CREAT|O_EXCL, S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP))==-1) {
+		fprintf(stderr,"Error opening email file in user's homedir\n");
+		return 1;
+	}
+	//TODO test na spravne zapisany size
+	write(fw, new_email->head, strlen(new_email->head)); 
+	write(fw, new_email->body, strlen(new_email->body)); 
+	if(close(fw)!=0) {
+		fprintf(stderr,"Error, close email file in user's homedir\n");
+		return 1;
+	}
 
-} while(stat(filepath,&filestat)!=-1);  //generujem meno suboru pokial este neexistuje
+
 
 
 	return 0;

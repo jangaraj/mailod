@@ -25,4 +25,4 @@
 #define MAILDIR "/.maildir"			//name of maildir - depend on setting postfix
 #define CUR "cur"					//folder of readed emails
 #define NEW "/new"					//folder if new emails
-#define INBOX "/.maildir/.new/"		//for stat in write_email
+#define INBOX "/.maildir/new/"		//for stat in write_email

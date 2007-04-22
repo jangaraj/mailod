@@ -8,6 +8,7 @@ typedef struct {
 	char *to;		//local user
 	char *homedir;	//homedir of local user
 	int hardlink;	//ulozit ako hardlinku
+	int size;		//velkost celeho emailu
 } email;
 
 email *readmail(void);

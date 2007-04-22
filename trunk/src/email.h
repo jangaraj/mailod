@@ -11,4 +11,4 @@ typedef struct {
 } email;
 
 email *readmail(void);
-
+int write_email(email *new_email);

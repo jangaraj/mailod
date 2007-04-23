@@ -47,7 +47,11 @@ int main(int argc, char* argv[]) {
 		//TODO vratilo sa mi NULL cize ulozit standardne email
 		printf("nemam ident email. Idem ho zapisat to filesystema  do DB.\n");
 		if(write_email(new_email)!=0) {
-			fprintf(stderr,"Error writing email\n");
+			fprintf(stderr,"Error writing email.\n");
+			return 1;
+		}
+		if((insert_email(conf_struct, new_email))!=0) {
+			fprintf(stderr,"Error, inserting email to database\n");
 			return 1;
 		}
 	}

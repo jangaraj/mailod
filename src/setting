@@ -5,7 +5,7 @@ database_username	xxx
 database_password	xxx
 database_name	xxx
 #time window in minutes
-time_window	600	
+time_window	0	
 log_level	0	
 #debug 1 - log also to stderr
 debug	1

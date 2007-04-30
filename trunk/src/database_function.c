@@ -17,7 +17,7 @@ email *select_by_hash(config *conf, char hash_value[]) {
     dbi_conn_set_option(conn, "username", conf->db_username);
 	dbi_conn_set_option(conn, "password", conf->db_password);
 	dbi_conn_set_option(conn, "dbname", conf->db_name);
-	//dbi_conn_set_option(conn, "encoding", "UTF-8");
+	dbi_conn_set_option(conn, "encoding", "UTF-8");
     if (dbi_conn_connect(conn) < 0) {
     	fprintf(stderr,"Could not connect. Please check the option settings\n");
 	return NULL;

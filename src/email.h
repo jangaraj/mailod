@@ -14,3 +14,4 @@ typedef struct {
 
 email *readmail(void);
 int write_email(email *new_email);
+int link_email(email *new_email);

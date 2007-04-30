@@ -50,6 +50,7 @@ int main(int argc, char* argv[]) {
 			fprintf(stderr,"Error writing email.\n");
 			return 1;
 		}
+		//TODO dopisat insert
 		if((insert_email(conf_struct, new_email))!=0) {
 			fprintf(stderr,"Error, inserting email to database\n");
 			return 1;
@@ -57,14 +58,15 @@ int main(int argc, char* argv[]) {
 	}
 	else {
 		//TODO linkovat email
+		if(link_email(new_email)!=0) {
 		printf("Mam IDENT EMAIL - fs: %s\n", ident_email->filesystem);
 	}
 	
 	
 //	printf(">>>>>>>>>>>>>>>>>>>>>>>>Toto je mail->head z email struktury:\n%s\n", new_email->head);
-/*	printf(">>>>>>>>>>>>>>>>>>>>>>>>Toto je mail->body z email struktury:\n%s\n", new_email->body);
+/*	printf(">>>>>>>>>>>>>>>>>>>>>>>>Toto je mail->body z email struktury:\n%s\n", new_email->body);*/
 	printf(">>>>>>>>>>>>>>>>>>>>>>>>Toto je mail->hash z email struktury:\n%s\n", new_email->hash);
-*/
+
 	printf(">>>>>>>>>>>>>>>>>>>>>>>>Toto je mail->to z email struktury:\n%s\n", new_email->to);
 	printf(">>>>>>>>>>>>>>>>>>>>>>>>Toto je mail->homedir z email struktury:\n%s\n", new_email->homedir);
 	printf(">>>>>>>>>>>>>>>>>>>>>>>>Toto je mail->size z email struktury:\n%d\n",new_email->size);

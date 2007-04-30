@@ -172,3 +172,10 @@ printf("Meno suboru bude: %s\n",filepath);
 
 	return 0;
 }
+
+int link_email(email *new_email)
+{
+
+
+	return 0;
+}

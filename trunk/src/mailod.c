@@ -18,7 +18,6 @@
 
 int main(int argc, char* argv[]) {
 	mtrace();
-	muntrace();
 
 	email *new_email, *ident_email;
 	config *conf_struct;
@@ -84,8 +83,12 @@ int main(int argc, char* argv[]) {
 	free((void *) conf_struct);
 	free((void *) new_email->to);
 	free((void *) new_email->head);
+	free((void *) new_email->hash);
 	free((void *) new_email->body);
 	free((void *) new_email->filepath);
+	free((void *) new_email->homedir);
 	free((void *) new_email);
+
+	muntrace();
 	return 0;
 }

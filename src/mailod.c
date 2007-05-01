@@ -8,6 +8,7 @@
 #include <stdio.h>
 #include <stdlib.h>			//exit
 #include <unistd.h>
+#include <mcheck.h>			//testing of malloc
 #include "const.h"			//BUFFER_SIZE
 #include "email.h"			//email struct
 #include "hash_function.h"	//hash function
@@ -16,6 +17,8 @@
 #include "database_function.h"
 
 int main(int argc, char* argv[]) {
+	mtrace();
+
 	email *new_email, *ident_email;
 	config *conf_struct;
 	
@@ -63,6 +66,7 @@ int main(int argc, char* argv[]) {
 			fprintf(stderr,"Error, linking email\n");
 			return 1;
 		}
+		free((void *) ident_email);
 	}
 	
 	
@@ -76,6 +80,11 @@ int main(int argc, char* argv[]) {
 
 
 	//TODO uvolnit alokovanu pamat
+	free((void *) conf_struct);
+	free((void *) new_email->to);
+	free((void *) new_email->head);
+	free((void *) new_email->body);
+	free((void *) new_email->filepath);
 	free((void *) new_email);
 	return 0;
 }

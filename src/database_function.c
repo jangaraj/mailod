@@ -23,8 +23,8 @@ email *select_by_hash(config *conf, char hash_value[]) {
 	return NULL;
     }
     else {
-		//TODO TRANSAKCIE
-		sprintf(sql,"SELECT * FROM `mailod` WHERE `body_hash`='%s' AND `timestamp`>(NOW()+INTERVAL -%d MINUTE) AND `number_hardlinks`<'1000' ORDER BY `email_id` LIMIT 1",hash_value, conf->time_window);
+		//TODO TRANSAKCIE - su potrebne?
+		sprintf(sql,"SELECT * FROM `mailod` WHERE `body_hash`='%s' AND `timestamp`>(NOW()+INTERVAL -%d MINUTE) AND `number_hardlinks`<'1000' ORDER BY `email_id` LIMIT 1;",hash_value, conf->time_window);
 		//printf("SQL: %s\n",sql);
 	   	result = dbi_conn_query(conn,sql);
     	if (result) {
@@ -66,6 +66,10 @@ int insert_email(config *conf, email *new_email)
     }
     else {
 		//TODO TRANSAKCIE
+		//START TRANSACTION;
+		//SELECT @A:=SUM(salary) FROM table1 WHERE type=1;
+		//UPDATE table2 SET summary=@A WHERE type=1;
+		//COMMIT;
 		sprintf(sql,"INSERT body_hash`='%s' AND `timestamp`>(NOW()+INTERVAL -%d MINUTE) AND `number_hardlinks`<'1000' ORDER BY `email_id` LIMIT 1",new_email->hash, conf->time_window);
 		//printf("SQL: %s\n",sql);
 	   	result = dbi_conn_query(conn,sql);

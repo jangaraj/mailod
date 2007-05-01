@@ -1,0 +1,402 @@
+= Start
+@ ./xmailod:[0x8048ea2] + 0x804e378 0x1414
+@ /lib/libc.so.6:[0xb7e34e9f] + 0x804f790 0x160
+@ /lib/libc.so.6:(fclose+0x142)[0xb7e345a2] - 0x804f790
+@ ./xmailod:[0x80490ec] + 0x804f790 0x24
+@ ./xmailod:[0x8049129] + 0x804f7b8 0x1
+@ ./xmailod:[0x804916f] + 0x804f7c8 0x1
+@ ./xmailod:[0x8049226] < 0x804f7b8
+@ ./xmailod:[0x8049226] > 0x804f7d8 0x401
+@ ./xmailod:[0x8049226] < 0x804f7d8
+@ ./xmailod:[0x8049226] > 0x804f7d8 0x51f
+@ ./xmailod:[0x8049310] < 0x804f7c8
+@ ./xmailod:[0x8049310] > 0x804fd00 0x472
+@ ./xmailod:[0x804937a] + 0x8050178 0xad
+@ ./xmailod:[0x80494cb] + 0x804f7c8 0x4
+@ ./xmailod:[0x804953e] - 0x804f7d8
+@ /lib/libc.so.6:(getpwnam+0x10f)[0xb7e6a1ef] + 0x804f7d8 0x400
+@ /lib/libc.so.6:[0xb7e34e9f] + 0x8050230 0x160
+@ /lib/libc.so.6:(__nss_database_lookup+0x17e)[0xb7eae45e] + 0x804f7b8 0x8
+@ /lib/libc.so.6:(__getdelim+0x78)[0xb7e35c18] + 0x804fbe0 0x78
+@ /lib/libc.so.6:(__nss_database_lookup+0x2b7)[0xb7eae597] + 0x804fc60 0xf
+@ /lib/libc.so.6:[0xb7eaddbd] + 0x804fc78 0x27
+@ /lib/libc.so.6:(__nss_database_lookup+0x2b7)[0xb7eae597] + 0x804fca8 0xf
+@ /lib/libc.so.6:[0xb7eaddbd] + 0x804fcc0 0x27
+@ /lib/libc.so.6:(__nss_database_lookup+0x2b7)[0xb7eae597] + 0x8050398 0xe
+@ /lib/libc.so.6:[0xb7eaddbd] + 0x80503b0 0x27
+@ /lib/libc.so.6:(__nss_database_lookup+0x2b7)[0xb7eae597] + 0x80503e0 0xe
+@ /lib/libc.so.6:[0xb7eaddbd] + 0x80503f8 0x26
+@ /lib/libc.so.6:[0xb7eaddbd] + 0x8050428 0x24
+@ /lib/libc.so.6:(__nss_database_lookup+0x2b7)[0xb7eae597] + 0x8050450 0x11
+@ /lib/libc.so.6:[0xb7eaddbd] + 0x8050468 0x26
+@ /lib/libc.so.6:[0xb7eaddbd] + 0x8050498 0x24
+@ /lib/libc.so.6:(__nss_database_lookup+0x2b7)[0xb7eae597] + 0x80504c0 0x11
+@ /lib/libc.so.6:[0xb7eaddbd] + 0x80504d8 0x23
+@ /lib/libc.so.6:[0xb7eaddbd] + 0x8050500 0x26
+@ /lib/libc.so.6:(__nss_database_lookup+0x2b7)[0xb7eae597] + 0x8050530 0x12
+@ /lib/libc.so.6:[0xb7eaddbd] + 0x8050548 0x23
+@ /lib/libc.so.6:[0xb7eaddbd] + 0x8050570 0x26
+@ /lib/libc.so.6:(__nss_database_lookup+0x2b7)[0xb7eae597] + 0x804fcf0 0xc
+@ /lib/libc.so.6:[0xb7eaddbd] + 0x80505a0 0x23
+@ /lib/libc.so.6:[0xb7eaddbd] + 0x80505c8 0x26
+@ /lib/libc.so.6:(__nss_database_lookup+0x2b7)[0xb7eae597] + 0x80505f8 0xf
+@ /lib/libc.so.6:[0xb7eaddbd] + 0x8050610 0x23
+@ /lib/libc.so.6:[0xb7eaddbd] + 0x8050638 0x26
+@ /lib/libc.so.6:(__nss_database_lookup+0x2b7)[0xb7eae597] + 0x8050668 0x11
+@ /lib/libc.so.6:[0xb7eaddbd] + 0x8050680 0x26
+@ /lib/libc.so.6:(__nss_database_lookup+0x2b7)[0xb7eae597] + 0x80506b0 0x11
+@ /lib/libc.so.6:[0xb7eaddbd] + 0x80506c8 0x26
+@ /lib/libc.so.6:(__nss_database_lookup+0x2b7)[0xb7eae597] + 0x80506f8 0x13
+@ /lib/libc.so.6:[0xb7eaddbd] + 0x8050710 0x26
+@ /lib/libc.so.6:(__nss_database_lookup+0x2b7)[0xb7eae597] + 0x8050740 0x12
+@ /lib/libc.so.6:[0xb7eaddbd] + 0x8050758 0x26
+@ /lib/libc.so.6:(__nss_database_lookup+0x2b7)[0xb7eae597] + 0x8050788 0x10
+@ /lib/libc.so.6:[0xb7eaddbd] + 0x80507a0 0x26
+@ /lib/libc.so.6:(__nss_database_lookup+0x30b)[0xb7eae5eb] - 0x804fbe0
+@ /lib/libc.so.6:(fclose+0x142)[0xb7e345a2] - 0x8050230
+@ /lib/libc.so.6:(tsearch+0xfc)[0xb7e9cd1c] + 0x804fbe0 0x10
+@ /lib/libc.so.6:(__nss_lookup_function+0xa0)[0xb7ead9a0] + 0x804fbf8 0x8
+@ /lib/libc.so.6:(__nss_lookup_function+0x117)[0xb7eada17] + 0x804fc08 0xc
+@ /lib/ld-linux.so.2:[0xb7f504af] + 0x804fc18 0x18
+@ /lib/ld-linux.so.2:[0xb7f5228c] + 0x80507d0 0x26b
+@ /lib/ld-linux.so.2:[0xb7f5252e] + 0x804fc38 0x18
+@ /lib/ld-linux.so.2:[0xb7f504af] + 0x8050230 0x11
+@ /lib/ld-linux.so.2:[0xb7f5228c] + 0x8050a40 0x264
+@ /lib/ld-linux.so.2:[0xb7f5252e] + 0x8050248 0x11
+@ /lib/ld-linux.so.2:[0xb7f54296] + 0x8050260 0x14
+@ /lib/ld-linux.so.2:[0xb7f54393] + 0x8050278 0x24
+@ /lib/ld-linux.so.2:[0xb7f57063] + 0x80502a0 0xa0
+@ /lib/ld-linux.so.2:[0xb7f57063] + 0x8050ca8 0xc0
+@ /lib/libc.so.6:[0xb7eaddbd] + 0x8050348 0x24
+@ /lib/libc.so.6:(tsearch+0xfc)[0xb7e9cd1c] + 0x8050370 0x10
+@ /lib/libc.so.6:(__nss_lookup_function+0xa0)[0xb7ead9a0] + 0x8050388 0x8
+@ /lib/libc.so.6:(__nss_lookup_function+0x117)[0xb7eada17] + 0x8050d70 0xc
+@ /lib/ld-linux.so.2:[0xb7f504af] + 0x8050d80 0x15
+@ /lib/ld-linux.so.2:[0xb7f5228c] + 0x8050da0 0x268
+@ /lib/ld-linux.so.2:[0xb7f5252e] + 0x8051010 0x15
+@ /lib/ld-linux.so.2:[0xb7f504af] + 0x8051030 0x17
+@ /lib/ld-linux.so.2:[0xb7f5228c] + 0x8051050 0x26a
+@ /lib/ld-linux.so.2:[0xb7f5252e] + 0x80512c0 0x17
+@ /lib/ld-linux.so.2:[0xb7f54296] + 0x80512e0 0x14
+@ /lib/ld-linux.so.2:[0xb7f54393] + 0x80512f8 0x2c
+@ /lib/ld-linux.so.2:[0xb7f57063] + 0x8051328 0xd0
+@ /lib/ld-linux.so.2:[0xb7f57063] + 0x8051400 0x90
+@ /lib/libc.so.6:(tsearch+0xfc)[0xb7e9cd1c] + 0x8051498 0x10
+@ /lib/libc.so.6:(__nss_lookup_function+0xa0)[0xb7ead9a0] + 0x80514b0 0x8
+@ /lib/libc.so.6:(tsearch+0xfc)[0xb7e9cd1c] + 0x80514c0 0x10
+@ /lib/libc.so.6:(__nss_lookup_function+0xa0)[0xb7ead9a0] + 0x80514d8 0x8
+@ /lib/libc.so.6:(tsearch+0xfc)[0xb7e9cd1c] + 0x80514e8 0x10
+@ /lib/libc.so.6:(__nss_lookup_function+0xa0)[0xb7ead9a0] + 0x8051500 0x8
+@ /lib/libc.so.6:(tsearch+0xfc)[0xb7e9cd1c] + 0x8051510 0x10
+@ /lib/libc.so.6:(__nss_lookup_function+0xa0)[0xb7ead9a0] + 0x8051528 0x8
+@ /lib/libc.so.6:[0xb7e34e9f] + 0x8051538 0x160
+@ /lib/libc.so.6:(fclose+0x142)[0xb7e345a2] - 0x8051538
+@ ./xmailod:[0x8049ecb] + 0x8051538 0x40
+@ /lib/libc.so.6:[0xb7e66ffb] + 0x8051580 0x101c
+@ /lib/ld-linux.so.2:[0xb7f4d446] + 0x80525a0 0x2d
+@ /lib/ld-linux.so.2:[0xb7f5228c] + 0x80525d8 0x285
+@ /lib/ld-linux.so.2:[0xb7f5252e] + 0x8052868 0x2d
+@ /lib/ld-linux.so.2:[0xb7f504af] + 0x80528a0 0x1e
+@ /lib/ld-linux.so.2:[0xb7f5228c] + 0x80528c8 0x26d
+@ /lib/ld-linux.so.2:[0xb7f5252e] + 0x8052b40 0x1e
+@ /lib/ld-linux.so.2:[0xb7f504af] + 0x8052b68 0x13
+@ /lib/ld-linux.so.2:[0xb7f5228c] + 0x8052b80 0x266
+@ /lib/ld-linux.so.2:[0xb7f5252e] + 0x8052df0 0x13
+@ /lib/ld-linux.so.2:[0xb7f504af] + 0x8052e08 0x19
+@ /lib/ld-linux.so.2:[0xb7f5228c] + 0x8052e28 0x268
+@ /lib/ld-linux.so.2:[0xb7f5252e] + 0x8053098 0x19
+@ /lib/ld-linux.so.2:[0xb7f4f108] + 0x80530b8 0x4
+@ /lib/ld-linux.so.2:[0xb7f504af] + 0x80530c8 0x1c
+@ /lib/ld-linux.so.2:[0xb7f5228c] + 0x80530e8 0x26b
+@ /lib/ld-linux.so.2:[0xb7f5252e] + 0x8053358 0x1c
+@ /lib/ld-linux.so.2:[0xb7f4f108] + 0x8053378 0x4
+@ /lib/ld-linux.so.2:[0xb7f504af] + 0x8053388 0xf
+@ /lib/ld-linux.so.2:[0xb7f5228c] + 0x80533a0 0x262
+@ /lib/ld-linux.so.2:[0xb7f5252e] + 0x8053608 0xf
+@ /lib/ld-linux.so.2:[0xb7f54296] + 0x8053620 0x44
+@ /lib/ld-linux.so.2:[0xb7f54296] + 0x8053668 0x14
+@ /lib/ld-linux.so.2:[0xb7f54296] + 0x8053680 0x24
+@ /lib/ld-linux.so.2:[0xb7f54296] + 0x80536a8 0x1c
+@ /lib/ld-linux.so.2:[0xb7f54296] + 0x80536c8 0x14
+@ /lib/ld-linux.so.2:[0xb7f54393] + 0x80536e0 0x5c
+@ /lib/ld-linux.so.2:[0xb7f57063] + 0x8053740 0x50
+@ /lib/ld-linux.so.2:[0xb7f57063] + 0x8053798 0x90
+@ /lib/ld-linux.so.2:[0xb7f57063] + 0x8053830 0x50
+@ /lib/ld-linux.so.2:[0xb7f57063] + 0x8053888 0x40
+@ /lib/ld-linux.so.2:[0xb7f57063] + 0x80538d0 0x80
+@ /lib/ld-linux.so.2:[0xb7f57063] + 0x8053958 0x50
+@ /lib/ld-linux.so.2:[0xb7f59b0b] + 0x80539b0 0x20
+@ /home/vlk/bin/libdbi/lib/libdbi.so.0:(dbi_initialize+0x179)[0xb7f0e819] + 0x80539d8 0x20
+@ /lib/libc.so.6:(__strdup+0x30)[0xb7e4a070] + 0x8053a00 0x2d
+@ /home/vlk/bin/libdbi/lib/libdbi.so.0:(dbi_initialize+0x1c0)[0xb7f0e860] + 0x8053a38 0x60
+@ /lib/ld-linux.so.2:[0xb7f4d446] + 0x8053aa0 0x2d
+@ /lib/ld-linux.so.2:[0xb7f5228c] + 0x8053ad8 0x285
+@ /lib/ld-linux.so.2:[0xb7f5252e] + 0x8053d68 0x2d
+@ /lib/ld-linux.so.2:[0xb7f504af] + 0x8053da0 0x14
+@ /lib/ld-linux.so.2:[0xb7f5228c] + 0x8053db8 0x263
+@ /lib/ld-linux.so.2:[0xb7f5252e] + 0x8054020 0x14
+@ /lib/ld-linux.so.2:[0xb7f4d446] + 0x8054038 0x9
+@ /lib/ld-linux.so.2:[0xb7f4d9c1] + 0x8054048 0x8
+@ /lib/ld-linux.so.2:[0xb7f4d9f9] - 0x8054038
+@ /lib/ld-linux.so.2:[0xb7f504af] + 0x8054058 0x14
+@ /lib/ld-linux.so.2:[0xb7f5228c] + 0x8054070 0x267
+@ /lib/ld-linux.so.2:[0xb7f5252e] + 0x80542e0 0x14
+@ /lib/ld-linux.so.2:[0xb7f54296] + 0x80542f8 0x3c
+@ /lib/ld-linux.so.2:[0xb7f54296] + 0x8054338 0x14
+@ /lib/ld-linux.so.2:[0xb7f54393] + 0x8054350 0x54
+@ /lib/ld-linux.so.2:[0xb7f57063] + 0x80543a8 0x50
+@ /lib/ld-linux.so.2:[0xb7f57063] + 0x8054400 0x80
+@ /lib/ld-linux.so.2:[0xb7f57063] + 0x8054488 0xc0
+@ /lib/ld-linux.so.2:[0xb7f59b0b] + 0x8054550 0x20
+@ /lib/ld-linux.so.2:[0xb7f59b0b] + 0x8054578 0x20
+@ /home/vlk/bin/libdbi/lib/libdbi.so.0:(dbi_initialize+0x179)[0xb7f0e819] + 0x80545a0 0x20
+@ /lib/libc.so.6:(__strdup+0x30)[0xb7e4a070] + 0x80545c8 0x2d
+@ /home/vlk/bin/libdbi/lib/libdbi.so.0:(dbi_initialize+0x1c0)[0xb7f0e860] + 0x8054600 0x60
+@ /lib/libc.so.6:(closedir+0x28)[0xb7e67138] - 0x8051580
+@ /home/vlk/bin/libdbi/lib/libdbi.so.0:(dbi_conn_open+0x2c)[0xb7f0d71c] + 0x8051580 0x38
+@ /home/vlk/bin/libdbi/lib/libdbi.so.0:(dbi_conn_set_option+0x5a)[0xb7f0df1a] + 0x80515c0 0x10
+@ /lib/libc.so.6:(__strdup+0x30)[0xb7e4a070] + 0x8054038 0x5
+@ /lib/libc.so.6:(__strdup+0x30)[0xb7e4a070] + 0x80515d8 0xa
+@ /home/vlk/bin/libdbi/lib/libdbi.so.0:(dbi_conn_set_option+0x5a)[0xb7f0df1a] + 0x80515e8 0x10
+@ /lib/libc.so.6:(__strdup+0x30)[0xb7e4a070] + 0x8051600 0x9
+@ /lib/libc.so.6:(__strdup+0x30)[0xb7e4a070] + 0x8051610 0x8
+@ /home/vlk/bin/libdbi/lib/libdbi.so.0:(dbi_conn_set_option+0x5a)[0xb7f0df1a] + 0x8051620 0x10
+@ /lib/libc.so.6:(__strdup+0x30)[0xb7e4a070] + 0x8051638 0x9
+@ /lib/libc.so.6:(__strdup+0x30)[0xb7e4a070] + 0x8051648 0xa
+@ /home/vlk/bin/libdbi/lib/libdbi.so.0:(dbi_conn_set_option+0x5a)[0xb7f0df1a] + 0x8051658 0x10
+@ /lib/libc.so.6:(__strdup+0x30)[0xb7e4a070] + 0x8051670 0x7
+@ /lib/libc.so.6:(__strdup+0x30)[0xb7e4a070] + 0x8051680 0xe
+@ /home/vlk/bin/libdbi/lib/libdbi.so.0:(dbi_conn_set_option+0x5a)[0xb7f0df1a] + 0x8051698 0x10
+@ /lib/libc.so.6:(__strdup+0x30)[0xb7e4a070] + 0x80516b0 0x9
+@ /lib/libc.so.6:(__strdup+0x30)[0xb7e4a070] + 0x80516c0 0x6
+@ /usr/lib/libmysqlclient.so.15:(my_malloc+0x38)[0xb7c667a8] + 0x80516d0 0x10
+@ /lib/libc.so.6:(getservbyname+0x5d)[0xb7eb505d] + 0x80516e8 0x400
+@ /lib/libc.so.6:(tsearch+0xfc)[0xb7e9cd1c] + 0x8051af0 0x10
+@ /lib/libc.so.6:(__nss_lookup_function+0xa0)[0xb7ead9a0] + 0x8051b08 0x8
+@ /lib/libc.so.6:(__nss_lookup_function+0x117)[0xb7eada17] + 0x8051b18 0xc
+@ /lib/ld-linux.so.2:[0xb7f5574f] + 0x8051b28 0x2e
+@ /lib/ld-linux.so.2:[0xb7f59de4] - 0x8051b28
+@ /lib/ld-linux.so.2:[0xb7f5574f] + 0x8051b28 0x2e
+@ /lib/libc.so.6:[0xb7ed18af] - 0x8051b28
+@ /lib/libc.so.6:(tsearch+0xfc)[0xb7e9cd1c] + 0x8051b60 0x10
+@ /lib/libc.so.6:(__nss_lookup_function+0xa0)[0xb7ead9a0] + 0x8051b78 0x8
+@ /lib/libc.so.6:(__nss_lookup_function+0x117)[0xb7eada17] + 0x8051b88 0xc
+@ /lib/ld-linux.so.2:[0xb7f545ea] - 0x80512e0
+@ /lib/ld-linux.so.2:[0xb7f54393] + 0x8051b98 0x1c
+@ /lib/libc.so.6:[0xb7e34e9f] + 0x8051bb8 0x160
+@ /lib/libc.so.6:(fclose+0x142)[0xb7e345a2] - 0x8051bb8
+@ /usr/lib/libmysqlclient.so.15:(my_malloc+0x38)[0xb7c667a8] + 0x8051bb8 0x3b8
+@ /usr/lib/libmysqlclient.so.15:(my_malloc+0x38)[0xb7c667a8] + 0x8051f78 0x9c
+@ /usr/lib/libmysqlclient.so.15:(my_malloc+0x38)[0xb7c667a8] + 0x8054668 0x4000
+@ /usr/lib/libmysqlclient.so.15:(my_malloc+0x38)[0xb7c667a8] + 0x8058670 0x2007
+@ /usr/lib/libmysqlclient.so.15:(my_malloc+0x38)[0xb7c667a8] + 0x80512e0 0x5
+@ /usr/lib/libmysqlclient.so.15:(my_once_alloc+0x73)[0xb7c6d673] + 0x805a680 0xff8
+@ /usr/lib/libmysqlclient.so.15:(my_once_alloc+0x73)[0xb7c6d673] + 0x805b680 0xff8
+@ /usr/lib/libmysqlclient.so.15:(my_once_alloc+0x73)[0xb7c6d673] + 0x805c680 0xff8
+@ /usr/lib/libmysqlclient.so.15:(my_once_alloc+0x73)[0xb7c6d673] + 0x805d680 0xff8
+@ /usr/lib/libmysqlclient.so.15:(my_once_alloc+0x73)[0xb7c6d673] + 0x805e680 0xff8
+@ /usr/lib/libmysqlclient.so.15:(my_once_alloc+0x73)[0xb7c6d673] + 0x805f680 0xff8
+@ /usr/lib/libmysqlclient.so.15:(my_once_alloc+0x73)[0xb7c6d673] + 0x8060680 0xff8
+@ /usr/lib/libmysqlclient.so.15:(my_once_alloc+0x73)[0xb7c6d673] + 0x8061680 0xff8
+@ /usr/lib/libmysqlclient.so.15:(my_once_alloc+0x73)[0xb7c6d673] + 0x8062680 0xff8
+@ /usr/lib/libmysqlclient.so.15:(my_once_alloc+0x73)[0xb7c6d673] + 0x8063680 0xff8
+@ /usr/lib/libmysqlclient.so.15:(my_once_alloc+0x73)[0xb7c6d673] + 0x8064680 0xff8
+@ /usr/lib/libmysqlclient.so.15:(my_once_alloc+0x73)[0xb7c6d673] + 0x8065680 0xff8
+@ /usr/lib/libmysqlclient.so.15:(my_once_alloc+0x73)[0xb7c6d673] + 0x8066680 0xff8
+@ /usr/lib/libmysqlclient.so.15:(my_once_alloc+0x73)[0xb7c6d673] + 0x8067680 0xff8
+@ /usr/lib/libmysqlclient.so.15:(my_once_alloc+0x73)[0xb7c6d673] + 0x8068680 0xff8
+@ /usr/lib/libmysqlclient.so.15:(my_malloc+0x38)[0xb7c667a8] + 0x8069680 0x472d
+@ /usr/lib/libmysqlclient.so.15:(my_malloc+0x38)[0xb7c667a8] + 0x8051b28 0x24
+@ /usr/lib/libmysqlclient.so.15:(my_no_flags_free+0x1f)[0xb7c6687f] - 0x8051b28
+@ /usr/lib/libmysqlclient.so.15:(my_no_flags_free+0x1f)[0xb7c6687f] - 0x8069680
+@ /usr/lib/libmysqlclient.so.15:(my_malloc+0x38)[0xb7c667a8] + 0x8052018 0x80
+@ /usr/lib/libmysqlclient.so.15:(my_malloc+0x38)[0xb7c667a8] + 0x8051b50 0x8
+@ /usr/lib/libmysqlclient.so.15:(my_malloc+0x38)[0xb7c667a8] + 0x80520a0 0xa
+@ /usr/lib/libmysqlclient.so.15:(my_malloc+0x38)[0xb7c667a8] + 0x80520b0 0xe
+@ /lib/libc.so.6:(__strdup+0x30)[0xb7e4a070] + 0x80520c8 0xe
+@ /lib/libc.so.6:(vasprintf+0x23)[0xb7e3cc03] + 0x80520e0 0x64
+@ /lib/libc.so.6:(vasprintf+0x11e)[0xb7e3ccfe] + 0x8052148 0x11
+@ /lib/libc.so.6:(vasprintf+0x14d)[0xb7e3cd2d] - 0x80520e0
+@ /home/vlk/bin/libdbi/lib/libdbi.so.0:(_dbd_result_create+0x1f)[0xb7f131bf] + 0x80520e0 0x3c
+@ /home/vlk/bin/libdbi/lib/libdbi.so.0:(_dbd_result_create+0x94)[0xb7f13234] + 0x8052120 0x4
+@ /home/vlk/bin/libdbi/lib/libdbi.so.0:(_dbd_result_add_to_conn+0x66)[0xb7f13186] + 0x8052130 0x4
+@ /home/vlk/bin/libdbi//lib/dbd/libdbdmysql.so:(dbd_connect+0x1c3)[0xb7f44e73] - 0x8052148
+@ /usr/lib/libmysqlclient.so.15:(my_malloc+0x38)[0xb7c667a8] + 0x8052160 0x34
+@ /usr/lib/libmysqlclient.so.15:(my_malloc+0x38)[0xb7c667a8] + 0x8069680 0x1fe4
+@ /usr/lib/libmysqlclient.so.15:(my_malloc+0x38)[0xb7c667a8] + 0x806b668 0x1fe4
+@ /usr/lib/libmysqlclient.so.15:(my_no_flags_free+0x1f)[0xb7c6687f] - 0x8069680
+@ /usr/lib/libmysqlclient.so.15:(my_no_flags_free+0x1f)[0xb7c6687f] - 0x8052160
+@ /usr/lib/libmysqlclient.so.15:(my_malloc+0x38)[0xb7c667a8] + 0x8052198 0x70
+@ /usr/lib/libmysqlclient.so.15:(my_malloc+0x38)[0xb7c667a8] + 0x8052160 0x34
+@ /home/vlk/bin/libdbi/lib/libdbi.so.0:(_dbd_result_create+0x1f)[0xb7f131bf] + 0x8052210 0x3c
+@ /home/vlk/bin/libdbi/lib/libdbi.so.0:(_dbd_result_create+0x94)[0xb7f13234] + 0x8052250 0x4
+@ /home/vlk/bin/libdbi/lib/libdbi.so.0:(_dbd_result_add_to_conn+0x66)[0xb7f13186] < 0x8052130
+@ /home/vlk/bin/libdbi/lib/libdbi.so.0:(_dbd_result_add_to_conn+0x66)[0xb7f13186] > 0x8052130 0x8
+@ /home/vlk/bin/libdbi/lib/libdbi.so.0:(_dbd_result_set_numfields+0x45)[0xb7f132c5] + 0x8052260 0x1c
+@ /home/vlk/bin/libdbi/lib/libdbi.so.0:(_dbd_result_set_numfields+0x59)[0xb7f132d9] + 0x8052148 0xe
+@ /home/vlk/bin/libdbi/lib/libdbi.so.0:(_dbd_result_set_numfields+0x6d)[0xb7f132ed] + 0x8052280 0x1c
+@ /lib/libc.so.6:(__strdup+0x30)[0xb7e4a070] + 0x80522a0 0x9
+@ /lib/libc.so.6:(__strdup+0x30)[0xb7e4a070] + 0x80522b0 0xa
+@ /lib/libc.so.6:(__strdup+0x30)[0xb7e4a070] + 0x80522c0 0xc
+@ /lib/libc.so.6:(__strdup+0x30)[0xb7e4a070] + 0x80522d0 0xb
+@ /lib/libc.so.6:(__strdup+0x30)[0xb7e4a070] + 0x80522e0 0x9
+@ /lib/libc.so.6:(__strdup+0x30)[0xb7e4a070] + 0x80522f0 0xa
+@ /lib/libc.so.6:(__strdup+0x30)[0xb7e4a070] + 0x8052300 0x11
+@ ./xmailod:[0x80495b6] + 0x8052318 0x68
+@ /lib/libc.so.6:[0xb7e66ffb] + 0x8069680 0x101c
+@ /home/vlk/bin/libdbi/lib/libdbi.so.0:(dbi_initialize+0x179)[0xb7f0e819] + 0x8051b28 0x20
+@ /lib/libc.so.6:(__strdup+0x30)[0xb7e4a070] + 0x8052388 0x2d
+@ /home/vlk/bin/libdbi/lib/libdbi.so.0:(dbi_initialize+0x1c0)[0xb7f0e860] + 0x80523c0 0x60
+@ /home/vlk/bin/libdbi/lib/libdbi.so.0:(dbi_initialize+0x179)[0xb7f0e819] + 0x8052428 0x20
+@ /lib/libc.so.6:(__strdup+0x30)[0xb7e4a070] + 0x8052450 0x2d
+@ /home/vlk/bin/libdbi/lib/libdbi.so.0:(dbi_initialize+0x1c0)[0xb7f0e860] + 0x8052488 0x60
+@ /lib/libc.so.6:(closedir+0x28)[0xb7e67138] - 0x8069680
+@ /home/vlk/bin/libdbi/lib/libdbi.so.0:(dbi_conn_open+0x2c)[0xb7f0d71c] + 0x80524f0 0x38
+@ /home/vlk/bin/libdbi/lib/libdbi.so.0:(dbi_conn_set_option+0x5a)[0xb7f0df1a] + 0x8052530 0x10
+@ /lib/libc.so.6:(__strdup+0x30)[0xb7e4a070] + 0x8052548 0x5
+@ /lib/libc.so.6:(__strdup+0x30)[0xb7e4a070] + 0x8052558 0xa
+@ /home/vlk/bin/libdbi/lib/libdbi.so.0:(dbi_conn_set_option+0x5a)[0xb7f0df1a] + 0x8052568 0x10
+@ /lib/libc.so.6:(__strdup+0x30)[0xb7e4a070] + 0x8052580 0x9
+@ /lib/libc.so.6:(__strdup+0x30)[0xb7e4a070] + 0x8052590 0x8
+@ /home/vlk/bin/libdbi/lib/libdbi.so.0:(dbi_conn_set_option+0x5a)[0xb7f0df1a] + 0x8069680 0x10
+@ /lib/libc.so.6:(__strdup+0x30)[0xb7e4a070] + 0x8069698 0x9
+@ /lib/libc.so.6:(__strdup+0x30)[0xb7e4a070] + 0x80696a8 0xa
+@ /home/vlk/bin/libdbi/lib/libdbi.so.0:(dbi_conn_set_option+0x5a)[0xb7f0df1a] + 0x80696b8 0x10
+@ /lib/libc.so.6:(__strdup+0x30)[0xb7e4a070] + 0x80696d0 0x7
+@ /lib/libc.so.6:(__strdup+0x30)[0xb7e4a070] + 0x80696e0 0xe
+@ /usr/lib/libmysqlclient.so.15:(my_malloc+0x38)[0xb7c667a8] + 0x80696f8 0x3b8
+@ /usr/lib/libmysqlclient.so.15:(my_malloc+0x38)[0xb7c667a8] + 0x8069ab8 0x9c
+@ /usr/lib/libmysqlclient.so.15:(my_malloc+0x38)[0xb7c667a8] + 0x806d650 0x4000
+@ /usr/lib/libmysqlclient.so.15:(my_malloc+0x38)[0xb7c667a8] + 0x8071658 0x2007
+@ /usr/lib/libmysqlclient.so.15:(my_malloc+0x38)[0xb7c667a8] + 0x8069b58 0x5
+@ /usr/lib/libmysqlclient.so.15:(my_malloc+0x38)[0xb7c667a8] + 0x8069b68 0x80
+@ /usr/lib/libmysqlclient.so.15:(my_malloc+0x38)[0xb7c667a8] + 0x8069bf0 0x8
+@ /usr/lib/libmysqlclient.so.15:(my_malloc+0x38)[0xb7c667a8] + 0x8069c00 0xa
+@ /usr/lib/libmysqlclient.so.15:(my_malloc+0x38)[0xb7c667a8] + 0x8069c10 0xe
+@ /lib/libc.so.6:(__strdup+0x30)[0xb7e4a070] + 0x8069c28 0xe
+@ /lib/libc.so.6:(__strdup+0x30)[0xb7e4a070] + 0x8069c40 0xe3
+@ /usr/lib/libmysqlclient.so.15:(my_no_flags_free+0x1f)[0xb7c6687f] - 0x806d650
+@ /usr/lib/libmysqlclient.so.15:(my_no_flags_free+0x1f)[0xb7c6687f] - 0x8069ab8
+@ /usr/lib/libmysqlclient.so.15:(my_no_flags_free+0x1f)[0xb7c6687f] - 0x8071658
+@ /usr/lib/libmysqlclient.so.15:(my_no_flags_free+0x1f)[0xb7c6687f] - 0x8069b58
+@ /usr/lib/libmysqlclient.so.15:(my_no_flags_free+0x1f)[0xb7c6687f] - 0x8069b68
+@ /usr/lib/libmysqlclient.so.15:(my_no_flags_free+0x1f)[0xb7c6687f] - 0x8069bf0
+@ /usr/lib/libmysqlclient.so.15:(my_no_flags_free+0x1f)[0xb7c6687f] - 0x8069c00
+@ /usr/lib/libmysqlclient.so.15:(my_no_flags_free+0x1f)[0xb7c6687f] - 0x8069c10
+@ /usr/lib/libmysqlclient.so.15:(my_no_flags_free+0x1f)[0xb7c6687f] - 0x80696f8
+@ /home/vlk/bin/libdbi/lib/libdbi.so.0:(dbi_conn_clear_options+0x30)[0xb7f0d880] - 0x8052548
+@ /home/vlk/bin/libdbi/lib/libdbi.so.0:(dbi_conn_clear_options+0x3b)[0xb7f0d88b] - 0x8052558
+@ /home/vlk/bin/libdbi/lib/libdbi.so.0:(dbi_conn_clear_options+0x45)[0xb7f0d895] - 0x8052530
+@ /home/vlk/bin/libdbi/lib/libdbi.so.0:(dbi_conn_clear_options+0x30)[0xb7f0d880] - 0x8052580
+@ /home/vlk/bin/libdbi/lib/libdbi.so.0:(dbi_conn_clear_options+0x3b)[0xb7f0d88b] - 0x8052590
+@ /home/vlk/bin/libdbi/lib/libdbi.so.0:(dbi_conn_clear_options+0x45)[0xb7f0d895] - 0x8052568
+@ /home/vlk/bin/libdbi/lib/libdbi.so.0:(dbi_conn_clear_options+0x30)[0xb7f0d880] - 0x8069698
+@ /home/vlk/bin/libdbi/lib/libdbi.so.0:(dbi_conn_clear_options+0x3b)[0xb7f0d88b] - 0x80696a8
+@ /home/vlk/bin/libdbi/lib/libdbi.so.0:(dbi_conn_clear_options+0x45)[0xb7f0d895] - 0x8069680
+@ /home/vlk/bin/libdbi/lib/libdbi.so.0:(dbi_conn_clear_options+0x30)[0xb7f0d880] - 0x80696d0
+@ /home/vlk/bin/libdbi/lib/libdbi.so.0:(dbi_conn_clear_options+0x3b)[0xb7f0d88b] - 0x80696e0
+@ /home/vlk/bin/libdbi/lib/libdbi.so.0:(dbi_conn_clear_options+0x45)[0xb7f0d895] - 0x80696b8
+@ /home/vlk/bin/libdbi/lib/libdbi.so.0:(dbi_conn_close+0x100)[0xb7f0d9b0] - 0x8069c28
+@ /home/vlk/bin/libdbi/lib/libdbi.so.0:(dbi_conn_close+0x112)[0xb7f0d9c2] - 0x8069c40
+@ /home/vlk/bin/libdbi/lib/libdbi.so.0:(dbi_conn_close+0xf0)[0xb7f0d9a0] - 0x80524f0
+@ /usr/lib/libmysqlclient.so.15:(my_no_flags_free+0x1f)[0xb7c6687f] - 0x8054668
+@ /usr/lib/libmysqlclient.so.15:(my_no_flags_free+0x1f)[0xb7c6687f] - 0x8051f78
+@ /usr/lib/libmysqlclient.so.15:(my_no_flags_free+0x1f)[0xb7c6687f] - 0x8058670
+@ /usr/lib/libmysqlclient.so.15:(my_no_flags_free+0x1f)[0xb7c6687f] - 0x80512e0
+@ /usr/lib/libmysqlclient.so.15:(my_no_flags_free+0x1f)[0xb7c6687f] - 0x8052018
+@ /usr/lib/libmysqlclient.so.15:(my_no_flags_free+0x1f)[0xb7c6687f] - 0x8051b50
+@ /usr/lib/libmysqlclient.so.15:(my_no_flags_free+0x1f)[0xb7c6687f] - 0x80520a0
+@ /usr/lib/libmysqlclient.so.15:(my_no_flags_free+0x1f)[0xb7c6687f] - 0x80520b0
+@ /usr/lib/libmysqlclient.so.15:(my_no_flags_free+0x1f)[0xb7c6687f] - 0x8051bb8
+@ /home/vlk/bin/libdbi/lib/libdbi.so.0:(dbi_conn_clear_options+0x30)[0xb7f0d880] - 0x8054038
+@ /home/vlk/bin/libdbi/lib/libdbi.so.0:(dbi_conn_clear_options+0x3b)[0xb7f0d88b] - 0x80515d8
+@ /home/vlk/bin/libdbi/lib/libdbi.so.0:(dbi_conn_clear_options+0x45)[0xb7f0d895] - 0x80515c0
+@ /home/vlk/bin/libdbi/lib/libdbi.so.0:(dbi_conn_clear_options+0x30)[0xb7f0d880] - 0x8051600
+@ /home/vlk/bin/libdbi/lib/libdbi.so.0:(dbi_conn_clear_options+0x3b)[0xb7f0d88b] - 0x8051610
+@ /home/vlk/bin/libdbi/lib/libdbi.so.0:(dbi_conn_clear_options+0x45)[0xb7f0d895] - 0x80515e8
+@ /home/vlk/bin/libdbi/lib/libdbi.so.0:(dbi_conn_clear_options+0x30)[0xb7f0d880] - 0x8051638
+@ /home/vlk/bin/libdbi/lib/libdbi.so.0:(dbi_conn_clear_options+0x3b)[0xb7f0d88b] - 0x8051648
+@ /home/vlk/bin/libdbi/lib/libdbi.so.0:(dbi_conn_clear_options+0x45)[0xb7f0d895] - 0x8051620
+@ /home/vlk/bin/libdbi/lib/libdbi.so.0:(dbi_conn_clear_options+0x30)[0xb7f0d880] - 0x8051670
+@ /home/vlk/bin/libdbi/lib/libdbi.so.0:(dbi_conn_clear_options+0x3b)[0xb7f0d88b] - 0x8051680
+@ /home/vlk/bin/libdbi/lib/libdbi.so.0:(dbi_conn_clear_options+0x45)[0xb7f0d895] - 0x8051658
+@ /home/vlk/bin/libdbi/lib/libdbi.so.0:(dbi_conn_clear_options+0x30)[0xb7f0d880] - 0x80516b0
+@ /home/vlk/bin/libdbi/lib/libdbi.so.0:(dbi_conn_clear_options+0x3b)[0xb7f0d88b] - 0x80516c0
+@ /home/vlk/bin/libdbi/lib/libdbi.so.0:(dbi_conn_clear_options+0x45)[0xb7f0d895] - 0x8051698
+@ /home/vlk/bin/libdbi/lib/libdbi.so.0:(dbi_conn_close+0x100)[0xb7f0d9b0] - 0x80520c8
+@ /home/vlk/bin/libdbi/lib/libdbi.so.0:(dbi_conn_close+0xe5)[0xb7f0d995] - 0x8052130
+@ /home/vlk/bin/libdbi/lib/libdbi.so.0:(dbi_conn_close+0xf0)[0xb7f0d9a0] - 0x8051580
+@ /home/vlk/bin/libdbi/lib/libdbi.so.0:(dbi_shutdown+0x64)[0xb7f0da44] - 0x80523c0
+@ /home/vlk/bin/libdbi/lib/libdbi.so.0:(dbi_shutdown+0xbf)[0xb7f0da9f] - 0x8052388
+@ /home/vlk/bin/libdbi/lib/libdbi.so.0:(dbi_shutdown+0xca)[0xb7f0daaa] - 0x8051b28
+@ /home/vlk/bin/libdbi/lib/libdbi.so.0:(dbi_shutdown+0x64)[0xb7f0da44] - 0x8052488
+@ /home/vlk/bin/libdbi/lib/libdbi.so.0:(dbi_shutdown+0xbf)[0xb7f0da9f] - 0x8052450
+@ /home/vlk/bin/libdbi/lib/libdbi.so.0:(dbi_shutdown+0xca)[0xb7f0daaa] - 0x8052428
+@ ./xmailod:[0x8049078] - 0x804e378
+@ ./xmailod:[0x8049086] - 0x804f7c8
+@ ./xmailod:[0x8049093] - 0x804fd00
+@ ./xmailod:[0x80490a1] - 0x8050178
+@ ./xmailod:[0x80490af] - 0x8052318
+@ ./xmailod:[0x80490ba] - 0x804f790
+@ /lib/libc.so.6:[0xb7e9d343] - 0x804fbf8
+@ /lib/libc.so.6:[0xb7e9d34b] - 0x804fbe0
+@ /lib/libc.so.6:[0xb7ed9458] - 0x804fc78
+@ /lib/libc.so.6:[0xb7ed9473] - 0x804fc60
+@ /lib/libc.so.6:[0xb7ed942f] - 0x804fcc0
+@ /lib/libc.so.6:[0xb7ed9473] - 0x804fca8
+@ /lib/libc.so.6:[0xb7ed942f] - 0x80503b0
+@ /lib/libc.so.6:[0xb7ed9473] - 0x8050398
+@ /lib/libc.so.6:[0xb7ed942f] - 0x80503f8
+@ /lib/libc.so.6:[0xb7ed942f] - 0x8050428
+@ /lib/libc.so.6:[0xb7ed9473] - 0x80503e0
+@ /lib/libc.so.6:[0xb7ed942f] - 0x8050468
+@ /lib/libc.so.6:[0xb7ed942f] - 0x8050498
+@ /lib/libc.so.6:[0xb7ed9473] - 0x8050450
+@ /lib/libc.so.6:[0xb7e9d343] - 0x8051b08
+@ /lib/libc.so.6:[0xb7e9d34b] - 0x8051af0
+@ /lib/libc.so.6:[0xb7ed9458] - 0x80504d8
+@ /lib/libc.so.6:[0xb7e9d343] - 0x8051b78
+@ /lib/libc.so.6:[0xb7e9d34b] - 0x8051b60
+@ /lib/libc.so.6:[0xb7ed9458] - 0x8050500
+@ /lib/libc.so.6:[0xb7ed9473] - 0x80504c0
+@ /lib/libc.so.6:[0xb7ed942f] - 0x8050548
+@ /lib/libc.so.6:[0xb7ed942f] - 0x8050570
+@ /lib/libc.so.6:[0xb7ed9473] - 0x8050530
+@ /lib/libc.so.6:[0xb7ed942f] - 0x80505a0
+@ /lib/libc.so.6:[0xb7ed942f] - 0x80505c8
+@ /lib/libc.so.6:[0xb7ed9473] - 0x804fcf0
+@ /lib/libc.so.6:[0xb7ed942f] - 0x8050610
+@ /lib/libc.so.6:[0xb7ed942f] - 0x8050638
+@ /lib/libc.so.6:[0xb7ed9473] - 0x80505f8
+@ /lib/libc.so.6:[0xb7ed942f] - 0x8050680
+@ /lib/libc.so.6:[0xb7ed9473] - 0x8050668
+@ /lib/libc.so.6:[0xb7ed942f] - 0x80506c8
+@ /lib/libc.so.6:[0xb7ed9473] - 0x80506b0
+@ /lib/libc.so.6:[0xb7ed942f] - 0x8050710
+@ /lib/libc.so.6:[0xb7ed9473] - 0x80506f8
+@ /lib/libc.so.6:[0xb7ed942f] - 0x8050758
+@ /lib/libc.so.6:[0xb7ed9473] - 0x8050740
+@ /lib/libc.so.6:[0xb7ed942f] - 0x80507a0
+@ /lib/libc.so.6:[0xb7ed9473] - 0x8050788
+@ /lib/ld-linux.so.2:[0xb7f5a555] - 0x80502a0
+@ /lib/ld-linux.so.2:[0xb7f5a568] - 0x804fc38
+@ /lib/ld-linux.so.2:[0xb7f5a58e] - 0x804fc18
+@ /lib/ld-linux.so.2:[0xb7f5a6a4] - 0x8050278
+@ /lib/ld-linux.so.2:[0xb7f5a6f7] - 0x80507d0
+@ /lib/libc.so.6:[0xb7ed948d] - 0x804fc08
+@ /lib/ld-linux.so.2:[0xb7f5a555] - 0x8051328
+@ /lib/ld-linux.so.2:[0xb7f5a568] - 0x8051010
+@ /lib/ld-linux.so.2:[0xb7f5a58e] - 0x8050d80
+@ /lib/ld-linux.so.2:[0xb7f5a6a4] - 0x80512f8
+@ /lib/ld-linux.so.2:[0xb7f5a6f7] - 0x8050da0
+@ /lib/libc.so.6:[0xb7ed948d] - 0x8050d70
+@ /lib/libc.so.6:[0xb7ed948d] - 0x8051b18
+@ /lib/ld-linux.so.2:[0xb7f5a555] - 0x8051400
+@ /lib/ld-linux.so.2:[0xb7f5a568] - 0x80512c0
+@ /lib/ld-linux.so.2:[0xb7f5a58e] - 0x8051030
+@ /lib/ld-linux.so.2:[0xb7f5a6a4] - 0x8051b98
+@ /lib/ld-linux.so.2:[0xb7f5a6f7] - 0x8051050
+@ /lib/libc.so.6:[0xb7ed948d] - 0x8051b88
+@ /lib/libc.so.6:[0xb7ed94bc] - 0x804f7b8
+@ /lib/libc.so.6:(__libc_freeres+0x8d)[0xb7ed91bd] - 0x804f7d8
+@ /lib/libc.so.6:(__libc_freeres+0x8d)[0xb7ed91bd] - 0x80516e8

@@ -18,6 +18,7 @@
 
 int main(int argc, char* argv[]) {
 	mtrace();
+	muntrace();
 
 	email *new_email, *ident_email;
 	config *conf_struct;

@@ -67,7 +67,7 @@ int main(int argc, char* argv[]) {
 	
 	
 //	printf(">>>>>>>>>>>>>>>>>>>>>>>>Toto je mail->head z email struktury:\n%s\n", new_email->head);
-/*	printf(">>>>>>>>>>>>>>>>>>>>>>>>Toto je mail->body z email struktury:\n%s\n", new_email->body);*/
+//	printf("%s", new_email->body);
 	printf(">>>>>>>>>>>>>>>>>>>>>>>>Toto je mail->hash z email struktury:\n%s\n", new_email->hash);
 
 	printf(">>>>>>>>>>>>>>>>>>>>>>>>Toto je mail->to z email struktury:\n%s\n", new_email->to);

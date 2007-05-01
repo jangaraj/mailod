@@ -137,7 +137,7 @@ int write_email(email *new_email)
 			}
 		}
 		strcat(filepath,name);
-printf("Meno suboru bude: %s\n",filepath);
+//printf("Meno suboru bude: %s\n",filepath);
 	} while(stat(filepath,&filestat)!=-1);  //generujem meno suboru pokial este neexistuje
 	//otvorenie suboru
 	//TODO zamykanie suboru - musi byt? link()

@@ -175,8 +175,18 @@ int write_email(email *new_email)
 
 int link_email(email *new_email, email *master_email)
 {
-//	printf("
+	int rval;
 
+	rval = access(master_email->filepath, F_OK);
+	if (rval == 0) {
+		//TODO file exist link
+		
+	}
+	else {
+		//TODO skus cur adresar prehladat
+		
+		// TODO ak nenajdes nastav flag na 2 ze nelinkovany a return 1 , nech sa uz v hlavnom programe write normalne
 
+	}
 	return 0;
 }

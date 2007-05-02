@@ -34,18 +34,14 @@ email *select_by_hash(config *conf, char hash_value[]) {
 				return NULL;
 			}
 			while (dbi_result_next_row(result)) {
-	  			//ident_email->hardlink = dbi_result_get_uint(result, "number_hardlinks");
 				//TODO zle vypisuje filesystems - pretypovane z const char
-  				ident_email->filepath = (char *) dbi_result_get_string(result, "filepath");
-printf("selectnuty filepath %s\n",ident_email->filepath);
-				ident_email->done = 0;
+  				ident_email->filepath = (char *) dbi_result_get_string_copy(result, "filepath");
 			}
 			dbi_result_free(result);
 		}
 		dbi_conn_close(conn);
 	}
 	dbi_shutdown();
-printf("selectnuty filepath 22 %s\n",ident_email->filepath);
     return ident_email;
 }
 

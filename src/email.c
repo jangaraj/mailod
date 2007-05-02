@@ -158,12 +158,12 @@ int link_email(email *new_email, email *master_email)
 	DIR *dp;
 	struct dirent *dir;
 
-	rval = access(master_email->filepath, F_OK);
-	if (rval == 0) {
-		if((new_email->filepath = make_filepath(new_email)) == NULL) {
+	if((new_email->filepath = make_filepath(new_email)) == NULL) {
 			fprintf(stderr,"Error, generate uniq name of email file\n");
 			return 1;
-		}
+	}
+	rval = access(master_email->filepath, F_OK);
+	if (rval == 0) {
 		if((lval = link(master_email->filepath, new_email->filepath)) != 0) {
 			printf("Error pri vytvarani linku\n");
 			new_email->done = 2;
@@ -222,8 +222,47 @@ int link_email(email *new_email, email *master_email)
 		closedir(dp);
 		printf("Nasiel som subor s rovnakym inodom v cur, idem skusit linkovat\n");
 		//TODO links s dir->d_name cela tortura s linkom
+		master_email->filepath = (char *) realloc(master_email->filepath, (strlen(master_email->filepath)+strlen(dir->d_name)+1)*sizeof(char));
+		strcat(master_email->filepath,"/");
+		strcat(master_email->filepath,dir->d_name);
+		printf("master_email->filepath %s\n",master_email->filepath);
+		printf("new_email->filepath %s\n",new_email->filepath);
+		if((lval = link(master_email->filepath, new_email->filepath)) != 0) {
+			printf("Error pri vytvarani linku\n");
+			new_email->done = 2;
+			switch (errno) {
+				case EACCES:
+					fprintf(stderr,"Error, denied search permision of path\n");
+					break;
+				case EMLINK:
+					printf("prekrocil som max pocet hardliniek na subor\n");
+					//TODO delet ident email and select new ident
+					//vymazat zaznam ident z db
+					new_email->done = EMLINK;
+					break;
+				case ENAMETOOLONG:
+					fprintf(stderr,"Error, name of email file is too long\n");
+					break;
+				case EPERM:
+					fprintf(stderr,"Error, path %s is a directory and does not have privileges of using link()\n",new_email->filepath);
+					break;
+				case EROFS:
+					fprintf(stderr,"Error, read-only file system\n");
+					break;
+				case EXDEV:
+					fprintf(stderr,"Error, path1 %s and path2 %s are on different file systems\n",master_email->filepath,new_email->filepath);
+					break;
+				default:
+					printf("Errno: %s\n",strerror(errno));
+					fprintf(stderr,"Error, link is not created2\n");
+					break;
+			}
 
-		// TODO ak nenajdes nastav flag na 1 ze nelinkovany a return 1 , nech sa uz v hlavnom programe write normalne
+		}
+		else {
+			new_email->done = 0;	
+			printf("Uspesne vytvoreny link v cur-e\n");
+		}
 	}
 	return 0;
 }
@@ -263,13 +302,13 @@ char *make_only_dir(char *filepath)
 	char *new;
 	int i;
 
-	if((new=(char *) malloc((strlen(filepath)+5)*sizeof(char))) == NULL) {
+	if((new=(char *) malloc((strlen(filepath)+6)*sizeof(char))) == NULL) {
 		fprintf(stderr,"Error, malloc new filepath\n");
 		return NULL;
 	}
 	strcpy(new, rindex(filepath, '/'));
 	i = strlen(filepath) - strlen(new) - 3; 	//without new
-	strncpy(new,filepath,i);
+	strncpy(new,filepath,i);	
 	*(new+i) = '\0';
 	free((void *) filepath);
 

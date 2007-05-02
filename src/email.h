@@ -21,3 +21,6 @@ int write_email(email *new_email);
 
 /* create link or call write_email on error of creating link */
 int link_email(email *new_email, email *master_email);
+
+/* generate uniq name of email file for users */
+char *make_filepath(email *email);

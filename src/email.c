@@ -107,41 +107,20 @@ email *readmail(void)
 
 int write_email(email *new_email) 
 {
-	char *filepath;
-	static time_t t;
-	static char name[MAXHOSTNAMELEN];
-	struct stat filestat;
-//	struct fstab *info_file;
+	//	struct fstab *info_file;
 //	struct mntentchn *info_file;
 	int fw, i;
-
+	if((new_email->filepath = make_filepath(new_email)) == NULL) {
+		fprintf(stderr,"Error, generate uniq name of email file\n");
+		return 1;
+	}
 	//unique filename template: time.pid.hostname
 	//t - 10 chars
 	//getpid - 5 chars
 	//hostname MAXHOSTNAMELEN chars
-	if((filepath = (char *) malloc((strlen(new_email->homedir)+strlen(INBOX)+17+MAXHOSTNAMELEN)*sizeof(char)))==NULL) {
-		fprintf(stderr,"Error malloc filename\n");
-		return 1;
-	}
-	do {							//generovanie nazvu suboru, ktory neexistuje
-		t = time((time_t*)0);
-		//TODO safehostname - bez badchars
-		gethostname(name,MAXHOSTNAMELEN);
-		name[MAXHOSTNAMELEN-1] = '\0';
-		sprintf(filepath,"%s%s%d.%d.",new_email->homedir,INBOX,(int) t,getpid());
-		if(strlen(filepath)+strlen(name)>17+MAXHOSTNAMELEN) {
-			//realloc filepath na vacsiu velkost
-			if((filepath = (char *) realloc(filepath, strlen(filepath)+strlen(name)))==NULL) {
-				fprintf(stderr,"Error realloc filepath\n");
-				return 1;
-			}
-		}
-		strcat(filepath,name);
-//printf("Meno suboru bude: %s\n",filepath);
-	} while(stat(filepath,&filestat)!=-1);  //generujem meno suboru pokial este neexistuje
 	//otvorenie suboru
 	//TODO zamykanie suboru - musi byt? link()
-	if((fw = open(filepath,O_WRONLY|O_CREAT|O_EXCL, S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP))==-1) {
+	if((fw = open(new_email->filepath,O_WRONLY|O_CREAT|O_EXCL, S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP))==-1) {
 		fprintf(stderr,"Error opening email file in user's homedir\n");
 		return 1;
 	}
@@ -162,7 +141,6 @@ int write_email(email *new_email)
 		fprintf(stderr,"Error, close email file in user's homedir\n");
 		return 1;
 	}
-	new_email->filepath = filepath;
 	//TODO vytiahnut aj filesysytem na ktorom je ulozeny aby som ho mohol insertnut do db
 	//nefungen
 	//info_file = getfsfile(filepath);
@@ -180,6 +158,11 @@ int link_email(email *new_email, email *master_email)
 	rval = access(master_email->filepath, F_OK);
 	if (rval == 0) {
 		//TODO file exist link
+		if((new_email->filepath = make_filepath(new_email)) == NULL) {
+			fprintf(stderr,"Error, generate uniq name of email file\n");
+			return 1;
+		}
+		printf("Linka bude mat cestu: %s\n",new_email->filepath);
 		
 	}
 	else {
@@ -189,4 +172,35 @@ int link_email(email *new_email, email *master_email)
 
 	}
 	return 0;
+}
+
+char *make_filepath(email *email)
+{
+	char *filepath;
+	static time_t t;
+	static char name[MAXHOSTNAMELEN];
+	struct stat filestat;
+
+	if((filepath = (char *) malloc((strlen(email->homedir)+strlen(INBOX)+17+MAXHOSTNAMELEN)*sizeof(char)))==NULL) {
+		fprintf(stderr,"Error malloc filename\n");
+		return NULL;
+	}
+	do {							//generovanie nazvu suboru, ktory neexistuje
+		t = time((time_t*)0);
+		//TODO safehostname - bez badchars
+		gethostname(name,MAXHOSTNAMELEN);
+		name[MAXHOSTNAMELEN-1] = '\0';
+		sprintf(filepath,"%s%s%d.%d.",email->homedir,INBOX,(int) t,getpid());
+		if(strlen(filepath)+strlen(name)>17+MAXHOSTNAMELEN) {
+			//realloc filepath na vacsiu velkost
+			if((filepath = (char *) realloc(filepath, strlen(filepath)+strlen(name)))==NULL) {
+				fprintf(stderr,"Error realloc filepath\n");
+				return NULL;
+			}
+		}
+		strcat(filepath,name);
+//printf("Meno suboru bude: %s\n",filepath);
+	} while(stat(filepath,&filestat)!=-1);  //generujem meno suboru pokial este neexistuje
+
+	return filepath;
 }

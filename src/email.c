@@ -171,7 +171,8 @@ int link_email(email *new_email, email *master_email)
 				case EMLINK:
 					printf("prekrocil som max pocet hardliniek na subor\n");
 					//TODO delet ident email and select new ident
-					new_email->done = 3;
+					//vymazat zaznam ident z db
+					new_email->done = EMLINK;
 					break;
 				case ENAMETOOLONG:
 					fprintf(stderr,"Error, name of email file is too long\n");

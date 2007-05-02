@@ -20,7 +20,7 @@ email *select_by_hash(config *conf, char hash_value[]) {
 	dbi_conn_set_option(conn, "encoding", "UTF-8");
     if (dbi_conn_connect(conn) < 0) {
     	fprintf(stderr,"Could not connect. Please check the option settings\n");
-	return NULL;
+		return NULL;
     }
     else {
 		//TODO TRANSAKCIE - su potrebne?
@@ -62,7 +62,7 @@ int insert_email(config *conf, email *new_email)
 	//dbi_conn_set_option(conn, "encoding", "UTF-8");
     if (dbi_conn_connect(conn) < 0) {
     	fprintf(stderr,"Could not connect. Please check the option settings\n");
-	return 1;
+		return 1;
     }
     else {
 		//TODO TRANSAKCIE
@@ -70,7 +70,8 @@ int insert_email(config *conf, email *new_email)
 		//SELECT @A:=SUM(salary) FROM table1 WHERE type=1;
 		//UPDATE table2 SET summary=@A WHERE type=1;
 		//COMMIT;
-		sprintf(sql,"INSERT body_hash`='%s' AND `timestamp`>(NOW()+INTERVAL -%d MINUTE) AND `number_hardlinks`<'1000' ORDER BY `email_id` LIMIT 1",new_email->hash, conf->time_window);
+		//TODO nazvy tabuliek a stlpcov do const.h
+		sprintf(sql,"INSERT INTO mailod (body_hash, body_lenght, filepath) VALUES (\"%s\",%d,\"%s\");", new_email->hash,new_email->size, new_email->filepath);
 		//printf("SQL: %s\n",sql);
 	   	result = dbi_conn_query(conn,sql);
     	if (result) {

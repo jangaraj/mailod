@@ -102,14 +102,13 @@ email *readmail(void)
 	read_email->body = reading_email_body;
 	read_email->to = reading_email_to;
 	read_email->homedir = (getpwnam(reading_email_to)->pw_dir);
+	read_email->done = 1;
 
 	return read_email;
 }
 
 int write_email(email *new_email) 
 {
-	//	struct fstab *info_file;
-//	struct mntentchn *info_file;
 	int fw, i;
 	if((new_email->filepath = make_filepath(new_email)) == NULL) {
 		fprintf(stderr,"Error, generate uniq name of email file\n");
@@ -142,13 +141,6 @@ int write_email(email *new_email)
 		fprintf(stderr,"Error, close email file in user's homedir\n");
 		return 1;
 	}
-	//TODO vytiahnut aj filesysytem na ktorom je ulozeny aby som ho mohol insertnut do db
-	//nefungen
-	//info_file = getfsfile(filepath);
-//	printf("fs_spec %s\n,fs_file %s\n",info_file->fs_spec,info_file->fs_file);
-
-
-
 	return 0;
 }
 
@@ -196,8 +188,10 @@ int link_email(email *new_email, email *master_email)
 	} //rval == 0 - file exist
 	else {
 		//TODO skus cur adresar prehladat
-		printf("Nenasiel som mail v new\n");
-		// TODO ak nenajdes nastav flag na 2 ze nelinkovany a return 1 , nech sa uz v hlavnom programe write normalne
+		printf("Nenasiel som mail v new pokusim sa ho najst v cur\n");
+
+
+		// TODO ak nenajdes nastav flag na 1 ze nelinkovany a return 1 , nech sa uz v hlavnom programe write normalne
 	}
 	return 0;
 }

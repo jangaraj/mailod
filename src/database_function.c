@@ -50,7 +50,6 @@ int insert_email(config *conf, email *new_email)
 {
 	dbi_conn conn;
     dbi_result result;
-	email *ident_email;
 	char sql[1024];  //TODO betonovana konstanta 1024
 
 	dbi_initialize(NULL);
@@ -71,15 +70,15 @@ int insert_email(config *conf, email *new_email)
 		//UPDATE table2 SET summary=@A WHERE type=1;
 		//COMMIT;
 		//TODO nazvy tabuliek a stlpcov do const.h
-		sprintf(sql,"INSERT INTO mailod (body_hash, body_lenght, filepath) VALUES (\"%s\",%d,\"%s\");", new_email->hash,new_email->size, new_email->filepath);
-		//printf("SQL: %s\n",sql);
+		sprintf(sql,"INSERT INTO mailod (body_hash, body_length, filepath) VALUES (\"%s\",%d,\"%s\");", new_email->hash,new_email->size, new_email->filepath);
+		//printf("insertSQL: %s\n",sql);
 	   	result = dbi_conn_query(conn,sql);
     	if (result) {
 			if((dbi_result_get_numrows(result))<1) return 1;		//0 selected rows
 			//TODO otestovat ci sa vlozilo OK
 			while (dbi_result_next_row(result)) {
 	  			//ident_email->hardlink = dbi_result_get_uint(result, "number_hardlinks");
-  				ident_email->filesystem = (char *) dbi_result_get_string(result, "filesystem");
+  		//		ident_email->filesystem = (char *) dbi_result_get_string(result, "filesystem");
 			}
 			dbi_result_free(result);
 		}

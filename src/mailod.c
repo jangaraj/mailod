@@ -63,7 +63,7 @@ int main(int argc, char* argv[]) {
 	}
 	else {
 		//TODO linkovat email
-		printf("Mam IDENT EMAIL - fs: %s\n", ident_email->filesystem);
+		printf("Mam IDENT EMAIL - filepath: %s\n", ident_email->filepath);
 		if(link_email(new_email, ident_email)!=0) {
 			fprintf(stderr,"Error, linking email\n");
 			return 1;

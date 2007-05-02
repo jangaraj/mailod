@@ -23,7 +23,7 @@ email *select_by_hash(config *conf, char hash_value[]) {
 		return NULL;
     }
     else {
-		//TODO TRANSAKCIE - su potrebne?
+		//TODO TRANSAKCIE - su potrebne selektnut najstarsi
 		sprintf(sql,"SELECT * FROM `mailod` WHERE `body_hash`='%s' AND `timestamp`>(NOW()+INTERVAL -%d MINUTE) AND `number_hardlinks`<'1000' ORDER BY `email_id` LIMIT 1;",hash_value, conf->time_window);
 		//printf("SQL: %s\n",sql);
 	   	result = dbi_conn_query(conn,sql);
@@ -36,13 +36,16 @@ email *select_by_hash(config *conf, char hash_value[]) {
 			while (dbi_result_next_row(result)) {
 	  			//ident_email->hardlink = dbi_result_get_uint(result, "number_hardlinks");
 				//TODO zle vypisuje filesystems - pretypovane z const char
-  				ident_email->filesystem = (char *) dbi_result_get_string(result, "filesystem");
+  				ident_email->filepath = (char *) dbi_result_get_string(result, "filepath");
+printf("selectnuty filepath %s\n",ident_email->filepath);
+				ident_email->done = 0;
 			}
 			dbi_result_free(result);
 		}
 		dbi_conn_close(conn);
 	}
 	dbi_shutdown();
+printf("selectnuty filepath 22 %s\n",ident_email->filepath);
     return ident_email;
 }
 
@@ -73,15 +76,8 @@ int insert_email(config *conf, email *new_email)
 		sprintf(sql,"INSERT INTO mailod (body_hash, body_length, filepath) VALUES (\"%s\",%d,\"%s\");", new_email->hash,new_email->size, new_email->filepath);
 		//printf("insertSQL: %s\n",sql);
 	   	result = dbi_conn_query(conn,sql);
-    	if (result) {
-			if((dbi_result_get_numrows(result))<1) return 1;		//0 selected rows
-			//TODO otestovat ci sa vlozilo OK
-			while (dbi_result_next_row(result)) {
-	  			//ident_email->hardlink = dbi_result_get_uint(result, "number_hardlinks");
-  		//		ident_email->filesystem = (char *) dbi_result_get_string(result, "filesystem");
-			}
-			dbi_result_free(result);
-		}
+		if(dbi_result_get_numrows_affected(result)!=1) return 1;   // 0 affected rows - not inserted
+		dbi_result_free(result);
 		dbi_conn_close(conn);
 	}
 	dbi_shutdown();

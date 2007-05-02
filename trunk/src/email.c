@@ -220,13 +220,11 @@ int link_email(email *new_email, email *master_email)
 			 break;
 	    }
 		closedir(dp);
+		// link with file from cur
 		printf("Nasiel som subor s rovnakym inodom v cur, idem skusit linkovat\n");
-		//TODO links s dir->d_name cela tortura s linkom
 		master_email->filepath = (char *) realloc(master_email->filepath, (strlen(master_email->filepath)+strlen(dir->d_name)+1)*sizeof(char));
 		strcat(master_email->filepath,"/");
 		strcat(master_email->filepath,dir->d_name);
-		printf("master_email->filepath %s\n",master_email->filepath);
-		printf("new_email->filepath %s\n",new_email->filepath);
 		if((lval = link(master_email->filepath, new_email->filepath)) != 0) {
 			printf("Error pri vytvarani linku\n");
 			new_email->done = 2;

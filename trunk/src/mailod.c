@@ -51,12 +51,14 @@ int main(int argc, char* argv[]) {
 		printf("nemam ident email. Idem ho zapisat to filesystema  do DB.\n");
 		if(write_email(new_email)!=0) {
 			fprintf(stderr,"Error writing email.\n");
-			return 1;
+			new_email->done = 1;						//email nebol zapisany uzivatelovi
 		}
-		//TODO dopisat insert
-		if((insert_email(conf_struct, new_email))!=0) {
-			fprintf(stderr,"Error, inserting email to database\n");
-			return 1;
+		else 
+		{
+			if((insert_email(conf_struct, new_email))!=0) {
+				fprintf(stderr,"Error, inserting email to database\n");	
+				new_email->done = 2;					//email nebol zapisany do db
+			}
 		}
 	}
 	else {
@@ -73,7 +75,6 @@ int main(int argc, char* argv[]) {
 //	printf(">>>>>>>>>>>>>>>>>>>>>>>>Toto je mail->head z email struktury:\n%s\n", new_email->head);
 //	printf("%s", new_email->body);
 	printf(">>>>>>>>>>>>>>>>>>>>>>>>Toto je mail->hash z email struktury:\n%s\n", new_email->hash);
-
 	printf(">>>>>>>>>>>>>>>>>>>>>>>>Toto je mail->to z email struktury:\n%s\n", new_email->to);
 	printf(">>>>>>>>>>>>>>>>>>>>>>>>Toto je mail->homedir z email struktury:\n%s\n", new_email->homedir);
 	printf(">>>>>>>>>>>>>>>>>>>>>>>>Toto je mail->size z email struktury:\n%d\n",new_email->size);

@@ -12,6 +12,7 @@ typedef struct {
 	int size;		//velkost celeho emailu
 	int done;		//flag, ze email je spravne spracovany
 	long id;		//id in database
+	long inode;		//inode na fs
 } email;
 
 /* reading email from input */
@@ -25,3 +26,6 @@ int link_email(email *new_email, email *master_email);
 
 /* generate uniq name of email file for users */
 char *make_filepath(email *email);
+
+/* make from filepath only dirpath */
+char *make_only_dir(char *filepath);

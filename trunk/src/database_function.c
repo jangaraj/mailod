@@ -38,6 +38,7 @@ email *select_by_hash(config *conf, char hash_value[]) {
 				//TODO zle vypisuje filesystems - pretypovane z const char
   				ident_email->filepath = (char *) dbi_result_get_string_copy(result, "filepath");
 				ident_email->id = dbi_result_get_long(result,"email_id");
+				ident_email->inode = dbi_result_get_long(result,"inode");
 			}
 			dbi_result_free(result);
 		}
@@ -71,7 +72,7 @@ int insert_email(config *conf, email *new_email)
 		//UPDATE table2 SET summary=@A WHERE type=1;
 		//COMMIT;
 		//TODO nazvy tabuliek a stlpcov do const.h
-		sprintf(sql,"INSERT INTO mailod (body_hash, body_length, filepath) VALUES (\"%s\",%d,\"%s\");", new_email->hash,new_email->size, new_email->filepath);
+		sprintf(sql,"INSERT INTO mailod (body_hash, body_length, filepath, inode) VALUES (\"%s\",%d,\"%s\",%ld);", new_email->hash,new_email->size, new_email->filepath, new_email->inode);
 		//printf("insertSQL: %s\n",sql);
 	   	result = dbi_conn_query(conn,sql);
 		if(dbi_result_get_numrows_affected(result)!=1) return 1;   // 0 affected rows - not inserted

@@ -8,8 +8,9 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <errno.h>
+#include <sys/types.h>
+#include <dirent.h>
 //#include <fstab.h>
-
 #include "email.h"
 #include "const.h"
 
@@ -110,6 +111,7 @@ email *readmail(void)
 int write_email(email *new_email) 
 {
 	int fw, i;
+
 	if((new_email->filepath = make_filepath(new_email)) == NULL) {
 		fprintf(stderr,"Error, generate uniq name of email file\n");
 		return 1;
@@ -147,6 +149,9 @@ int write_email(email *new_email)
 int link_email(email *new_email, email *master_email)
 {
 	int rval, lval;
+	DIR *dp;
+	struct dirent *dir;
+
 	rval = access(master_email->filepath, F_OK);
 	if (rval == 0) {
 		if((new_email->filepath = make_filepath(new_email)) == NULL) {
@@ -189,7 +194,10 @@ int link_email(email *new_email, email *master_email)
 	else {
 		//TODO skus cur adresar prehladat
 		printf("Nenasiel som mail v new pokusim sa ho najst v cur\n");
-
+ 		if ((dp = opendir(".")) == NULL) {
+	         fprintf(stderr, "cannot open directory.\n");
+		        exit(1);
+		}
 
 		// TODO ak nenajdes nastav flag na 1 ze nelinkovany a return 1 , nech sa uz v hlavnom programe write normalne
 	}

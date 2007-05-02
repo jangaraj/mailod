@@ -7,6 +7,7 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
+#include <errno.h>
 //#include <fstab.h>
 
 #include "email.h"
@@ -153,23 +154,49 @@ int write_email(email *new_email)
 
 int link_email(email *new_email, email *master_email)
 {
-	int rval;
-
+	int rval, lval;
 	rval = access(master_email->filepath, F_OK);
 	if (rval == 0) {
-		//TODO file exist link
 		if((new_email->filepath = make_filepath(new_email)) == NULL) {
 			fprintf(stderr,"Error, generate uniq name of email file\n");
 			return 1;
 		}
-		printf("Linka bude mat cestu: %s\n",new_email->filepath);
-		
-	}
+		if((lval = link(master_email->filepath, new_email->filepath)) != 0) {
+			printf("Error pri vytvarani linku\n");
+			new_email->done = 2;
+			switch (errno) {
+				case EACCES:
+					fprintf(stderr,"Error, denied search permision of path\n");
+					break;
+				case EMLINK:
+					printf("prekrocil som max pocet hardliniek na subor\n");
+					//TODO delet ident email and select new ident
+					new_email->done = 3;
+					break;
+				case ENAMETOOLONG:
+					fprintf(stderr,"Error, name of email file is too long\n");
+					break;
+				case EPERM:
+					fprintf(stderr,"Error, path %s is a directory and does not have privileges of using link()\n",new_email->filepath);
+					break;
+				case EROFS:
+					fprintf(stderr,"Error, read-only file system\n");
+					break;
+				case EXDEV:
+					fprintf(stderr,"Error, path1 %s and path2 %s are on different file systems\n",master_email->filepath,new_email->filepath);
+					break;
+				default:
+					fprintf(stderr,"Error, link is not created\n");
+					break;
+			}
+
+		}
+		else printf("Uspesne vytvoreny link\n");
+	} //rval == 0 - file exist
 	else {
 		//TODO skus cur adresar prehladat
-		
+		printf("Nenasiel som mail v new\n");
 		// TODO ak nenajdes nastav flag na 2 ze nelinkovany a return 1 , nech sa uz v hlavnom programe write normalne
-
 	}
 	return 0;
 }

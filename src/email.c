@@ -111,6 +111,7 @@ email *readmail(void)
 int write_email(email *new_email) 
 {
 	int fw, i;
+	struct stat filestat;
 
 	if((new_email->filepath = make_filepath(new_email)) == NULL) {
 		fprintf(stderr,"Error, generate uniq name of email file\n");
@@ -143,6 +144,11 @@ int write_email(email *new_email)
 		fprintf(stderr,"Error, close email file in user's homedir\n");
 		return 1;
 	}
+	if(stat(new_email->filepath,&filestat)==-1) {
+		fprintf(stderr,"Error checking for existing email file\n");
+	}
+	new_email->inode = filestat.st_ino;
+
 	return 0;
 }
 
@@ -189,15 +195,33 @@ int link_email(email *new_email, email *master_email)
 			}
 
 		}
-		else printf("Uspesne vytvoreny link\n");
+		else {
+			new_email->done = 0;	
+			printf("Uspesne vytvoreny link\n");
+		}
 	} //rval == 0 - file exist
 	else {
-		//TODO skus cur adresar prehladat
+		//TODO spravne nastavit podmienky aby som nepracoval s NULL atda
 		printf("Nenasiel som mail v new pokusim sa ho najst v cur\n");
- 		if ((dp = opendir(".")) == NULL) {
-	         fprintf(stderr, "cannot open directory.\n");
-		        exit(1);
+		if((master_email->filepath = make_only_dir(master_email->filepath)) == NULL) {
+			fprintf(stderr,"Error, making only dir from filepath\n");
+			return 1;
 		}
+		strcat(master_email->filepath,"cur");
+		printf("Idem otvarat dir %s\n",master_email->filepath);
+ 		if ((dp = opendir(master_email->filepath)) == NULL) {
+	         fprintf(stderr, "Error, cannot open directory.\n");
+			 return 1;
+		}
+		while ((dir = readdir(dp)) != NULL)	{
+	        if (dir->d_ino == 0)
+	             continue;
+	       if(master_email->inode == dir->d_ino)
+			 break;
+	    }
+		closedir(dp);
+		printf("Nasiel som subor s rovnakym inodom v cur, idem skusit linkovat\n");
+		//TODO links s dir->d_name cela tortura s linkom
 
 		// TODO ak nenajdes nastav flag na 1 ze nelinkovany a return 1 , nech sa uz v hlavnom programe write normalne
 	}
@@ -229,8 +253,25 @@ char *make_filepath(email *email)
 			}
 		}
 		strcat(filepath,name);
-//printf("Meno suboru bude: %s\n",filepath);
 	} while(stat(filepath,&filestat)!=-1);  //generujem meno suboru pokial este neexistuje
 
 	return filepath;
+}
+
+char *make_only_dir(char *filepath)
+{
+	char *new;
+	int i;
+
+	if((new=(char *) malloc((strlen(filepath)+5)*sizeof(char))) == NULL) {
+		fprintf(stderr,"Error, malloc new filepath\n");
+		return NULL;
+	}
+	strcpy(new, rindex(filepath, '/'));
+	i = strlen(filepath) - strlen(new) - 3; 	//without new
+	strncpy(new,filepath,i);
+	*(new+i) = '\0';
+	free((void *) filepath);
+
+	return new;
 }

@@ -9,6 +9,7 @@
 #include <stdlib.h>			//exit
 #include <unistd.h>
 #include <mcheck.h>			//testing of malloc
+#include <errno.h>			//testovanie napr. ci som neprekrocil max pocet hardliniek
 #include "const.h"			//BUFFER_SIZE
 #include "email.h"			//email struct
 #include "hash_function.h"	//hash function
@@ -48,27 +49,42 @@ int main(int argc, char* argv[]) {
 	new_email->hash = hash_text(new_email->body);
 	if((ident_email = select_by_hash(conf_struct, new_email->hash))==NULL) {
 		//TODO vratilo sa mi NULL cize ulozit standardne email
-		printf("nemam ident email. Idem ho zapisat to filesystema  do DB.\n");
+		printf("nemam ident email. Idem ho zapisat to filesystema a do DB.\n");
 		if(write_email(new_email)!=0) {
 			fprintf(stderr,"Error writing email.\n");
 			new_email->done = 1;						//email nebol zapisany uzivatelovi
 		}
 		else 
-		{
+		{	
+		   	printf("uspesny zapis email suboru\n");
 			if((insert_email(conf_struct, new_email))!=0) {
 				fprintf(stderr,"Error, inserting email to database\n");	
 				new_email->done = 2;					//email nebol zapisany do db
 			}
+			else {
+				printf("uspesny zapis zaznamu do db\n");
+			}
 		}
 	}
 	else {
-		//TODO linkovat email
-		printf("Mam IDENT EMAIL - filepath: %s\n", ident_email->filepath);
-		if(link_email(new_email, ident_email)!=0) {
-			fprintf(stderr,"Error, linking email\n");
-			return 1;
-		}
-		//TODO free casti identu
+		//linkovanie emailu
+		printf("Linkujem podla ident emailu\n");
+		do {
+			if(link_email(new_email, ident_email)!=0) {
+				printf("linkovanie zlyhalo, ak kvoli max hardlinks bude nasledovat dalsie kolo ukladania\n");
+				fprintf(stderr,"Error, linking email\n");
+				if((delete_email(conf_struct, ident_email))!=0) {
+					fprintf(stderr,"Error, deleting full hardlinks record from database\n");
+				}
+				free((void *) ident_email);
+				if((ident_email = select_by_hash(conf_struct, new_email->hash))==NULL) {
+					//nenasiel som dalsi vhodny email koncim slucku nastavim new_email na obycajny write
+					printf("Nenasiel som dalsi vhodny email z db\n");
+					new_email->done = 1;
+					break;
+				}
+			}
+		} while (new_email->done == EMLINK);  //ak chyba max hardliniek dalsie kolo s inym identom
 		free((void *) ident_email);
 	}
 	

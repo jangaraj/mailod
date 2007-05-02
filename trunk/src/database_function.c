@@ -23,9 +23,10 @@ email *select_by_hash(config *conf, char hash_value[]) {
 		return NULL;
     }
     else {
-		//TODO TRANSAKCIE - su potrebne selektnut najstarsi
-		sprintf(sql,"SELECT * FROM `mailod` WHERE `body_hash`='%s' AND `timestamp`>(NOW()+INTERVAL -%d MINUTE) AND `number_hardlinks`<'1000' ORDER BY `email_id` LIMIT 1;",hash_value, conf->time_window);
-		//printf("SQL: %s\n",sql);
+		//TODO TRANSAKCIE - su potrebne,
+		//selekujem vzdy najstarsi mozny
+		sprintf(sql,"SELECT * FROM `mailod` WHERE `body_hash`='%s' AND `timestamp`>(NOW()+INTERVAL -%d MINUTE) ORDER BY `email_id` LIMIT 1;",hash_value, conf->time_window);
+		//printf("selectSQL: %s\n",sql);
 	   	result = dbi_conn_query(conn,sql);
     	if (result) {
 			if((dbi_result_get_numrows(result))<1) return NULL;		//0 selected rows
@@ -36,6 +37,7 @@ email *select_by_hash(config *conf, char hash_value[]) {
 			while (dbi_result_next_row(result)) {
 				//TODO zle vypisuje filesystems - pretypovane z const char
   				ident_email->filepath = (char *) dbi_result_get_string_copy(result, "filepath");
+				ident_email->id = dbi_result_get_long(result,"email_id");
 			}
 			dbi_result_free(result);
 		}

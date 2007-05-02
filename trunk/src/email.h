@@ -11,6 +11,7 @@ typedef struct {
 	int hardlink;	//ulozit ako hardlinku
 	int size;		//velkost celeho emailu
 	int done;		//flag, ze email je spravne spracovany
+	long id;		//id in database
 } email;
 
 /* reading email from input */

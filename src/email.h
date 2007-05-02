@@ -10,6 +10,7 @@ typedef struct {
 	char *filepath;	//cesta k emailu spolu s nazvom suboru
 	int hardlink;	//ulozit ako hardlinku
 	int size;		//velkost celeho emailu
+	int done;		//flag, ze email je spravne spracovany
 } email;
 
 /* reading email from input */

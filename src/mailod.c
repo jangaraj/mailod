@@ -56,6 +56,7 @@ int main(int argc, char* argv[]) {
 		}
 		else 
 		{	
+		  	new_email->done = 0;
 		   	printf("uspesny zapis email suboru\n");
 			if((insert_email(conf_struct, new_email))!=0) {
 				fprintf(stderr,"Error, inserting email to database\n");	
@@ -86,6 +87,23 @@ int main(int argc, char* argv[]) {
 			}
 		} while (new_email->done == EMLINK);  //ak chyba max hardliniek dalsie kolo s inym identom
 		free((void *) ident_email);
+	}
+	//zavercne testovanie ci je done==0 - email ulozeny alebo nalinkovany
+	if(new_email->done!=0) {
+		if(write_email(new_email)!=0) {
+			fprintf(stderr,"Error writing email.\n");
+			exit (1);				//pokus zapisu suboru zlyhal
+		}
+		else 
+		{	
+		   	printf("uspesny zapis email suboru2\n");
+			if((insert_email(conf_struct, new_email))!=0) {
+				fprintf(stderr,"Error, inserting email to database\n");	
+			}
+			else {
+				printf("uspesny zapis zaznamu do db2\n");
+			}
+		}
 	}
 	
 	

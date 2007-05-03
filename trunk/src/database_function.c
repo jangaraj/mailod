@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include </home/vlk/bin/include/dbi/dbi.h>
+#include <dbi/dbi.h>
 #include "email.h"
 #include "common_function.h"
 #include "database_function.h"

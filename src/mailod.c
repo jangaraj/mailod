@@ -3,7 +3,8 @@
  * Author: Jan Garaj
  * Supervisor: Ing. Jan Mate
  * Date: now();
-  
+ 
+
  */
 
 #include <stdio.h>

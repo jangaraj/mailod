@@ -25,7 +25,7 @@
 //#define LENGTH_FILESYSTEM 254		//lenght of string filesystem
 #define MYPORT 6666					//the port users will be connecting to
 #define BACKLOG 10	 				//how many pending connections queue will hold
-#define PARSE_TO "To: "				//parse string to determinate local user
+#define PARSE_TO "\nTo: "				//parse string to determinate local user
 #define PARSE_MAILDIR "X-Mailod-dir"//special email header - email saved in maildir/<value> of this <para> - inserted by MDA(procmail, maildrop)
 #define MAILDIR "/.maildir"			//name of maildir - depend on setting postfix
 #define CUR "cur"					//folder of readed emails

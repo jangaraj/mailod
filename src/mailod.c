@@ -31,6 +31,7 @@ int main(int argc, char* argv[])
 		exit (1);
 	}
 	start_log(conf_struct);
+	logging(DEBUG, "Nacital som uspesne konfiguraciu a zapol logovanie\n");
 /*	printf("Setting - db_driver: %s\n",conf_struct->db_driver);
 	printf("Setting - db_username: %s\n",conf_struct->db_username);
 	printf("Setting - db_password: %s\n",conf_struct->db_password);

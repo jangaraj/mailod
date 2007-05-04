@@ -32,26 +32,26 @@ email *readmail(void)
 
 	if((read_email=(email *) malloc(sizeof(email)))==NULL) {
 		fprintf(stderr, "Error, malloc of reading email\n");
-		exit (1);
+		return NULL;;
 	}
 	if((reading_email_all=(char *) malloc(sizeof(char)))==NULL) {
 		fprintf(stderr,"Error, malloc of char of reading email\n");
-		exit (1);
+		return NULL;
 	}
 	*(reading_email_all)='\0';
 	if((reading_email_head=(char *) malloc(sizeof(char)))==NULL) {
 		fprintf(stderr,"Error, malloc of char of reading email\n");
-		exit (1);
+		return NULL;
 	}
 	*(reading_email_head)='\0';
 	while (0<(read_size = read(0, buffer, BUFFER_SIZE))) {
 		if(read_size<0) {
 		fprintf(stderr, "Error reading input file\n");
-			exit (1);
+			return NULL;
 		} 
 		if((reading_email_all = (char *) realloc(reading_email_all, ((nblock*BUFFER_SIZE)+read_size+1)*sizeof(char)))==NULL) {
 			fprintf(stderr,"Error, realloc by reading text\n");
-			exit(1);
+			return NULL;
 		}
 		strncat(reading_email_all, buffer, read_size);
 		nblock++;							//counter na citaci cyklus - pocet alokovanych blokov
@@ -61,17 +61,17 @@ email *readmail(void)
 	position = strstr(reading_email_all, DIVIDER_HEAD_BODY);
 	if(position==NULL) {
 		fprintf(stderr,"Error, dividing email to head and body\n");
-		exit (1);
+		return NULL;
 	}
 	length_position = position - reading_email_all;
 	if((reading_email_head=(char *) realloc(reading_email_head, length_position*sizeof(char)))==NULL) {
 		fprintf(stderr,"Error, realloc reading_email_head\n");
-		exit (1);
+		return NULL;
 	}
 	strncat(reading_email_head, reading_email_all, length_position);
 	if((reading_email_body=(char *) malloc((strlen(position)+1)*sizeof(char)))==NULL) {
 		fprintf(stderr, "Error, malloc reading_email_body\n");
-		exit (1);
+		return NULL;
 	}
 	*reading_email_body = '\0';
 	strcat(reading_email_body, position+2);
@@ -79,23 +79,23 @@ email *readmail(void)
 	position = strstr(reading_email_all, PARSE_TO);
 	if(position==NULL) {
 		fprintf(stderr,"Error, not found in mail header parse string %s\n",PARSE_TO);
-		exit (1);
+		return NULL;
 	}
 	//ak je adresat v <mailaddress> najdem zobacik ina prvu " "
 	//TODO vytiahnut local usera aj ked nie je v zobacikoch
 	if((position=strstr(position,"<"))==NULL) {
 		fprintf(stderr,"Error parse local user - only <local@user.tld> is allowed now\n");
-		exit (1);
+		return NULL;
 	}
 	position2 = strstr(position,"@");
 	if(position2==NULL) {
 		fprintf(stderr,"Error, in email header - parse string @\n");
-		exit (1);
+		return NULL;
 	}
 	length_position = position2 - position;
 	if((reading_email_to=(char *) malloc(length_position*sizeof(char)))==NULL) {
 		fprintf(stderr,"Error, malloc reading_email_to\n");
-		exit (1);
+		return NULL;
 	}
 	position++;
 	*reading_email_to = '\0';

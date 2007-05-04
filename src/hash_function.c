@@ -146,7 +146,7 @@ char *hash_text(char *text) {
 	
 	if((hash_out=(char *) malloc(64*sizeof(char)))==NULL) {
 		fprintf(stderr,"Error, mallock hash_out\n");
-		exit (1);
+		return NULL;	
 	}
 	sha256_init(&ctx); 
 	sha256_update(&ctx,(uchar *) text,strlen(text)); 

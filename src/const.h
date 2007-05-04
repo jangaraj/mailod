@@ -3,8 +3,8 @@
  * Author: Jan Garaj	
  */
 
-#define PROG "Mailod-Garaj"			//name of program
-#define VERS "0.0.21"				//version of program
+#define PROG "mailod"				//name of program - for logging
+#define VERS "0.0.82"				//version of program
 #define BUFFER_SIZE 1024			//size of reading( writing email buffer
 #define DIVIDER_HEAD_BODY "\n\n"	//divider email head and email body
 #define CONFIG_FILE "/home/vlk/ggmailod/src/setting_true"	//name of config file

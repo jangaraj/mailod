@@ -1,3 +1,8 @@
+/*
+ * mailod:  optimalization of the usage disk
+ * Author: Jan Garaj	
+ */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -10,7 +15,6 @@
 #include <errno.h>
 #include <sys/types.h>
 #include <dirent.h>
-//#include <fstab.h>
 #include "email.h"
 #include "const.h"
 
@@ -55,8 +59,6 @@ email *readmail(void)
 	read_email->size = nblock*BUFFER_SIZE+read_size;
 	//divide head from all
 	position = strstr(reading_email_all, DIVIDER_HEAD_BODY);
-	//position = position+2*sizeof(char);
-//	position++;
 	if(position==NULL) {
 		fprintf(stderr,"Error, dividing email to head and body\n");
 		exit (1);
@@ -173,8 +175,6 @@ int link_email(email *new_email, email *master_email)
 					break;
 				case EMLINK:
 					printf("prekrocil som max pocet hardliniek na subor\n");
-					//TODO delet ident email and select new ident
-					//vymazat zaznam ident z db
 					new_email->done = EMLINK;
 					break;
 				case ENAMETOOLONG:
@@ -219,7 +219,9 @@ int link_email(email *new_email, email *master_email)
 	       if(master_email->inode == dir->d_ino)
 			 break;
 	    }
-		closedir(dp);
+		if((closedir(dp) != 0)) {
+			fprintf(stderr,"Error, closedir(%s)\n",master_email->filepath);
+		}
 		// link with file from cur
 		printf("Nasiel som subor s rovnakym inodom v cur, idem skusit linkovat\n");
 		master_email->filepath = (char *) realloc(master_email->filepath, (strlen(master_email->filepath)+strlen(dir->d_name)+1)*sizeof(char));
@@ -234,8 +236,6 @@ int link_email(email *new_email, email *master_email)
 					break;
 				case EMLINK:
 					printf("prekrocil som max pocet hardliniek na subor\n");
-					//TODO delet ident email and select new ident
-					//vymazat zaznam ident z db
 					new_email->done = EMLINK;
 					break;
 				case ENAMETOOLONG:

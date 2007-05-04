@@ -1,4 +1,9 @@
-/*source http://b-con.us/code/sha256_c.php */
+/*
+ * mailod:  optimalization of the usage disk
+ * Author: Jan Garaj	
+ * source: http://b-con.us/code/sha256_c.php
+ */
+ 
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -144,7 +149,7 @@ char *hash_text(char *text) {
 		exit (1);
 	}
 	sha256_init(&ctx); 
-	sha256_update(&ctx,text,strlen(text)); 
+	sha256_update(&ctx,(uchar *) text,strlen(text)); 
 	sha256_final(&ctx,hash); 
 	for (idx=0; idx < 32; idx++)
 	  sprintf((hash_out+(2*idx)),"%02x",hash[idx]); 

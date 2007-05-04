@@ -1,3 +1,8 @@
+/*
+ * mailod:  optimalization of the usage disk
+ * Author: Jan Garaj	
+ */
+
 #include <stdio.h>
 #include <dbi/dbi.h>
 #include "email.h"

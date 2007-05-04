@@ -4,15 +4,15 @@
  */
 
 #include <stdio.h>
-#include <stdlib.h>			//exit
+#include <stdlib.h>
 #include <unistd.h>
 #include <mcheck.h>			//testing of malloc
-#include <errno.h>			//testovanie napr. ci som neprekrocil max pocet hardliniek
-#include "const.h"			//BUFFER_SIZE
-#include "email.h"			//email struct
-#include "hash_function.h"	//hash function
-#include "common_function.h"//read conf file
-#include "logging.h"		//logging function
+#include <errno.h>
+#include "const.h"
+#include "email.h"
+#include "hash_function.h"
+#include "common_function.h"
+#include "logging.h"
 #include "database_function.h"
 
 int main(int argc, char* argv[]) {
@@ -46,11 +46,9 @@ int main(int argc, char* argv[]) {
 	new_email = readmail();
 	new_email->hash = hash_text(new_email->body);
 	if((ident_email = select_by_hash(conf_struct, new_email->hash))==NULL) {
-		//TODO vratilo sa mi NULL cize ulozit standardne email
 		printf("nemam ident email. Idem ho zapisat to filesystema a do DB.\n");
 		if(write_email(new_email)!=0) {
-			fprintf(stderr,"Error writing email.\n");
-			new_email->done = 1;						//email nebol zapisany uzivatelovi
+			fprintf(stderr,"Error standard-writing email.\n");
 		}
 		else 
 		{	
@@ -92,7 +90,7 @@ int main(int argc, char* argv[]) {
 	//zavercne testovanie ci je done==0 - email ulozeny alebo nalinkovany
 	if(new_email->done!=0) {
 		if(write_email(new_email)!=0) {
-			fprintf(stderr,"Error writing email.\n");
+			fprintf(stderr,"Error fail-writing email.\n");
 			exit (1);				//pokus zapisu suboru zlyhal
 		}
 		else 

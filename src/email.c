@@ -81,8 +81,7 @@ email *readmail(void)
 		fprintf(stderr,"Error, not found in mail header parse string %s\n",PARSE_TO);
 		return NULL;
 	}
-	//ak je adresat v <mailaddress> najdem zobacik ina prvu " "
-	//TODO vytiahnut local usera aj ked nie je v zobacikoch
+	//TODO upravit na To: <> tvar
 	if((position=strstr(position," "))==NULL) {
 		fprintf(stderr,"Error parse local user - only \"To: local@user.tld is\" allowed now\n");
 		return NULL;

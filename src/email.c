@@ -83,23 +83,28 @@ email *readmail(void)
 	}
 	//ak je adresat v <mailaddress> najdem zobacik ina prvu " "
 	//TODO vytiahnut local usera aj ked nie je v zobacikoch
-	if((position=strstr(position,"<"))==NULL) {
-		fprintf(stderr,"Error parse local user - only <local@user.tld> is allowed now\n");
+	if((position=strstr(position," "))==NULL) {
+		fprintf(stderr,"Error parse local user - only \"To: local@user.tld is\" allowed now\n");
 		return NULL;
 	}
+printf("TOTO00:\n%s\n",position);
+	position++;
 	position2 = strstr(position,"@");
 	if(position2==NULL) {
 		fprintf(stderr,"Error, in email header - parse string @\n");
 		return NULL;
 	}
+printf("TOTO:\n%s\n",position);
 	length_position = position2 - position;
+printf("LENGTH:\n%d\n",length_position);
 	if((reading_email_to=(char *) malloc(length_position*sizeof(char)))==NULL) {
 		fprintf(stderr,"Error, malloc reading_email_to\n");
 		return NULL;
 	}
-	position++;
 	*reading_email_to = '\0';
+printf("TOTO2:\n%s\n",position);
 	strncat(reading_email_to, position, length_position-1);
+printf("READINGTO:\n%s\n",reading_email_to);
 	free((void *) reading_email_all);
 	read_email->head = reading_email_head;
 	read_email->body = reading_email_body;

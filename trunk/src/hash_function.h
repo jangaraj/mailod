@@ -1,3 +1,9 @@
+/*
+ * mailod:  optimalization of the usage disk
+ * Author: Jan Garaj	
+ * source: http://b-con.us/code/sha256_c.php
+ */
+
 #define uchar unsigned char // 8-bit byte 
 #define uint unsigned long // 32-bit word
 

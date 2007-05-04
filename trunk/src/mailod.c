@@ -1,10 +1,6 @@
 /*
- * Bachelor theses: Optimalization of the Usage of Computer Systems in E-mail
- * Author: Jan Garaj
- * Supervisor: Ing. Jan Mate
- * Date: now();
- 
-
+ * mailod:  optimalization of the usage disk
+ * Author: Jan Garaj	
  */
 
 #include <stdio.h>
@@ -26,11 +22,11 @@ int main(int argc, char* argv[]) {
 	config *conf_struct;
 	
 	if((conf_struct=(config *) malloc(sizeof(config)))==NULL) {
-		fprintf(stderr, "Error, malloc config structure\n");
+		fprintf(stderr, "Error, malloc config structure - exited status 1\n");
 		exit (1);
 	}
 	if(readconf(CONFIG_FILE, conf_struct)!=0) {
-		fprintf(stderr,"Error, parse config file\n");
+		fprintf(stderr,"Error, reading config file - exited status 1\n");
 		exit (1);
 	}
 	start_log(conf_struct);
@@ -76,8 +72,11 @@ int main(int argc, char* argv[]) {
 			if(link_email(new_email, ident_email)!=0) {
 				printf("linkovanie zlyhalo, ak kvoli max hardlinks bude nasledovat dalsie kolo ukladania\n");
 				fprintf(stderr,"Error, linking email\n");
-				if((delete_email(conf_struct, ident_email))!=0) {
-					fprintf(stderr,"Error, deleting full hardlinks record from database\n");
+				if(new_email->done == EMLINK) { 
+					printf("Idem zmazat zaznam, ktory uz ma full hardlinks\n");
+					if((delete_email(conf_struct, ident_email))!=0) {
+						fprintf(stderr,"Error, deleting full hardlinks record from database\n");
+					}
 				}
 				free((void *) ident_email);
 				if((ident_email = select_by_hash(conf_struct, new_email->hash))==NULL) {

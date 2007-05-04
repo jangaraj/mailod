@@ -1,3 +1,8 @@
+/*
+ * mailod:  optimalization of the usage disk
+ * Author: Jan Garaj	
+ */
+
 /* select from database by hash and time */
 email *select_by_hash(config *conf, char hash_value[]);
 

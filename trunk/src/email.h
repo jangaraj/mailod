@@ -1,3 +1,8 @@
+/*
+ * mailod:  optimalization of the usage disk
+ * Author: Jan Garaj	
+ */
+
 #include "const.h"
 
 typedef struct {

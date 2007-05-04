@@ -1,3 +1,8 @@
+/*
+ * mailod:  optimalization of the usage disk
+ * Author: Jan Garaj	
+ */
+
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -10,8 +15,8 @@ int readconf( char conffile[], config *conf ) {
 	int  line = 0;
 	fp = fopen( conffile, "r" );
 	if( fp == NULL ) {
-		fprintf(stderr,"Error, fopen config file: %s\n", conffile );
-		return 0;
+		fprintf(stderr,"Error by fopen config file %s\n", conffile );
+		return 1;
 	}
 	while( (fgets(buf, 512, fp)) != NULL) {
 		char *parm;

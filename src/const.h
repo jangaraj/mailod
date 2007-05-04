@@ -7,7 +7,7 @@
 #define VERS "0.0.21"				//version of program
 #define BUFFER_SIZE 1024			//size of reading( writing email buffer
 #define DIVIDER_HEAD_BODY "\n\n"	//divider email head and email body
-#define CONFIG_FILE "setting_true"	//name of config file
+#define CONFIG_FILE "/home/vlk/ggmailod/src/setting_true"	//name of config file
 #define DB_DRIVER "database_driver" 
 #define DB_HOST	 "database_host"
 #define DB_USERNAME "database_username"

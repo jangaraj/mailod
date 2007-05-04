@@ -121,8 +121,9 @@ int main(int argc, char* argv[]) {
 	free((void *) new_email->hash);
 	free((void *) new_email->body);
 	free((void *) new_email->filepath);
-//	free((void *) new_email->homedir);
+	free((void *) new_email->homedir);
 	free((void *) new_email);
+	stop_log();
 
 	muntrace();
 	return 0;

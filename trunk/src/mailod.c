@@ -32,6 +32,7 @@ int main(int argc, char* argv[])
 	}
 	start_log(conf_struct);
 	logging(DEBUG, "Nacital som uspesne konfiguraciu a zapol logovanie\n");
+	logging(DEBUG, "USER ID je %d\n",getuid());
 /*	printf("Setting - db_driver: %s\n",conf_struct->db_driver);
 	printf("Setting - db_username: %s\n",conf_struct->db_username);
 	printf("Setting - db_password: %s\n",conf_struct->db_password);
@@ -44,44 +45,55 @@ int main(int argc, char* argv[])
 	printf("Setting - backlog: %d\n",conf_struct->backlog);
 	*/
 	if((new_email = readmail()) == NULL) {
-		fprintf(stderr,"Error, reading and processing input email\n");
+	//	fprintf(stderr,"Error, reading and processing input email\n");
+		logging(DEBUG, "Error, reading and processing input email\n");
 		exit (1);
 	}
 	if(((conn = connect_db(conf_struct)) != NULL) && (new_email->hash = hash_text(new_email->body))) {
 		//connect to database and hashing body text - OK
 		if((ident_email = select_by_hash(conn, new_email->hash, conf_struct->time_window))==NULL) {
-			printf("nemam ident email. Idem ho zapisat to filesystema a do DB.\n");
+	//		printf("nemam ident email. Idem ho zapisat to filesystema a do DB.\n");
+			logging(DEBUG, "nemam ident email. Idem ho zapisat to filesystema a do DB.\n");
 			if(write_email(new_email)!=0) {
-				fprintf(stderr,"Error standard-writing email.\n");
+	//			fprintf(stderr,"Error standard-writing email.\n");
+				logging(DEBUG, "Error standard-writing email.\n");
 			}
 			else 
 			{	
 			  	new_email->done = 0;
-			   	printf("uspesny zapis email suboru\n");
+	//		   	printf("uspesny zapis email suboru\n");
+				logging(DEBUG, "uspesny zapis email suboru\n");
 				if((insert_email(conn, new_email))!=0) {
-					fprintf(stderr,"Error, inserting email to database\n");	
+	//				fprintf(stderr,"Error, inserting email to database\n");	
+					logging(DEBUG, "Error standard-writing email.\n");
 				}
 				else {
-					printf("uspesny zapis zaznamu do db\n");
+	//				printf("uspesny zapis zaznamu do db\n");
+					logging(DEBUG, "uspesny zapis zaznamu do db\n");
 				}
 			}
 		}
 		else {
-			printf("Linkujem podla ident emailu\n");
+	//		printf("Linkujem podla ident emailu\n");
+			logging(DEBUG, "Linkujem podla ident emailu\n");
 			do {
 				if(link_email(new_email, ident_email)!=0) {
-					printf("linkovanie zlyhalo, ak kvoli max hardlinks bude nasledovat dalsie kolo ukladania\n");
-					fprintf(stderr,"Error, linking email\n");
+	//				printf("linkovanie zlyhalo, ak kvoli max hardlinks bude nasledovat dalsie kolo ukladania\n");
+	//				fprintf(stderr,"Error, linking email\n");
+					logging(DEBUG, "Error, linking email\n");
 					if(new_email->done == EMLINK) { 
-						printf("Idem zmazat zaznam, ktory uz ma full hardlinks\n");
+	//					printf("Idem zmazat zaznam, ktory uz ma full hardlinks\n");
+						logging(DEBUG, "Idem zmazat zaznam, ktory uz ma full hardlinks\n");
 						if((delete_email(conn, ident_email))!=0) {
-							fprintf(stderr,"Error, deleting full hardlinks record from database\n");
+	//						fprintf(stderr,"Error, deleting full hardlinks record from database\n");
+							logging(DEBUG, "Error, deleting full hardlinks record from database\n");
 						}
 					}
 					free((void *) ident_email);
 					if((ident_email = select_by_hash(conn, new_email->hash, conf_struct->time_window))==NULL) {
 						//not found ident email in database, break loop
-						printf("Nenasiel som dalsi vhodny email z db\n");
+	//					printf("Nenasiel som dalsi vhodny email z db\n");
+						logging(DEBUG, "Nenasiel som dalsi vhodny email z db\n");
 						break;
 					}
 				}
@@ -92,17 +104,21 @@ int main(int argc, char* argv[])
 	//end testing - done = 0 = email is good processed
 	if(new_email->done!=0) {
 		if(write_email(new_email)!=0) {
-			fprintf(stderr,"Error fail-writing email.\n");
+	//		fprintf(stderr,"Error fail-writing email.\n");
+			logging(DEBUG, "Error fail-writing email\n");
 			exit (1);				//critical fail input email
 		}
 		else 
 		{	
-		   	printf("uspesny zapis email suboru2\n");
+	//	   	printf("uspesny zapis email suboru2\n");
+			logging(DEBUG, "uspesny zapis email suboru2\n");
 			if((insert_email(conf_struct, new_email))!=0) {
-				fprintf(stderr,"Error, inserting email to database2\n");	
+	//			fprintf(stderr,"Error, inserting email to database2\n");	
+				logging(DEBUG, "Error, inserting email to database2\n");
 			}
 			else {
-				printf("uspesny zapis zaznamu do db2\n");
+	//			printf("uspesny zapis zaznamu do db2\n");
+				logging(DEBUG, "uspesny zapis zaznamu do db2\n");
 			}
 		}
 	}

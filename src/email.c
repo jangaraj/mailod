@@ -116,7 +116,14 @@ email *readmail(void)
 	read_email->head = reading_email_head;
 	read_email->body = reading_email_body;
 	read_email->to = reading_email_to;
-	read_email->homedir = (getpwnam(reading_email_to)->pw_dir);
+	if(getpwnam(reading_email_to) == NULL) {
+		logging(DEBUG,"Error, not determinated homedir for %s\n",reading_email_to);
+		return NULL;
+	}
+	else {
+		read_email->homedir = getpwnam(reading_email_to)->pw_dir;
+	}
+
 	read_email->done = 1;
 
 	return read_email;
@@ -259,7 +266,7 @@ int link_email(email *new_email, email *master_email)
 		}
 		// link with file from cur
 //		printf("Nasiel som subor s rovnakym inodom v cur, idem skusit linkovat\n");
-		logging(DEBUG,"Nasiel som subor s rovnakym inodom v cur, idem skusit linkovat\n");
+		logging(DEBUG,"Error, Nasiel som subor s rovnakym inodom v cur, idem skusit linkovat\n");
 		master_email->filepath = (char *) realloc(master_email->filepath, (strlen(master_email->filepath)+strlen(dir->d_name)+1)*sizeof(char));
 		strcat(master_email->filepath,"/");
 		strcat(master_email->filepath,dir->d_name);

@@ -6,7 +6,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
-#include <mcheck.h>			//testing of malloc
 #include <errno.h>
 #include <dbi/dbi.h>
 #include "const.h"
@@ -16,8 +15,8 @@
 #include "logging.h"
 #include "database_function.h"
 
-int main(int argc, char* argv[]) {
-	mtrace();
+int main(int argc, char* argv[]) 
+{
 
 	email *new_email, *ident_email;
 	config *conf_struct;
@@ -125,6 +124,5 @@ int main(int argc, char* argv[]) {
 	free((void *) new_email);
 	stop_log();
 
-	muntrace();
 	return 0;
 }

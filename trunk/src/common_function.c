@@ -8,6 +8,7 @@
 #include <stdlib.h>
 #include "const.h"
 #include "common_function.h"
+#include "logging.h"
 
 int readconf( char conffile[], config *conf ) {
 	FILE *fp;
@@ -15,7 +16,8 @@ int readconf( char conffile[], config *conf ) {
 	int  line = 0;
 	fp = fopen( conffile, "r" );
 	if( fp == NULL ) {
-		fprintf(stderr,"Error by fopen config file %s\n", conffile );
+//		fprintf(stderr,"Error by fopen config file %s\n", conffile );
+		logging(DEBUG,"Error by fopen config file %s\n", conffile );
 		return 1;
 	}
 	while( (fgets(buf, 512, fp)) != NULL) {
@@ -28,9 +30,11 @@ int readconf( char conffile[], config *conf ) {
 		parm = strtok( buf, "\t" );
 		val = strtok( NULL, "" );
 		if((parm == NULL) || (val == NULL)) {
-			fprintf(stderr,"Error, invalid config line number: %d\n", line);
+//			fprintf(stderr,"Error, invalid config line number: %d\n", line);
+			logging(DEBUG,"Error, invalid config line number: %d\n", line);
 			if(parm != NULL) {
-				fprintf( stderr,"Error, %s does not have a value!\n", parm );
+//				fprintf( stderr,"Error, %s does not have a value!\n", parm );
+				logging(DEBUG,"Error, %s does not have a value!\n", parm);
 			}
 			fclose(fp);
 			return 1;
@@ -55,14 +59,16 @@ int readconf( char conffile[], config *conf ) {
 		if( (strcasecmp(TIME_WINDOW, parm)) == 0 ) {
 			conf->time_window = atoi(val);
 			if(conf->time_window<0) {
-				fprintf(stderr, "Error, <param> %s at line %d has invalid value %d\n", TIME_WINDOW, line, conf->time_window);
+//				fprintf(stderr, "Error, <param> %s at line %d has invalid value %d\n", TIME_WINDOW, line, conf->time_window);
+				logging(DEBUG,"Error, <param> %s at line %d has invalid value %d\n", TIME_WINDOW, line, conf->time_window);
 				return 1;
 			}
 		}
 		if( (strcasecmp(LOG_LEVEL, parm)) == 0 ) {
 			conf->log_level = atoi(val);
 			if((conf->log_level<0) || (conf->log_level>6)) {
-				fprintf(stderr, "Error, <param> %s at line %d has invalid value %d\n", LOG_LEVEL, line, conf->log_level);
+//				fprintf(stderr, "Error, <param> %s at line %d has invalid value %d\n", LOG_LEVEL, line, conf->log_level);
+				logging(DEBUG,"Error, <param> %s at line %d has invalid value %d\n", LOG_LEVEL, line, conf->log_level);
 				return 1;
 			}
 
@@ -70,21 +76,25 @@ int readconf( char conffile[], config *conf ) {
 		if( (strcasecmp(LOG_STDERR, parm)) == 0 ) {
 			conf->debug = atoi(val);
 			if((conf->debug<0) || (conf->debug>1)) {
-				fprintf(stderr, "Error, <param> %s at line %d has invalid value %d\n", LOG_STDERR, line, conf->debug);
+//				fprintf(stderr, "Error, <param> %s at line %d has invalid value %d\n", LOG_STDERR, line, conf->debug);
+				logging(DEBUG,"Error, <param> %s at line %d has invalid value %d\n", LOG_STDERR, line, conf->debug);
+
 				return 1;
 			}
 		}
 		if( (strcasecmp(CON_PORT, parm)) == 0 ) {
 			conf->port = atoi(val);
 			if((conf->port<0) || (conf->port>65535)) {
-				fprintf(stderr, "Error, <param> %s at line %d has invalid value %d\n", CON_PORT, line, conf->debug);
+//				fprintf(stderr, "Error, <param> %s at line %d has invalid value %d\n", CON_PORT, line, conf->debug);
+				logging(DEBUG,"Error, <param> %s at line %d has invalid value %d\n", CON_PORT, line, conf->debug);
 				return 1;
 			}
 		}
 		if( (strcasecmp(CON_BACK, parm)) == 0 ) {
 			conf->backlog = atoi(val);
 			if(conf->backlog<0) {
-				fprintf(stderr, "Error, <param> %s at line %d has invalid value %d\n", CON_BACK, line, conf->debug);
+//				fprintf(stderr, "Error, <param> %s at line %d has invalid value %d\n", CON_BACK, line, conf->debug);
+				logging(DEBUG,"Error, <param> %s at line %d has invalid value %d\n", CON_BACK, line, conf->debug);
 				return 1;
 			}
 		}

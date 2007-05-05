@@ -141,5 +141,6 @@ int main(int argc, char* argv[])
 	free((void *) new_email);
 	stop_log();
 
+
 	return 0;
 }

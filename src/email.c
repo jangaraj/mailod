@@ -137,8 +137,9 @@ int write_email(email *new_email)
 	//backup umask setting
 	umask_bak = umask(0);
 	//set umask
-	umask(S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);
-	if((fw = open(new_email->filepath,O_WRONLY|O_CREAT|O_EXCL, S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP))==-1) {
+	//umask(S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IRUSR);
+	//umask(S_IRUSR | S_IWUSR );
+	if((fw = open(new_email->filepath,O_WRONLY|O_CREAT|O_EXCL, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH))==-1) {
 		logging(DEBUG,"Error opening email file in user's homedir\n");
 		return 1;
 	}

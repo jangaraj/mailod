@@ -94,7 +94,7 @@ int main(void)
 			perror("accept");
 			continue;
 		}
-		logging(DEBUG,"server: got connection from %s\n",inet_ntoa(their_addr.sin_addr));
+		logging(DEBUG,"got connection from %s\n",inet_ntoa(their_addr.sin_addr));
 		if (!fork()) { // this is the child process
 			close(sockfd); // child doesn't need the listener
 /*************************************************************/

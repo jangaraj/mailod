@@ -98,6 +98,10 @@ email *readmail(int input)
 		logging(DEBUG,"Error, malloc reading_email_to\n");
 		return NULL;
 	}
+	if((strstr(position,"<"))!=NULL) {
+		position++;
+		length_position--;
+	}
 	*reading_email_to = '\0';
 	strncat(reading_email_to, position, length_position);
 	free((void *) reading_email_all);

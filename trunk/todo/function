@@ -1,15 +1,15 @@
 getacl - urci ci je mozne pracovat s acl pravami, inak STD
-db_request - request na db ci uz je zaznam s danym hasv v db - casove okno
+DONE db_request - request na db ci uz je zaznam s danym hasv v db - casove okno
 DONE hash - hashuje body cast emailu - nie md5 bo tu je mozne vytvorit kolizie - bezpecnost
 get_number_acls - vrati pocet moznych aclie - depend on FS alebo napevno zabetonovat?
 setacl - nastavi acl
 hidden_private_info - skryje v hlavicke emailu provatne informacie
 link email - musi byt locknuty file
 DONE test na hodnoty v konfiguracnom subore - tie inty
-osetrit stav ked mail ma heade aj divider ale nema body - vyhodi error (invalid pointer) free()
-prerobit fprintf(stderr,... na logging(....
-prerobit libdbi na nonabsolute cesty (pocitat s tym ze to bude v lib systemu usera) - kontorlovat pri starte demona
-kde zistit kde sa bude ukladat email - home(etc/passwd) maildir(conf postfixu)
+DONE osetrit stav ked mail ma heade aj divider ale nema body - vyhodi error (invalid pointer) free()
+DONE prerobit fprintf(stderr,... na logging(....
+DONE prerobit libdbi na nonabsolute cesty (pocitat s tym ze to bude v lib systemu usera) - kontorlovat pri starte demona
+DONE kde zistit kde sa bude ukladat email - home(etc/passwd) maildir(conf postfixu)
 
 fcntl - zamky na subor
 #include <time.h>       /* time() ctime() time_t */
@@ -41,8 +41,8 @@ transakcia - select hash
 ak ano end transakcia
 inak insert
 end transakcia
-2.) demonizacia
-riesit cez socket alebo port - fork
+DONE 2.) demonizacia
+DONE riesit cez socket alebo port - fork
 3.) 2 demoni chcu naraz urobit hardlink
 zamykanie suborov
 4.) bezi pod userom POSTMASTER
@@ -52,8 +52,8 @@ prvy email sa ulozi prvemu dorucenemu userovi
 +ACL pridane pre userov ktorym prisli emaily
 pri starte demona skontrolovat prava a ak su nevhodne die
 5.) komu ulozit - neriesit aliasy
-6.) IMAP  a zmena nazvu
-da asi iba daky priznak na koniec mena
+DONE 6.) IMAP  a zmena nazvu
+DONE da asi iba daky priznak na koniec mena - riesim iba v new + cur podla cislao inodu
 7.) prepojenie s procmailom(maildoropom)
 procmail prida osobitny zaznam do hlavicky
 X-xdir: 

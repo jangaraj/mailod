@@ -21,7 +21,7 @@ typedef struct {
 } email;
 
 /* reading email from input */
-email *readmail(void);
+email *readmail(int input);
 
 /* write email to users maildir */
 int write_email(email *new_email);

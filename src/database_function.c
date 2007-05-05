@@ -8,6 +8,7 @@
 #include "email.h"
 #include "common_function.h"
 #include "database_function.h"
+#include "logging.h"
 
 dbi_conn connect_db(config *conf)
 {
@@ -21,7 +22,8 @@ dbi_conn connect_db(config *conf)
 	dbi_conn_set_option(conn, "dbname", conf->db_name);
 	dbi_conn_set_option(conn, "encoding", "UTF-8");
     if (dbi_conn_connect(conn) < 0) {
-    	fprintf(stderr,"Could not connect. Please check the option settings\n");
+//    	fprintf(stderr,"Could not connect. Please check the option settings\n");
+		logging(DEBUG,"Could not connect. Please check the option settings\n");
 		return NULL;
 	}
 
@@ -47,11 +49,13 @@ email *select_by_hash(dbi_conn conn, char hash_value[], int time_window)
 	//selekujem vzdy najstarsi mozny
 	sprintf(sql,"SELECT * FROM `mailod` WHERE `body_hash`='%s' AND `timestamp`>(NOW()+INTERVAL -%d MINUTE) ORDER BY `email_id` LIMIT 1;",hash_value, time_window);
 	//printf("selectSQL: %s\n",sql);
+	logging(DEBUG,"selectSQL: %s\n",sql);
    	result = dbi_conn_query(conn,sql);
    	if (result) {
 		if((dbi_result_get_numrows(result))<1) return NULL;		//0 selected rows
 		if((ident_email=(email *) malloc(sizeof(email)))==NULL) {
-			fprintf(stderr, "Error, mallock ident_email\n");
+//			fprintf(stderr, "Error, mallock ident_email\n");
+			logging(DEBUG,"Error, mallock ident_email\n");
 			return NULL;
 		}
 		while (dbi_result_next_row(result)) {

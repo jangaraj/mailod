@@ -122,7 +122,6 @@ int main(int argc, char* argv[])
 			}
 		}
 	}
-	logging(DEBUG,"Idem freeovat\n");
 	
 //	printf("mail->head:\n%s\n", new_email->head);
 //	printf("mail->body:\n%s\n", new_email->body);
@@ -132,15 +131,14 @@ int main(int argc, char* argv[])
 //	printf("mail->size:\n%d\n",new_email->size);
 
 	//TODO uvolnit alokovanu pamat
-/*	free((void *) conf_struct);
+	free((void *) conf_struct);
 	free((void *) new_email->to);
 	free((void *) new_email->head);
 	free((void *) new_email->hash);
 	free((void *) new_email->body);
-	free((void *) new_email->filepath);*/
+	free((void *) new_email->filepath);
 //	free((void *) new_email->homedir); 		//num_chuck erorr!!!
 	free((void *) new_email);
-	logging(DEBUG,"Idem stopnut log\n");
 	stop_log();
 
 	return 0;

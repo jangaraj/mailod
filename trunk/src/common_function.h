@@ -31,4 +31,7 @@ void head(char *buf);
 /* tail string */
 void tail(char *buf); 
 
+/* reap all dead processes for daemon */
+void sigchld_handler(int s);
+
 #endif /* COMMON_H_EXIST */

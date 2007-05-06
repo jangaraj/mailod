@@ -1,7 +1,7 @@
-getacl - urci ci je mozne pracovat s acl pravami, inak STD
+DONE getacl - urci ci je mozne pracovat s acl pravami, inak STD
 DONE db_request - request na db ci uz je zaznam s danym hasv v db - casove okno
 DONE hash - hashuje body cast emailu - nie md5 bo tu je mozne vytvorit kolizie - bezpecnost
-get_number_acls - vrati pocet moznych aclie - depend on FS alebo napevno zabetonovat?
+DONE get_number_acls - vrati pocet moznych aclie - depend on FS alebo napevno zabetonovat?
 setacl - nastavi acl
 hidden_private_info - skryje v hlavicke emailu provatne informacie
 link email - musi byt locknuty file
@@ -45,9 +45,9 @@ DONE 2.) demonizacia
 DONE riesit cez socket alebo port - fork
 3.) 2 demoni chcu naraz urobit hardlink
 zamykanie suborov
-4.) bezi pod userom POSTMASTER
-homy musia mat wx na zapis do maildirov
-vlastnikom emailu je POSTMASTER
+DONE4.) bezi pod userom POSTMASTER
+DONE homy musia mat wx na zapis do maildirov
+DONE vlastnikom emailu je POSTMASTER
 prvy email sa ulozi prvemu dorucenemu userovi
 +ACL pridane pre userov ktorym prisli emaily
 pri starte demona skontrolovat prava a ak su nevhodne die

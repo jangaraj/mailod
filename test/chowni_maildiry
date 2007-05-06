@@ -1,0 +1,27 @@
+#!/bin/csh -f
+#count - pocet uzivatelov
+@ count=10
+@ i=1
+while ($i <= $count )
+	echo "Posielam test_email pouzivatelovi posttest$i"
+	chown -R postfix:postfix /home/posttest$i/.maildir
+	chmod 700 /home/posttest$i/.maildir
+	setfacl -m g:users:rwx /home/posttest$i/.maildir
+	setfacl -m g:users:rwx /home/posttest$i/.maildir/new
+	setfacl -m g:users:rwx /home/posttest$i/.maildir/cur
+
+#	cat ../src/test_mail  | mail posttest$i
+	@ i++
+end
+	chown -R postfix:postfix /home/vlk/.maildir
+	chmod 700 /home/vlk/.maildir
+	setfacl -m g:users:rwx /home/vlk/.maildir
+	setfacl -m g:users:rwx /home/vlk/.maildir/new
+	setfacl -m g:users:rwx /home/vlk/.maildir/cur
+
+	chown -R postfix:postfix /root/.maildir
+	chmod 700 /root/.maildir
+	setfacl -m g:users:rwx /root/.maildir
+	setfacl -m g:users:rwx /root/.maildir/new
+	setfacl -m g:users:rwx /root/.maildir/cur
+

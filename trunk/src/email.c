@@ -213,6 +213,9 @@ int link_email(email *new_email, email *master_email)
 	int rval, lval;
 	DIR *dp;
 	struct dirent *dir;
+	acl_t acl;					/* ACL information */
+	acl_entry_t entry_p;		/* ACL entry */	
+	acl_permset_t permset;		/* Permissions */
 
 	if((new_email->filepath = make_filepath(new_email)) == NULL) {
 			logging(DEBUG,"Error, generate uniq name of email file\n");
@@ -221,43 +224,77 @@ int link_email(email *new_email, email *master_email)
 	//checking existence of email file
 	rval = access(master_email->filepath, F_OK);
 	if (rval == 0) {
-		logging(DEBUG,"link(%s,%s);\n",master_email->filepath, new_email->filepath);
-		if((lval = link(master_email->filepath, new_email->filepath)) != 0) {
-			logging(DEBUG,"Error pri vytvarani linku\n");
-			new_email->done = 2;
-			switch (errno) {
-				case EACCES:
-					logging(DEBUG,"Error, denied search permision of path\n");
-					break;
-				case EMLINK:
-					logging(DEBUG,"prekrocil som max pocet hardliniek na subor\n");
-					new_email->done = EMLINK;
-					break;
-				case ENAMETOOLONG:
-					logging(DEBUG,"Error, name of email file is too long\n");
-					break;
-				case EPERM:
-					logging(DEBUG,"Error, path %s is a directory and does not have privileges of using link()\n",new_email->filepath);
-					break;
-				case EROFS:
-					logging(DEBUG,"Error, read-only file system\n");
-					break;
-				case EXDEV:
-					logging(DEBUG,"Error, path1 %s and path2 %s are on different file systems\n",master_email->filepath,new_email->filepath);
-					break;
-				default:
-					logging(DEBUG,"Error, link is not created\n");
-					break;
-			}
+		//setting acl
+		acl = acl_get_file(master_email->filepath,ACL_TYPE_ACCESS);
+		if(!acl) {
+			logging(DEBUG,"In file %s not found acl's\n");
+		}
+		if(acl_create_entry(&acl,&entry_p) == -1) {
+			logging(DEBUG,"Error, adding acl entry: %s\n",strerror(errno));
+		}
+		if(acl_get_permset(entry_p, &permset) == -1) {
+			logging(DEBUG,"Error, getting permset of acl: %s\n",strerror(errno));
+		}
+		if(acl_add_perm(permset, ACL_READ) == -1) {
+			logging(DEBUG,"Error, adding permset of acl: %s\n",strerror(errno));
+		}
+		if(acl_set_tag_type(entry_p, ACL_USER) == -1) {
+			logging(DEBUG,"Error, setting type of acl: %s\n",strerror(errno));
+		}
+		if(acl_set_qualifier(entry_p, &new_email->to_uid) == -1) {
+			logging(DEBUG,"Error, seting qualifier of acl: %s\n",strerror(errno));
+		}
+		if(acl_set_permset(entry_p, permset) == -1) {
+			logging(DEBUG,"Error, seting permset of acl: %s\n",strerror(errno));	
+		}
+		if (!acl_valid(acl)) {
+			logging(DEBUG,"Error, not valid acl\n");
+		}
+		if(acl_set_file(master_email->filepath,ACL_TYPE_ACCESS,acl) == -1) {
+			logging(DEBUG,"Error, set new acl for file %s\nerrno: %s\n",new_email->filepath,strerror(errno));
+			if(errno == EINVAL) new_email->done = EINVAL;
+		}
+		if(new_email->done != EINVAL) {
+			logging(DEBUG,"link(%s,%s);\n",master_email->filepath, new_email->filepath);
+			if((lval = link(master_email->filepath, new_email->filepath)) != 0) {
+				logging(DEBUG,"Error pri vytvarani linku\n");
+				new_email->done = 2;
+				switch (errno) {
+					case EACCES:
+						logging(DEBUG,"Error, denied search permision of path\n");
+						break;
+					case EMLINK:
+						logging(DEBUG,"prekrocil som max pocet hardliniek na subor\n");
+						new_email->done = EMLINK;
+						break;
+					case ENAMETOOLONG:
+						logging(DEBUG,"Error, name of email file is too long\n");
+						break;
+					case EPERM:
+						logging(DEBUG,"Error, path %s is a directory and does not have privileges of using link()\n",new_email->filepath);
+						break;
+					case EROFS:
+						logging(DEBUG,"Error, read-only file system\n");
+						break;
+					case EXDEV:
+						logging(DEBUG,"Error, path1 %s and path2 %s are on different file systems\n",master_email->filepath,new_email->filepath);
+						break;
+					default:
+						logging(DEBUG,"Error, link is not created\n");
+						break;
+				}
 
+			}
+			else {
+				new_email->done = 0;	
+				logging(DEBUG,"Uspesne vytvoreny link\n");
+			}
 		}
 		else {
-			new_email->done = 0;	
-			logging(DEBUG,"Uspesne vytvoreny link\n");
+			return 1;		//error cl
 		}
 	} //rval == 0 - file exist
 	else {
-		//TODO spravne nastavit podmienky aby som nepracoval s NULL atda
 		logging(DEBUG,"Nenasiel som mail v new pokusim sa ho najst v cur\n");
 		if((master_email->filepath = make_only_dir(master_email->filepath)) == NULL) {
 			logging(DEBUG,"Error, making only dir from filepath\n");
@@ -270,7 +307,7 @@ int link_email(email *new_email, email *master_email)
 			 return 1;
 		}
 		while ((dir = readdir(dp)) != NULL)	{
-	        if (dir->d_ino == 0)
+	       if (dir->d_ino == 0)
 	             continue;
 	       if(master_email->inode == dir->d_ino)
 			 break;
@@ -283,39 +320,74 @@ int link_email(email *new_email, email *master_email)
 		master_email->filepath = (char *) realloc(master_email->filepath, (strlen(master_email->filepath)+strlen(dir->d_name)+1)*sizeof(char));
 		strcat(master_email->filepath,"/");
 		strcat(master_email->filepath,dir->d_name);
-		logging(DEBUG,"link(%s,%s);\n",master_email->filepath, new_email->filepath);
-		if((lval = link(master_email->filepath, new_email->filepath)) != 0) {
-			logging(DEBUG,"Error pri vytvarani linku\n");
-			new_email->done = 2;
-			switch (errno) {
-				case EACCES:
-					logging(DEBUG,"Error, denied search permision of path\n");
-					break;
-				case EMLINK:
-					logging(DEBUG,"prekrocil som max pocet hardliniek na subor\n");
-					new_email->done = EMLINK;
-					break;
-				case ENAMETOOLONG:
-					logging(DEBUG,"Error, name of email file is too long\n");
-					break;
-				case EPERM:
-					logging(DEBUG,"Error, path %s is a directory and does not have privileges of using link()\n",new_email->filepath);
-					break;
-				case EROFS:
-					logging(DEBUG,"Error, read-only file system\n");
-					break;
-				case EXDEV:
-					logging(DEBUG,"Error, path1 %s and path2 %s are on different file systems\n",master_email->filepath,new_email->filepath);
-					break;
-				default:
-					logging(DEBUG,"Error, link is not created2: %s\n",strerror(errno));
-					break;
-			}
+		//setting acl
+		acl = acl_get_file(master_email->filepath,ACL_TYPE_ACCESS);
+		if(!acl) {
+			logging(DEBUG,"In file %s not found acl's\n");
+		}
+		if(acl_create_entry(&acl,&entry_p) == -1) {
+			logging(DEBUG,"Error, adding acl entry: %s\n",strerror(errno));
+		}
+		if(acl_get_permset(entry_p, &permset) == -1) {
+			logging(DEBUG,"Error, getting permset of acl: %s\n",strerror(errno));
+		}
+		if(acl_add_perm(permset, ACL_READ) == -1) {
+			logging(DEBUG,"Error, adding permset of acl: %s\n",strerror(errno));
+		}
+		if(acl_set_tag_type(entry_p, ACL_USER) == -1) {
+			logging(DEBUG,"Error, setting type of acl: %s\n",strerror(errno));
+		}
+		if(acl_set_qualifier(entry_p, &new_email->to_uid) == -1) {
+			logging(DEBUG,"Error, seting qualifier of acl: %s\n",strerror(errno));
+		}
+		if(acl_set_permset(entry_p, permset) == -1) {
+			logging(DEBUG,"Error, seting permset of acl: %s\n",strerror(errno));	
+		}
+		if (!acl_valid(acl)) {
+			logging(DEBUG,"Error, not valid acl\n");
+		}
+		if(acl_set_file(master_email->filepath,ACL_TYPE_ACCESS,acl) == -1) {
+			logging(DEBUG,"Error, set new acl for file %s\n",new_email->filepath);
+			if(errno == EINVAL) new_email->done = EINVAL;
+		}
+		if(new_email->done != EINVAL) {
+			logging(DEBUG,"link(%s,%s);\n",master_email->filepath, new_email->filepath);
+			if((lval = link(master_email->filepath, new_email->filepath)) != 0) {
+				logging(DEBUG,"Error pri vytvarani linku\n");
+				new_email->done = 2;
+				switch (errno) {
+					case EACCES:
+						logging(DEBUG,"Error, denied search permision of path\n");
+						break;
+					case EMLINK:
+						logging(DEBUG,"prekrocil som max pocet hardliniek na subor\n");
+						new_email->done = EMLINK;
+						break;
+					case ENAMETOOLONG:
+						logging(DEBUG,"Error, name of email file is too long\n");
+						break;
+					case EPERM:
+						logging(DEBUG,"Error, path %s is a directory and does not have privileges of using link()\n",new_email->filepath);
+						break;
+					case EROFS:
+						logging(DEBUG,"Error, read-only file system\n");
+						break;
+					case EXDEV:
+						logging(DEBUG,"Error, path1 %s and path2 %s are on different file systems\n",master_email->filepath,new_email->filepath);
+						break;
+					default:
+						logging(DEBUG,"Error, link is not created2: %s\n",strerror(errno));
+						break;
+				}
 
+			}
+			else {
+				new_email->done = 0;	
+				logging(DEBUG,"Uspesne vytvoreny link v cur-e\n");
+			}
 		}
 		else {
-			new_email->done = 0;	
-			logging(DEBUG,"Uspesne vytvoreny link v cur-e\n");
+			return 1;				//error acl
 		}
 	}
 	return 0;

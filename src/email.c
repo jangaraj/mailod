@@ -11,9 +11,9 @@
 #include <time.h>
 #include <sys/types.h>
 #include <sys/stat.h>
+#include <sys/types.h>
 #include <fcntl.h>
 #include <errno.h>
-#include <sys/types.h>
 #include <dirent.h>
 #include "email.h"
 #include "const.h"
@@ -82,7 +82,6 @@ email *readmail(int input)
 		logging(DEBUG,"Error, not found in mail header parse string %s\n",PARSE_TO);
 		return NULL;
 	}
-	//TODO upravit na To: <> tvar
 	if((position=strstr(position," "))==NULL) {
 		logging(DEBUG,"Error parse local user - only \"To: local@user.tld is\" allowed now\n");
 		return NULL;
@@ -115,7 +114,6 @@ email *readmail(int input)
 	else {
 		read_email->homedir = getpwnam(reading_email_to)->pw_dir;
 	}
-
 	read_email->done = 1;
 
 	return read_email;
@@ -147,7 +145,7 @@ int write_email(email *new_email)
 		logging(DEBUG,"Error opening email file in user's homedir\n");
 		return 1;
 	}
-	//zapis jednotlivych casti emailu do suboru
+	//writing part of emails to file
 	if((i = strlen(new_email->head)) != write(fw, new_email->head,i)) {
 		logging(DEBUG,"Error, writing email head\n");
 		return 1;
@@ -160,11 +158,12 @@ int write_email(email *new_email)
 			logging(DEBUG,"Error, writing email body\n");
 			return 1;
 	}
-	//zavretie suboru
+	//closing file
 	if(close(fw)!=0) {
 		logging(DEBUG,"Error, close email file in user's homedir\n");
 		return 1;
 	}
+	//check file
 	if(stat(new_email->filepath,&filestat)==-1) {
 		logging(DEBUG,"Error checking for existing email file\n");
 	}
@@ -185,6 +184,7 @@ int link_email(email *new_email, email *master_email)
 			logging(DEBUG,"Error, generate uniq name of email file\n");
 			return 1;
 	}
+	//checking existence of email file
 	rval = access(master_email->filepath, F_OK);
 	if (rval == 0) {
 		if((lval = link(master_email->filepath, new_email->filepath)) != 0) {
@@ -297,21 +297,20 @@ char *make_filepath(email *email)
 		logging(DEBUG,"Error malloc filename\n");
 		return NULL;
 	}
-	do {							//generovanie nazvu suboru, ktory neexistuje
+	do {								//generating name of nonexisting file
 		t = time((time_t*)0);
 		//TODO safehostname - bez badchars
 		gethostname(name,MAXHOSTNAMELEN);
 		name[MAXHOSTNAMELEN-1] = '\0';
 		sprintf(filepath,"%s%s%d.%d.",email->homedir,INBOX,(int) t,getpid());
 		if(strlen(filepath)+strlen(name)>17+MAXHOSTNAMELEN) {
-			//realloc filepath na vacsiu velkost
 			if((filepath = (char *) realloc(filepath, strlen(filepath)+strlen(name)))==NULL) {
 				logging(DEBUG,"Error realloc filepath\n");
 				return NULL;
 			}
 		}
 		strcat(filepath,name);
-	} while(stat(filepath,&filestat)!=-1);  //generujem meno suboru pokial este neexistuje
+	} while(stat(filepath,&filestat)!=-1); 
 
 	return filepath;
 }

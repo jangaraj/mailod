@@ -98,16 +98,16 @@ email *readmail(int input)
 		logging(DEBUG,"Error, malloc reading_email_to\n");
 		return NULL;
 	}
-	if((strstr(position,"<"))!=NULL) {
-		position++;
-		length_position--;
-	}
 	*reading_email_to = '\0';
 	strncat(reading_email_to, position, length_position);
+	if((strstr(reading_email_to,"<"))!=NULL) {
+		reading_email_to++;
+	}
 	free((void *) reading_email_all);
 	read_email->head = reading_email_head;
 	read_email->body = reading_email_body;
 	read_email->to = reading_email_to;
+	logging(DEBUG,"EMIL TO JE %s\n",reading_email_to);
 	if(getpwnam(reading_email_to) == NULL) {
 		logging(DEBUG,"Error, not determinated homedir for %s\n",reading_email_to);
 		return NULL;

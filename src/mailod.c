@@ -131,7 +131,8 @@ int main(void)
 								break;
 							}
 						}
-					} while (new_email->done == EMLINK);  //if fail on max number hardlinks - next loop
+					} while (new_email->done == EMLINK || new_email->done == EINVAL);  //if fail on max number hardlinks or max number of acl's - next loop
+
 					free((void *) ident_email);
 				}	
 			}

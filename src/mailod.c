@@ -37,6 +37,11 @@ int main(void)
 	config *conf_struct;
 	dbi_conn conn;
 
+	//drop root rights and set potfix user
+	if((setuid(207))==-1) {
+		fprintf(stderr,"Error, %s\n",strerror(errno));
+		exit (1);
+	}
 	if((conf_struct=(config *) malloc(sizeof(config)))==NULL) {
 		fprintf(stderr, "Error, malloc config structure - exited status 1\n");
 		exit (1);

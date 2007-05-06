@@ -11,6 +11,7 @@ typedef struct {
 	char *hash;		//hash tela emailu
 	char *filesystem;//filesystem where stored email file
 	char *to;		//local user
+	int to_uid;	//uid of local user
 	char *homedir;	//homedir of local user
 	char *filepath;	//cesta k emailu spolu s nazvom suboru
 	int hardlink;	//ulozit ako hardlinku

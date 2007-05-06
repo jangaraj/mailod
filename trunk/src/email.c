@@ -187,6 +187,7 @@ int link_email(email *new_email, email *master_email)
 	//checking existence of email file
 	rval = access(master_email->filepath, F_OK);
 	if (rval == 0) {
+		logging(DEBUG,"link(%s,%s);\n",master_email->filepath, new_email->filepath);
 		if((lval = link(master_email->filepath, new_email->filepath)) != 0) {
 			logging(DEBUG,"Error pri vytvarani linku\n");
 			new_email->done = 2;
@@ -244,10 +245,11 @@ int link_email(email *new_email, email *master_email)
 	 		logging(DEBUG,"Error, closedir(%s)\n",master_email->filepath);
 		}
 		// link with file from cur
-		logging(DEBUG,"Error, Nasiel som subor s rovnakym inodom v cur, idem skusit linkovat\n");
+		logging(DEBUG,"Nasiel som subor s rovnakym inodom v cur, idem skusit linkovat\n");
 		master_email->filepath = (char *) realloc(master_email->filepath, (strlen(master_email->filepath)+strlen(dir->d_name)+1)*sizeof(char));
 		strcat(master_email->filepath,"/");
 		strcat(master_email->filepath,dir->d_name);
+		logging(DEBUG,"link(%s,%s);\n",master_email->filepath, new_email->filepath);
 		if((lval = link(master_email->filepath, new_email->filepath)) != 0) {
 			logging(DEBUG,"Error pri vytvarani linku\n");
 			new_email->done = 2;
@@ -299,7 +301,6 @@ char *make_filepath(email *email)
 	}
 	do {								//generating name of nonexisting file
 		t = time((time_t*)0);
-		//TODO safehostname - bez badchars
 		gethostname(name,MAXHOSTNAMELEN);
 		name[MAXHOSTNAMELEN-1] = '\0';
 		sprintf(filepath,"%s%s%d.%d.",email->homedir,INBOX,(int) t,getpid());

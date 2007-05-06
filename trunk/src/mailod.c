@@ -22,14 +22,11 @@
 #include "logging.h"
 #include "database_function.h"
 
-
-
-
 int main(void)
 {
-	int sockfd, new_fd;  // listen on sock_fd, new connection on new_fd
-	struct sockaddr_in my_addr;	// my address information
-	struct sockaddr_in their_addr; // connector's address information
+	int sockfd, new_fd;  			//listen on sock_fd, new connection on new_fd
+	struct sockaddr_in my_addr;		//my address information
+	struct sockaddr_in their_addr; 	//connector's address information
 	socklen_t sin_size;
 	struct sigaction sa;
 	int yes=1;
@@ -37,11 +34,12 @@ int main(void)
 	config *conf_struct;
 	dbi_conn conn;
 
-	//drop root rights and set potfix user
-	if((setuid(207))==-1) {
+	//drop root rights and set UID_DAEMON_USER
+	if((setuid(UID_DAEMON_USER))==-1) {
 		fprintf(stderr,"Error, %s\n",strerror(errno));
 		exit (1);
 	}
+	//reading config file
 	if((conf_struct=(config *) malloc(sizeof(config)))==NULL) {
 		fprintf(stderr, "Error, malloc config structure - exited status 1\n");
 		exit (1);
@@ -62,10 +60,10 @@ int main(void)
 		perror("setsockopt");
 		exit(1);
 	}
-	my_addr.sin_family = AF_INET;		 	// host byte order
-	my_addr.sin_port = htons(MYPORT);	 	// short, network byte order
-	my_addr.sin_addr.s_addr = INADDR_ANY; 	// automatically fill with my IP
-	memset(&(my_addr.sin_zero), '\0', 8); 	// zero the rest of the struct
+	my_addr.sin_family = AF_INET;		 	//host byte order
+	my_addr.sin_port = htons(MYPORT);	 	//short, network byte order
+	my_addr.sin_addr.s_addr = INADDR_ANY; 	//automatically fill with my IP
+	memset(&(my_addr.sin_zero), '\0', 8); 	//zero the rest of the struct
 	if (bind(sockfd, (struct sockaddr *)&my_addr, sizeof(struct sockaddr)) == -1) {
 		perror("bind");
 		exit(1);
@@ -74,22 +72,22 @@ int main(void)
 		perror("listen");
 		exit(1);
 	}
-	sa.sa_handler = sigchld_handler; 		// reap all dead processes
+	sa.sa_handler = sigchld_handler; 		//reap all dead processes
 	sigemptyset(&sa.sa_mask);
 	sa.sa_flags = SA_RESTART;
 	if (sigaction(SIGCHLD, &sa, NULL) == -1) {
 		perror("sigaction");
 		exit(1);
 	}
-	while(1) {  							// main accept() loop
+	while(1) {  							//main accept() loop
 		sin_size = sizeof(struct sockaddr_in);
 		if ((new_fd = accept(sockfd, (struct sockaddr *)&their_addr, &sin_size)) == -1) {
 			perror("accept");
 			continue;
 		}
 		logging(DEBUG,"got connection from %s\n",inet_ntoa(their_addr.sin_addr));
-		if (!fork()) { // this is the child process
-			close(sockfd); // child doesn't need the listener
+		if (!fork()) { 						//this is the child process
+			close(sockfd); 					//child doesn't need the listener
 			logging(DEBUG,"USPESNE FORKNUTY");
 			if((new_email = readmail(new_fd)) == NULL) {
 				logging(DEBUG, "Error, reading and processing input email\n");
@@ -166,7 +164,7 @@ int main(void)
 
 			exit(0);
 		}
-	close(new_fd);  // parent doesn't need this
+	close(new_fd);  								// parent doesn't need this
 	}
 
 	return 0;

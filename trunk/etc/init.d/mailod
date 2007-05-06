@@ -1,0 +1,32 @@
+#!/sbin/runscript
+# Copyright 1999-2004 Gentoo Foundation
+# Distributed under the terms of the GNU General Public License v2
+# $Header: /var/cvsroot/gentoo-x86/mail-mta/postfix/files/postfix.rc6.2.2.9,v 1.1 2006/03/07 21:07:20 ferdy Exp $
+
+opts="${opts} reload"
+
+depend() {
+	use logger 
+	provide mda
+}
+
+start() {
+	ebegin "Starting mailod"
+	/home/vlk/ggmailod/src/xmailod& >/dev/null 2>&1
+#	/home/vlk/cecko/test/xtest& >/dev/null 2>&1
+	eend $?
+}
+
+stop() {
+	ebegin "Stopping mailod"
+	#/home/vlk/ggmailod/src/xmailod stop &>/dev/null
+	killall xmailod
+	eend $?
+}
+
+reload() {
+	ebegin "Reloading mailod"
+	killall xmailod
+	/home/vlk/ggmailod/src/xmailod& >/dev/null 2>&1
+	eend $?
+}

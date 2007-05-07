@@ -7,7 +7,7 @@
 #define VERS "0.0.93"				//version of program
 #define BUFFER_SIZE 1024			//size of reading( writing email buffer
 #define DIVIDER_HEAD_BODY "\n\n"	//divider email head and email body
-#define CONFIG_FILE "/home/vlk/ggmailod/src/setting_true"	//name of config file
+#define CONFIG_FILE "/etc/postfix/mailod.conf"	//name of config file
 #define DB_DRIVER "database_driver" 
 #define DB_HOST	 "database_host"
 #define DB_USERNAME "database_username"
@@ -22,7 +22,6 @@
 #define WARN	 2
 #define INFO	 1
 #define RUN	 0
-//#define LENGTH_FILESYSTEM 254		//lenght of string filesystem
 #define MYPORT 6666					//the port of daemon
 #define BACKLOG 50	 				//how many pending connections queue will hold
 #define PARSE_TO "\nTo: "			//parse string to determinate local user

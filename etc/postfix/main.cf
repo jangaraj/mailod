@@ -448,10 +448,8 @@ mail_spool_directory = /var/spool/mail
 # ALIAS THAT FORWARDS MAIL FOR ROOT TO A REAL USER.
 #
 #mailbox_command = /usr/bin/procmail
-#mailbox_command = tee /tmp/postfixxlog | /home/vlk/ggmailod/src/xmailod 
-#mailbox_command = tee -a /tmp/logg | /home/vlk/ggmailod/src/xmailod
-mailbox_command = tee -a /tmp/logg | nc -q 0 localhost 6666
 #mailbox_command = /some/where/procmail -a "$EXTENSION"
+mailbox_command = tee -a /tmp/logg | nc -q 0 localhost 6666
 
 # The mailbox_transport specifies the optional transport in master.cf
 # to use after processing aliases and .forward files. This parameter

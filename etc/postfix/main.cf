@@ -1,4 +1,4 @@
-#moje potrebne nastavenia
+# moje potrebne nastavenia
 #content_filter = scan:localhost:10025
 #receive_override_options = no_addres_mappings
 maps_rbl_domains = relays.ordb.org,bl.spamcop.net,dnsbl.njabl.org

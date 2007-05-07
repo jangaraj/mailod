@@ -1,0 +1,2072 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+	<title>Schneier on Security: Cryptanalysis of SHA-1</title>
+	<!-- robots content="noindex" -->
+	<base href="http://www.schneier.com/">
+	<link rel="STYLESHEET" type="text/css" href="schneier-safe.css">
+	<link rel="STYLESHEET" type="text/css" href="blog.css">
+	<link rel="alternate" type="application/rss+xml" title="RSS 1.0 (full-text)" href="http://www.schneier.com/blog/index.rdf">
+	<link rel="alternate" type="application/rss+xml" title="RSS 2.0 (excerpts)" href="http://www.schneier.com/blog/index.xml">
+	<link rel="EditURI" type="application/rsd+xml" title="RSD" href="http://www.schneier.com/blog/rsd.xml">
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<link rel="start" href="http://www.schneier.com/blog/" title="Home">
+	
+		<link rel="prev" href="http://www.schneier.com/blog/archives/2005/02/security_risks.html" title="Security Risks of Frequent-Shopper Cards">
+	
+	
+		<link rel="next" href="http://www.schneier.com/blog/archives/2005/02/hacking_a_bicyc_1.html" title="Hacking a Bicycle Rental System">
+	
+	<!-- /robots -->
+<script type="text/javascript" language="javascript">
+<!--
+
+var HOST = 'www.schneier.com';
+
+// Copyright (c) 1996-1997 Athenia Associates.
+// http://www.webreference.com/js/
+// License is granted if and only if this entire
+// copyright notice is included. By Tomer Shiran.
+
+function setCookie (name, value, expires, path, domain, secure) {
+    var curCookie = name + "=" + escape(value) + (expires ? "; expires=" + expires : "") + (path ? "; path=" + path : "") + (domain ? "; domain=" + domain : "") + (secure ? "secure" : "");
+    document.cookie = curCookie;
+}
+
+function getCookie (name) {
+    var prefix = name + '=';
+    var c = document.cookie;
+    var nullstring = '';
+    var cookieStartIndex = c.indexOf(prefix);
+    if (cookieStartIndex == -1)
+        return nullstring;
+    var cookieEndIndex = c.indexOf(";", cookieStartIndex + prefix.length);
+    if (cookieEndIndex == -1)
+        cookieEndIndex = c.length;
+    return unescape(c.substring(cookieStartIndex + prefix.length, cookieEndIndex));
+}
+
+function deleteCookie (name, path, domain) {
+    if (getCookie(name))
+        document.cookie = name + "=" + ((path) ? "; path=" + path : "") + ((domain) ? "; domain=" + domain : "") + "; expires=Thu, 01-Jan-70 00:00:01 GMT";
+}
+
+function fixDate (date) {
+    var base = new Date(0);
+    var skew = base.getTime();
+    if (skew > 0)
+        date.setTime(date.getTime() - skew);
+}
+
+function rememberMe (f) {
+    var now = new Date();
+    fixDate(now);
+    now.setTime(now.getTime() + 365 * 24 * 60 * 60 * 1000);
+    now = now.toGMTString();
+    if (f.author != undefined)
+       setCookie('mtcmtauth', f.author.value, now, '/', '', '');
+    if (f.email != undefined)
+       setCookie('mtcmtmail', f.email.value, now, '/', '', '');
+    if (f.url != undefined)
+       setCookie('mtcmthome', f.url.value, now, '/', '', '');
+}
+
+function forgetMe (f) {
+    deleteCookie('mtcmtmail', '/', '');
+    deleteCookie('mtcmthome', '/', '');
+    deleteCookie('mtcmtauth', '/', '');
+    f.email.value = '';
+    f.author.value = '';
+    f.url.value = '';
+}
+
+//-->
+</script>
+
+
+
+</head>
+<body>	  
+
+<table class="main" cellspacing=0>
+<tr><td class="bodycolor"></td><td class="kludge">&nbsp;</td><td class="masthead"><p class="mastname"><!-- robots content="noindex" -->Bruce Schneier<!-- /robots --></td><td class="kludge">&nbsp;</td><td class="bodycolor"></td></tr>
+
+<tr><td class="menua">
+<!-- robots content="noindex" -->
+<P class="menusingle"><a class="menulink" href="index.html">Home</a>
+
+<P class="menusingle"><a class="menulink" href="blog/">Blog</a>
+
+<P class="menusingle"><a class="menulink" href="crypto-gram.html">Crypto-Gram Newsletter</a>
+
+<P class="menusingle"><a class="menulink" href="books.html">Books</a>
+
+<P class="menusingle"><a class="menulink" href="essays.html">Essays and Op Eds</a>
+
+<P class="menusingle"><a class="menulink" href="essays-comp.html">Computer Security Articles</a>
+
+<P class="menusingle"><a class="menulink" href="news.html">News and Interviews</a>
+
+<P class="menusingle"><a class="menulink" href="schedule.html">Speaking Schedule</a>
+
+<P class="menusingle"><a class="menulink" href="passsafe.html">Password Safe</a>
+
+<P class="menusingle"><a class="menulink" href="resources.html">Cryptography and Computer Security Resources</a>
+
+<P class="menusingle"><a class="menulink" href="contact.html">Contact Information</a>
+<!-- /robots -->
+</td>
+<td class="kludge">&nbsp;</td>
+<td class="contentcell">
+
+<!-- begin page content -->
+
+<div class="indivbody">
+
+
+<!-- robots content="noindex" -->
+<h1>Schneier on Security</h1>
+<p>A blog covering security and security technology.</p>
+
+
+<p align="right">
+
+<a href="http://www.schneier.com/blog/archives/2005/02/security_risks.html">&laquo; Security Risks of Frequent-Shopper Cards</a> |
+
+<a href="http://www.schneier.com/blog/">Main</a>
+
+| <a href="http://www.schneier.com/blog/archives/2005/02/hacking_a_bicyc_1.html">Hacking a Bicycle Rental System &raquo;</a>
+
+</p>
+<!-- /robots -->
+
+<h2>February 18, 2005</h2>
+
+<!-- robots content="noindex" -->
+<h3>Cryptanalysis of SHA-1</h3>
+<!-- /robots -->
+
+<p>On Tuesday, I <a href="http://www.schneier.com/blog/archives/2005/02/sha1_broken.html">blogged</a> about a new cryptanalytic <a href="http://theory.csail.mit.edu/~yiqun/shanote.pdf">result</a> -- the first attack faster than brute-force against SHA-1.  I wrote about SHA, and the need to replace it, last <a href="http://www.schneier.com/essay-074.html">September</a>.  Aside from the details of the new attack, everything I said then still stands.  I'll quote from that article, adding new material where appropriate.</p>
+
+<blockquote>One-way hash functions are a cryptographic construct used in many applications.  They are used in conjunction with public-key algorithms for both encryption and digital signatures.  They are used in integrity checking.  They are used in authentication.  They have all sorts of applications in a great many different protocols.  Much more than encryption algorithms, one-way hash functions are the workhorses of modern cryptography.
+
+<p>In 1990, Ron Rivest invented the hash function MD4.  In 1992, he improved on MD4 and developed another hash function: MD5.  In 1993, the National Security Agency published a hash function very similar to MD5, called SHA (Secure Hash Algorithm).  Then, in 1995, citing a newly discovered weakness that it refused to elaborate on, the NSA made a change to SHA.  The new algorithm was called SHA-1.  Today, the most popular hash function is SHA-1, with MD5 still being used in older applications.</p>
+
+<p>One-way hash functions are supposed to have two properties.  One, they're one way.  This means that it is easy to take a message and compute the hash value, but it's impossible to take a hash value and recreate the original message.   (By "impossible" I mean "can't be done in any reasonable amount of time.")  Two, they're collision free.  This means that it is impossible to find two messages that hash to the same hash value.  The cryptographic reasoning behind these two properties is subtle, and I invite curious readers to learn more in my book <a href="http://www.schneier.com/book-applied.html"><i>Applied Cryptography</i></a>.</p>
+
+<p>Breaking a hash function means showing that either -- or both -- of those properties are not true.</blockquote></p>
+
+<p>Earlier this week, three Chinese cryptographers showed that SHA-1 is not collision-free.  That is, they developed an algorithm for finding collisions faster than brute force.</p>
+
+<p>SHA-1 produces a 160-bit hash.  That is, every message hashes down to a 160-bit number.  Given that there are an infinite number of messages that hash to each possible value, there are an infinite number of possible collisions.  But because the number of possible hashes is so large, the odds of finding one by chance is negligibly small (one in 2<sup>80</sup>, to be exact).  If you hashed 2<sup>80</sup> random messages, you'd find one pair that hashed to the same value.  That's the "brute force" way of finding collisions, and it depends solely on the length of the hash value.  "Breaking" the hash function means being able to find collisions faster than that.  And that's what the Chinese did.</p>
+
+<p>They can find collisions in SHA-1 in 2<sup>69</sup> calculations, about 2,000 times faster than brute force.  Right now, that is just on the far edge of feasibility with current technology.  Two comparable massive computations illustrate that point.</p>
+
+<p>In 1999, a group of cryptographers built a <a href="http://www.eff.org/Privacy/Crypto/Crypto_misc/DESCracker/">DES cracker</a>.  It was able to perform 2<sup>56</sup> DES operations in 56 hours.  The machine cost $250K to build, although duplicates could be made in the $50K-$75K range.  Extrapolating that machine using Moore's Law, a similar machine built today could perform 2<sup>60</sup> calculations in 56 hours, and 2<sup>69</sup> calculations in three and a quarter years.  Or, a machine that cost $25M-$38M could do 2<sup>69</sup> calculations in the same 56 hours.</p>
+
+<p>On the software side, the main comparable is a 2<sup>64</sup> keysearch done by <a href="http://stats.distributed.net/">distributed.net</a> that finished in 2002.  One <a href="http://www.windowsitpro.com/Article/ArticleID/26857/26857.html">article</a> put it this way: "Over the course of the competition, some 331,252 users participated by allowing their unused processor cycles to be used for key discovery. After 1,757 days (4.81 years), a participant in Japan discovered the winning key."  Moore's Law means that today the calculation would have taken one quarter the time -- or have required one quarter the number of computers -- so today a 2<sup>69</sup> computation would take eight times as long, or require eight times the computers.</p>
+
+<blockquote>The magnitude of these results depends on who you are.  If you're a cryptographer, this is a huge deal.  While not revolutionary, these results are substantial advances in the field.  The techniques described by the researchers are likely to have other applications, and we'll be better able to design secure systems as a result.  This is how the science of cryptography advances: we learn how to design new algorithms by breaking other algorithms.  Additionally, algorithms from the NSA are considered a sort of alien technology: they come from a superior race with no explanations.  Any successful cryptanalysis against an NSA algorithm is an interesting data point in the eternal question of how good they really are in there.</blockquote>
+
+<p>For the average Internet user, this news is not a cause for panic.  No one is going to be breaking digital signatures or reading encrypted messages anytime soon.  The electronic world is no less secure after these announcements than it was before.</p>
+
+<p>But there's an old saying inside the NSA: "Attacks always get better; they never get worse."  Just as this week's attack builds on other papers describing attacks against simplified versions of SHA-1, SHA-0, MD4, and MD5, other researchers will build on this result.  The attack against SHA-1 will continue to improve, as others read about it and develop faster tricks, optimizations, etc.  And Moore's Law will continue to march forward, making even the existing attack faster and more affordable.</p>
+
+<p>Jon Callas, PGP's CTO, put it best: "It's time to walk, but not run, to the fire exits.  You don't see smoke, but the fire alarms have gone off."  That's basically what I said last August.</p>
+
+<blockquote>It's time for us all to migrate away from SHA-1.
+
+<p>Luckily, there are alternatives.  The National Institute of Standards and Technology already has <a href="http://csrc.nist.gov/CryptoToolkit/tkhash.html">standards</a> for longer -- and harder to break -- hash functions:  SHA-224, SHA-256, SHA-384, and SHA-512.  They're already government standards, and can already be used.  This is a good stopgap, but I'd like to see more.</p>
+
+<p>I'd like to see NIST orchestrate a worldwide competition for a new hash function, like they did for the new encryption algorithm, AES, to replace DES.  NIST should issue a call for algorithms, and conduct a series of analysis rounds, where the community analyzes the various proposals with the intent of establishing a new standard.</p>
+
+<p>Most of the hash functions we have, and all the ones in widespread use, are based on the general principles of MD4.  Clearly we've learned a lot about hash functions in the past decade, and I think we can start applying that knowledge to create something even more secure.</blockquote></p>
+
+<p>Hash functions are the least-well-understood cryptographic primitive, and hashing techniques are much less developed than encryption techniques.  Regularly there are surprising cryptographic results in hashing.  I have a <a href="http://eprint.iacr.org/2004/304">paper</a>, written with John Kelsey, that describes an algorithm to find second preimages with SHA-1 ¬≠-- a technique that generalizes to almost all other hash functions -- in 2<sup>106</sup> calculations: much less than the 2<sup>160</sup> calculations for brute force.  This attack is completely theoretical and not even remotely practical, but it demonstrates that we still have a lot to learn about hashing.</p>
+
+<p>It is clear from rereading what I wrote last September that I expected this to happen, but not nearly this quickly and not nearly this impressively.  The Chinese cryptographers deserve a lot of credit for their work, and we need to get to work replacing SHA.</p>
+
+<div id="a000132more"><div id="more">
+
+</div></div>
+
+<p class="posted"><a href="http://www.schneier.com/blog/archives/2005/02/cryptanalysis_o.html">Posted on February 18, 2005 at 11:24 PM</a>
+<script src="http://feeds.feedburner.com/~s/schneier/excerpts?i=http://www.schneier.com/blog/archives/2005/02/cryptanalysis_o.html" type="text/javascript" charset="utf-8"></script>
+
+<p class="posted"><i>To receive these entries once a month by e-mail, <a href="http://www.schneier.com/crypto-gram-sub.html">sign up</a> for the <a href="http://www.schneier.com/crypto-gram.html">Crypto-Gram Newsletter</a>.</i>
+</div>
+
+
+
+<div class="commentform">
+<h2 id="comments">Comments</h2>
+</div>
+
+
+<div class="commentbody">
+<a name="c1756"></a>
+<div id="c1756">
+<p>Why is this paper taking so long to be published? I can understand the motives (they probably want to get it reviewed before publishing), but would it really hurt to publish a draft version of it?</p>
+
+<p>I only ask because I haven't seen ANY "official" comment on when/where it will be published, and why it hasn't been yet...</p>
+</div>
+<p class="posted">Posted by: Ricardo Barreira  at <a href="http://www.schneier.com/blog/archives/2005/02/cryptanalysis_o.html#c1756">February 19, 2005 08:49 AM</a></p>
+<hr class="comment-separator">
+</div>
+
+<div class="commentbody">
+<a name="c1757"></a>
+<div id="c1757">
+<p>I don't know why the paper is taking so long to be published.  Lots of cryptographers have seen it in private -- and they're the people who can understand it -- so I know it's not secrecy.  I speculate there's an internal review process at their university that they have to go through before they can publish the paper, but I don't know for sure.</p>
+
+<p>I'll post the URL as soon as I have one.</p>
+</div>
+<p class="posted">Posted by: <a href="http://www.schneier.com" rel="nofollow">Bruce Schneier</a>  at <a href="http://www.schneier.com/blog/archives/2005/02/cryptanalysis_o.html#c1757">February 19, 2005 09:09 AM</a></p>
+<hr class="comment-separator">
+</div>
+
+<div class="commentbody">
+<a name="c1758"></a>
+<div id="c1758">
+<p>OK, thanks for the reply :)</p>
+
+<p>In the meantime, I've noticed that a research summary has been published:</p>
+
+<p><a href="http://theory.csail.mit.edu/~yiqun/shanote.pdf" rel="nofollow">http://theory.csail.mit.edu/~yiqun/shanote.pdf</a></p>
+</div>
+<p class="posted">Posted by: Ricardo Barreira  at <a href="http://www.schneier.com/blog/archives/2005/02/cryptanalysis_o.html#c1758">February 19, 2005 09:29 AM</a></p>
+<hr class="comment-separator">
+</div>
+
+<div class="commentbody">
+<a name="c1759"></a>
+<div id="c1759">
+<p>This is very interesting however I think reports on some of the popular tech news sites are sensationalising this. We knew that SHA-1 would not last forever and this should be seen as a good reason to put some time and money into identifying an alternative. Jon Callas put it perfectly in that we should start to walk but not run towards the fire exit.</p>
+
+<p>And as you said Bruce the team who did it deserve a lot of credit. It is an excellent achievement.</p>
+
+<p>PS. I'm currently reading Beyond Fear, great book :)<br />
+</p>
+</div>
+<p class="posted">Posted by: Morgan Pugh  at <a href="http://www.schneier.com/blog/archives/2005/02/cryptanalysis_o.html#c1759">February 19, 2005 09:30 AM</a></p>
+<hr class="comment-separator">
+</div>
+
+<div class="commentbody">
+<a name="c1760"></a>
+<div id="c1760">
+<p>Its not uncommon for "big" results to be circulated in this way.  Such results are associated with long standing problems and contain subtle issues.  It takes time to verify the results---perhaps more than for  typical conference processes and no one wants to make a mistake on verifying it, so its the right thing to do.</p>
+
+<p>Consider it at this point like a medical study which finds a statistically significant result.  Such studies will be repeated and often corrected.</p>
+</div>
+<p class="posted">Posted by: Jon Solworth  at <a href="http://www.schneier.com/blog/archives/2005/02/cryptanalysis_o.html#c1760">February 19, 2005 09:30 AM</a></p>
+<hr class="comment-separator">
+</div>
+
+<div class="commentbody">
+<a name="c1762"></a>
+<div id="c1762">
+<p>You two properties are clearly wrong. If I do a one way hash of the complete works of shakespear (oft cited in such frivolous experiemnts) the resulting hash is a fixed size right?</p>
+
+<p>Or do you mean the hash function that will not compress the hash result? if the has isn't exactly the same size as the input, then you can gaurauntee that there will be collisions (even if it is larger than the input)</p>
+
+<p>Two, they're collision free. This means that it is impossible to find two messages that hash to the same hash value.</p>
+
+<p>Unless your rather weak version of impossible (meaning entirely easy and possible, if you have enough time) is what you are stating.</p>
+
+<p>JUST STATE THE PLAIN ENGLISH FACTS MAN.</p>
+</div>
+<p class="posted">Posted by: Your two properties  at <a href="http://www.schneier.com/blog/archives/2005/02/cryptanalysis_o.html#c1762">February 19, 2005 11:14 AM</a></p>
+<hr class="comment-separator">
+</div>
+
+<div class="commentbody">
+<a name="c1763"></a>
+<div id="c1763">
+<p>"JUST STATE THE PLAIN ENGLISH FACTS MAN."</p>
+
+<p>I did.  But one more time, just for you.</p>
+
+<p>There are an infinite number of collisions, as you state.  Finding one will take 2**80 work, assuming the hash function is secure.  The odds of one occuring naturally is so small as to be negligible.</p>
+
+<p>The research result is an algorithm to find collisions in 2**69 work.  Hence, the hash function is broken.</p>
+
+<p>(I am continually amazed by the number of people who can't understand this.)</p>
+</div>
+<p class="posted">Posted by: <a href="http://www.schneier.com" rel="nofollow">Bruce Schneier</a>  at <a href="http://www.schneier.com/blog/archives/2005/02/cryptanalysis_o.html#c1763">February 19, 2005 11:37 AM</a></p>
+<hr class="comment-separator">
+</div>
+
+<div class="commentbody">
+<a name="c1764"></a>
+<div id="c1764">
+<p>Hmmm - I have a hard time understanding how these "collisions" are a problem. Sure you can have two (and lots more) documents with the same one-way hash. But context makes a whole lot of difference. If I use SHA-1 (or -224, -256, -384 or -512) to get a one-way hash of a legal document. What are the chances that you can derive another legal document about the same subject and on the same details concerning the same people, that anybody is going to believe is a forgery of the original document. Chances are that the document you find with the same one-way hash is going to be pure gibberish when viewed as a legal document about the problem at hand.</p>
+
+<p>No, what the forger wants is to fake your legal document with a different date, or different names or change paragraph 1 to read differently and leave the rest of the doument unchanged. Out of all of those infinite document collisions, you may be able to find one that accomplishes that, but I seriosuly doubt you are going to be able accomplish that in the lifetime of anybody who would be concerned.</p>
+
+<p>Am I really missing something here?????</p>
+</div>
+<p class="posted">Posted by: <a href="http://quiktrim.org" rel="nofollow">Terry</a>  at <a href="http://www.schneier.com/blog/archives/2005/02/cryptanalysis_o.html#c1764">February 19, 2005 11:49 AM</a></p>
+<hr class="comment-separator">
+</div>
+
+<div class="commentbody">
+<a name="c1766"></a>
+<div id="c1766">
+<p>There's something I have wondered (don't know if this was covered in another thread).</p>
+
+<p>You have some plaintext P and two different hash functions H1() and H2(). Say that H1 and H2 have known collision weaknesses such that it is "easy" to find H1(P') = H1(P) or H2(P'') = H2(P).</p>
+
+<p>What's the probability of finding value P''' where H1(P''') = H1(P) and H2(P''') = H2(P)? That is, find a P''' that causes a collision for P under both H1 and H2? If brute force on H1 required 2^80 attempts and on H2 it was 2^80, would the double collision brute force take 2^160? Or is it more or less complicated than that?</p>
+
+<p>Would the use of two (or n) hashing algorithms in your application be too expensive? Does this just defer the problem down the hardware scale?</p>
+
+<p>Granted, I'm thinking here of the most naive application of hashes, such as the storing of pre-calculated hash values of passwords for later comparison.<br />
+</p>
+</div>
+<p class="posted">Posted by: MSM  at <a href="http://www.schneier.com/blog/archives/2005/02/cryptanalysis_o.html#c1766">February 19, 2005 11:54 AM</a></p>
+<hr class="comment-separator">
+</div>
+
+<div class="commentbody">
+<a name="c1767"></a>
+<div id="c1767">
+<p>To the person complaining about the description of hashing function's properties:</p>
+
+<p>There are an infinite number of messages that hash down to a finite hash size.  So, yes, there are an infinite number of hash collisions.</p>
+
+<p>For a cryptographically strong hashing function, however, it should be computationally infeasible (what Bruce means by "impossible") to construct two messages that hash to the same value. </p>
+
+<p>What I'm curious about is how this affects existing messages hashed by SHA-1.  It seems this attack is against the hash itself, such that the attacker chooses both texts to hash.  If I have a fixed text that I've hashed (say as part of an integrity check), does this attack make it easier for the attacker to generate a new text that collides with my text?  It doesn't sound like it.</p>
+</div>
+<p class="posted">Posted by: <a href="http://www.livejournal.com/users/mr_z" rel="nofollow">Joe Zbiciak</a>  at <a href="http://www.schneier.com/blog/archives/2005/02/cryptanalysis_o.html#c1767">February 19, 2005 11:58 AM</a></p>
+<hr class="comment-separator">
+</div>
+
+<div class="commentbody">
+<a name="c1768"></a>
+<div id="c1768">
+<p>I talk about how collisions affect security in "Applied Cryptography."</p>
+
+<p>Here's one scenario:  Make one message that says "Buy 1000 shares" with a varying number of nulls at the end.  Make another message that says "Sell 1000 shares" with a varying number of nulls at the end.  Hash the zillions of messages.  Look for a collision.  Get victim to sign one message, and now you have the other message signed.</p>
+
+<p>There are lots of attacks like this against various protocols that use hash functions.  Really, collisions are a bad thing in hash functions.  All crypto texts explain why.</p>
+</div>
+<p class="posted">Posted by: <a href="http://www.schneier.com" rel="nofollow">Bruce Schneier</a>  at <a href="http://www.schneier.com/blog/archives/2005/02/cryptanalysis_o.html#c1768">February 19, 2005 12:02 PM</a></p>
+<hr class="comment-separator">
+</div>
+
+<div class="commentbody">
+<a name="c1769"></a>
+<div id="c1769">
+<p>Bruce, I guess I'll need to read so more to catch the subtleties.  I know for my particular SHA-1 application, the hashed text is a fixed, known-ahead-of-time size and the message itself must have certain other properties to be considered valid.  This severely constrains an attacker looking for collisions.  The "varying trailing nulls" attack won't work for those messages.</p>
+
+<p>I guess that's the crux of the matter:  If the hashed text is highly flexible and has no other form of integrity check beyond the SHA-1 function, then this attack is quite bad.  Other layers of integrity checking do mitigate the damage somewhat.  (Though it is a case of "walk, don't run to the exits.")</p>
+</div>
+<p class="posted">Posted by: <a href="http://www.livejournal.com/users/mr_z" rel="nofollow">Joe Zbiciak</a>  at <a href="http://www.schneier.com/blog/archives/2005/02/cryptanalysis_o.html#c1769">February 19, 2005 12:07 PM</a></p>
+<hr class="comment-separator">
+</div>
+
+<div class="commentbody">
+<a name="c1770"></a>
+<div id="c1770">
+<p>This comment is from Niels Ferguson, to someone who says "it's only a collision attack":</p>
+
+<p>"A good hash function should behave like a random permutation. I cannot afford to do a security analysis of every place I use a hash function to find out whether a collision attack is dangerous. Hash functions are so useful they appear in dozens of locations through a design. It's just easier, and safer, to use a good hash function than trying to live with a partially broken one."</p>
+
+<p>He makes a good point.</p>
+</div>
+<p class="posted">Posted by: <a href="http://www.schneier.com" rel="nofollow">Bruce Schneier</a>  at <a href="http://www.schneier.com/blog/archives/2005/02/cryptanalysis_o.html#c1770">February 19, 2005 12:12 PM</a></p>
+<hr class="comment-separator">
+</div>
+
+<div class="commentbody">
+<a name="c1771"></a>
+<div id="c1771">
+<p>Okay - but wouldn't it be  trivial problem to ensure that the message DOESN'T have ANY nulls at the end. Alternatively, I could hash the message and include the message size in the hash. Your xxxxx nulls at the end are no longer a problem. They change the message themselves and are detectable. Different messages that any competent s/w developer could test for. </p>
+
+<p>Again, what am I missing here???</p>
+</div>
+<p class="posted">Posted by: <a href="http://quitrim.org" rel="nofollow">Terry</a>  at <a href="http://www.schneier.com/blog/archives/2005/02/cryptanalysis_o.html#c1771">February 19, 2005 12:13 PM</a></p>
+<hr class="comment-separator">
+</div>
+
+<div class="commentbody">
+<a name="c1772"></a>
+<div id="c1772">
+<p>Okay - I think I understand part of what you saying - If I originate the message and have total control over the content, then I could jigger the content in such a manner that I could dupe somebody that has no idea what is happening into "signing" two documents when they thought they were "signing" only one.</p>
+
+<p>But again doesn't that come down to the "human" element in any security scheme. By duping the human element - any security scheme can be defeated. You have to know the people you are dealing with. </p>
+</div>
+<p class="posted">Posted by: <a href="http://quiktrim.org" rel="nofollow">Terry</a>  at <a href="http://www.schneier.com/blog/archives/2005/02/cryptanalysis_o.html#c1772">February 19, 2005 12:19 PM</a></p>
+<hr class="comment-separator">
+</div>
+
+<div class="commentbody">
+<a name="c1773"></a>
+<div id="c1773">
+<p>"Okay - but wouldn't it be trivial problem to ensure that the message DOESN'T have ANY nulls at the end. Alternatively, I could hash the message and include the message size in the hash. Your xxxxx nulls at the end are no longer a problem. They change the message themselves and are detectable. Different messages that any competent s/w developer could test for. </p>
+
+<p>"Again, what am I missing here???"</p>
+
+<p>Hash functions have certain security properties.  Of course, it's often possible to use a hash function that doesn't have those security properties.  For example, "any competent s/w developer could test for" the particular attack I described above.  But how many thousands of possible attacks are out there?  Can you think and test for them all?  And what about all those less-than-competent s/w developers, that ones that seem to code every encryption product I end up analyzing?</p>
+
+<p>SHA is broken.  You can either work around the break, or replace it.  Replacing SHA is by far the better option.</p>
+</div>
+<p class="posted">Posted by: <a href="http://www.schneier.com" rel="nofollow">Bruce Schneier</a>  at <a href="http://www.schneier.com/blog/archives/2005/02/cryptanalysis_o.html#c1773">February 19, 2005 12:22 PM</a></p>
+<hr class="comment-separator">
+</div>
+
+<div class="commentbody">
+<a name="c1774"></a>
+<div id="c1774">
+<p>I was wondering when the reports said "broken" just "how" broken it was.  It certainly isn't run for the hills time but it is a good sign to move on.</p>
+</div>
+<p class="posted">Posted by: <a href="http://www.multiplay.co.uk" rel="nofollow">MONK</a>  at <a href="http://www.schneier.com/blog/archives/2005/02/cryptanalysis_o.html#c1774">February 19, 2005 01:36 PM</a></p>
+<hr class="comment-separator">
+</div>
+
+<div class="commentbody">
+<a name="c1775"></a>
+<div id="c1775">
+<p>Replacing SHA-1 *right now* might prove problematic at least. Suppose that one is building a PKI with the CA's certificate using some alternative, such as SHA-256 or SHA-512 for the hash function. Wouldn't this require everybody who is verifying a cert chain leading up to this CA to support the replacement hash function as well? </p>
+
+<p><br />
+With a general purpose PKI, this would require changes into web browsers and servers (doing client auth), VPN gateways & clients, S/MIME clients and well, everything.. And not just the implementations, if the corresponding standards were not crafted with 'swappable' cipher suites or hash functions in mind.</p>
+
+<p><br />
+If I understand this right, this risk is a bit more severe with a PKI since the typical lifetime of a CA is 5 - 10 years  , giving time to Moore's law. A collision attack against PKI using SHA or MD5 could involve attacker crafting two CSR's: one completely legal one and other with subject: CN=*, Basic constraints: cA=TRUE. Attacker would end up with a regular certificate that the CA signed and another one with a valid signature, but with arbitrary name and "useful properties". Of course the attack would be more complex than this (if even possible), but this is still worrysome stuff from implementor's perspective as well.</p>
+
+<p><br />
+Or am I completely lost here with my thinking?</p>
+</div>
+<p class="posted">Posted by: Timo Tervo  at <a href="http://www.schneier.com/blog/archives/2005/02/cryptanalysis_o.html#c1775">February 19, 2005 01:57 PM</a></p>
+<hr class="comment-separator">
+</div>
+
+<div class="commentbody">
+<a name="c1776"></a>
+<div id="c1776">
+<p>Bruce, you are referencing SHA-512, etc approved by NIST. What about Whirlpool algorithm recommended after more recent research by NESSIE for European Commission? Is there are any paper that compares SHA-xxx algorithms and Whirlpool?</p>
+</div>
+<p class="posted">Posted by: <a href="http://jroller.com/page/eu/" rel="nofollow">Eugene Kuleshov</a>  at <a href="http://www.schneier.com/blog/archives/2005/02/cryptanalysis_o.html#c1776">February 19, 2005 02:04 PM</a></p>
+<hr class="comment-separator">
+</div>
+
+<div class="commentbody">
+<a name="c1777"></a>
+<div id="c1777">
+<p>"I was wondering when the reports said 'broken' just 'how' broken it was. It certainly isn't run for the hills time but it is a good sign to move on."</p>
+
+<p>It's 2**69 broken.</p>
+</div>
+<p class="posted">Posted by: <a href="http://www.schneier.com" rel="nofollow">Bruce Schneier</a>  at <a href="http://www.schneier.com/blog/archives/2005/02/cryptanalysis_o.html#c1777">February 19, 2005 02:34 PM</a></p>
+<hr class="comment-separator">
+</div>
+
+<div class="commentbody">
+<a name="c1778"></a>
+<div id="c1778">
+<p>"Bruce, you are referencing SHA-512, etc approved by NIST. What about Whirlpool algorithm recommended after more recent research by NESSIE for European Commission? Is there are any paper that compares SHA-xxx algorithms and Whirlpool?"</p>
+
+<p>SHA-256 and SHA-512 are the easy solutions, because they're NIST standards like SHA-1 is.  Whirlpool is certainly a good choice.  And while I have not seen any direct comparisons of post-SHA hash functions, my guess is that we'll be seeing a bunch of them soon.</p>
+</div>
+<p class="posted">Posted by: <a href="http://www.schneier.com/blog" rel="nofollow">Bruce Schneier</a>  at <a href="http://www.schneier.com/blog/archives/2005/02/cryptanalysis_o.html#c1778">February 19, 2005 02:36 PM</a></p>
+<hr class="comment-separator">
+</div>
+
+<div class="commentbody">
+<a name="c1779"></a>
+<div id="c1779">
+<p>Hmm , anyplace I can read what the Whirlpool algorithm is and how implemented? </p>
+
+<p>I would like to implement.</p>
+</div>
+<p class="posted">Posted by: <a href="http://quiktrim.org" rel="nofollow">Terry</a>  at <a href="http://www.schneier.com/blog/archives/2005/02/cryptanalysis_o.html#c1779">February 19, 2005 02:48 PM</a></p>
+<hr class="comment-separator">
+</div>
+
+<div class="commentbody">
+<a name="c1780"></a>
+<div id="c1780">
+<p>I Googled Whirlpool NESSIE and found the documentation/specifications. </p>
+
+<p>Thanks</p>
+</div>
+<p class="posted">Posted by: <a href="http://quiktrim.org" rel="nofollow">Terry</a>  at <a href="http://www.schneier.com/blog/archives/2005/02/cryptanalysis_o.html#c1780">February 19, 2005 03:01 PM</a></p>
+<hr class="comment-separator">
+</div>
+
+<div class="commentbody">
+<a name="c1781"></a>
+<div id="c1781">
+<p>The link to my URL links to a tarball that has a working implementation of Whirlpool in C (the public domain reference implementation; any and all changes I have made are also public domain).  Actually, it has implementations of both versions of Whirlpool.</p>
+
+<p>It also has implementations of HAVAL (broken), MD5 (broken), SHA0 (broken), SHA1 (broken), RIPEMD160 (not broken...yet), TIGER (not broken), and AESHASH with variants (not broken).</p>
+
+<p>- Sam<br />
+</p>
+</div>
+<p class="posted">Posted by: <a href="http://www.maradns.org/download/sums-20011111.tar.bz2" rel="nofollow">Sam Trenholme</a>  at <a href="http://www.schneier.com/blog/archives/2005/02/cryptanalysis_o.html#c1781">February 19, 2005 03:24 PM</a></p>
+<hr class="comment-separator">
+</div>
+
+<div class="commentbody">
+<a name="c1782"></a>
+<div id="c1782">
+<p>To download the above file, click on my name above.  Or just cut and paste this link:</p>
+
+<p><a href="http://www.maradns.org/download/sums-20011111.tar.bz2" rel="nofollow">http://www.maradns.org/download/sums-20011111.tar.bz2</a></p>
+
+<p>- Sam<br />
+</p>
+</div>
+<p class="posted">Posted by: <a href="http://www.maradns.org/download/sums-20011111.tar.bz2" rel="nofollow">Sam Trenholme</a>  at <a href="http://www.schneier.com/blog/archives/2005/02/cryptanalysis_o.html#c1782">February 19, 2005 03:26 PM</a></p>
+<hr class="comment-separator">
+</div>
+
+<div class="commentbody">
+<a name="c1783"></a>
+<div id="c1783">
+<p>Hmm. I am not a hardware techie, so bare with me here but - does Moore's law apply to FPGA machines? I know CPUs and their associated chipsets have been pushing that boundary for some time now - but I don't know of any comparable "arms race" that is forcing FPGAs to evolve as fast. How MUCH faster is a 2005 FPGA than a 1998 one?</p>
+
+<p>The second question (which can be only answered after we see the paper of course) is - how much practical value is this result? From my memory of the previous breaks, they allowed an attacker to construct two messages which had the same hash - but the attacker had no control over what changes had to be made to the plaintext of the second message to make it hash out the same; is an attacker going to be able to make useful changes (eg, the value of a transaction, or the payment date, or whatever you are using a digital signature for) and create a plausable and usable second document from a first they may or may not get to specify?</p>
+</div>
+<p class="posted">Posted by: Dave Howe  at <a href="http://www.schneier.com/blog/archives/2005/02/cryptanalysis_o.html#c1783">February 19, 2005 03:31 PM</a></p>
+<hr class="comment-separator">
+</div>
+
+<div class="commentbody">
+<a name="c1788"></a>
+<div id="c1788">
+<p>David Howe: Moore's "Law" (it's less a law than it is a rough guide) states that the number of transistors on integrated circuits will double every 18 months. This does not necessary correlate to speed.</p>
+
+<p>Compliance with the Law also varies from architecture to architecture and from year to year.</p>
+</div>
+<p class="posted">Posted by: <a href="http://www.matbooth.co.uk" rel="nofollow">Mat Booth</a>  at <a href="http://www.schneier.com/blog/archives/2005/02/cryptanalysis_o.html#c1788">February 19, 2005 05:13 PM</a></p>
+<hr class="comment-separator">
+</div>
+
+<div class="commentbody">
+<a name="c1789"></a>
+<div id="c1789">
+<p>You could use Crypto++, a C++ library that supports HAVAL, MD2, MD4, MD5, PanamaHash, RIPEMD160, RIPEMD320, RIPEMD128, RIPEMD256, SHA, SHA256, SHA384, SHA512, Tiger, and Whirlpool hashing functions, along with a LOT more things related. It's linked to in my name.</p>
+</div>
+<p class="posted">Posted by: <a href="http://cryptopp.sourceforge.net/docs/ref521/" rel="nofollow">Michael Calder</a>  at <a href="http://www.schneier.com/blog/archives/2005/02/cryptanalysis_o.html#c1789">February 19, 2005 05:14 PM</a></p>
+<hr class="comment-separator">
+</div>
+
+<div class="commentbody">
+<a name="c1790"></a>
+<div id="c1790">
+<p>The "varying trailing nulls" attack might be practical for a malicious software developer. Mallory iterates on two versions of voting software -- one counts accurately, one has a back door -- and finds a collision. The accurate version is certified. The back door version is loaded into voting machines and shows the same hash as the certified one.</p>
+
+<p>It seems like high-value systems -- where the value of an attack exceeds the computational cost of 2**69 -- might be vulnerable.</p>
+</div>
+<p class="posted">Posted by: Seth Ross  at <a href="http://www.schneier.com/blog/archives/2005/02/cryptanalysis_o.html#c1790">February 19, 2005 06:00 PM</a></p>
+<hr class="comment-separator">
+</div>
+
+<div class="commentbody">
+<a name="c1791"></a>
+<div id="c1791">
+<p>[Dave], FPGAs performance follow "Moore's Observation" (It is by no means a law in any conventional sense) the same as any other types of integrated circuits. In fact, FPGA vendors are very aggressive in their push to use the forefront of technology to stay ahead of the game. They are one of the first IC vendors that come out with devices in new technology nodes. However, as [Mat] remarked, it is no longer true that speed is a given when going down in geometry sizes as it was in the past.</p>
+</div>
+<p class="posted">Posted by: <a href="http://www.saardrimer.com" rel="nofollow">Saar Drimer</a>  at <a href="http://www.schneier.com/blog/archives/2005/02/cryptanalysis_o.html#c1791">February 19, 2005 06:21 PM</a></p>
+<hr class="comment-separator">
+</div>
+
+<div class="commentbody">
+<a name="c1793"></a>
+<div id="c1793">
+<p>Bruce, </p>
+
+<p>It looks like the 2**69 number is for the existence problem: find two (any two) messages M0 and M1 so that SHA1(M0) = SHA1(M1). What's the number for the construtive problem: given a known message M0, find another message M1 so that SHA1(M0) = SHA1(M1)?</p>
+
+<p>Thanks,</p>
+
+<p>-David</p>
+</div>
+<p class="posted">Posted by: David Smith  at <a href="http://www.schneier.com/blog/archives/2005/02/cryptanalysis_o.html#c1793">February 19, 2005 09:25 PM</a></p>
+<hr class="comment-separator">
+</div>
+
+<div class="commentbody">
+<a name="c1799"></a>
+<div id="c1799">
+<p>One should notice that there are hidden considerations in every discussion. Once getting awared to them your attitude usually changes and becomes more positively balanced. Please find the hidden consideration in your point of view. The common one is lack of understanding of the drivers that make people think differently then us.</p>
+</div>
+<p class="posted">Posted by: <a href="http://kasino.psend.com" rel="nofollow">Online Kasino</a>  at <a href="http://www.schneier.com/blog/archives/2005/02/cryptanalysis_o.html#c1799">February 20, 2005 11:17 AM</a></p>
+<hr class="comment-separator">
+</div>
+
+<div class="commentbody">
+<a name="c1802"></a>
+<div id="c1802">
+<p>It's too bad that a prominent commentator scared everyone unnecessarily with his inflammatory claim that "SHA-1 HAS BEEN BROKEN", without emphasizing the difficulty of applying the attack. Now we have to go back and try to calm everyone down.</p>
+</div>
+<p class="posted">Posted by: Cypherpunk  at <a href="http://www.schneier.com/blog/archives/2005/02/cryptanalysis_o.html#c1802">February 20, 2005 12:25 PM</a></p>
+<hr class="comment-separator">
+</div>
+
+<div class="commentbody">
+<a name="c1803"></a>
+<div id="c1803">
+<p>"It looks like the 2**69 number is for the existence problem: find two (any two) messages M0 and M1 so that SHA1(M0) = SHA1(M1). What's the number for the construtive problem: given a known message M0, find another message M1 so that SHA1(M0) = SHA1(M1)?"</p>
+
+<p>The first problem is finding collisions, and that's what the attack does: 2**69 work.  The second problem is reversing the one-wayness, and that is not what the attack is about.  SHA-1 brute force says 2**160, and the best attack is the Kelsey-Schneier attack (mentioned in the main post) at 2**106.</p>
+</div>
+<p class="posted">Posted by: <a href="http://www.schneier.com" rel="nofollow">Bruce Schneier</a>  at <a href="http://www.schneier.com/blog/archives/2005/02/cryptanalysis_o.html#c1803">February 20, 2005 01:49 PM</a></p>
+<hr class="comment-separator">
+</div>
+
+<div class="commentbody">
+<a name="c1805"></a>
+<div id="c1805">
+<p>"It's too bad that a prominent commentator scared everyone unnecessarily with his inflammatory claim that 'SHA-1 HAS BEEN BROKEN', without emphasizing the difficulty of applying the attack. Now we have to go back and try to calm everyone down."</p>
+
+<p>That kind of thing happens.  I never talk about cryptographic anything being "broken" without stating the complexity of the attack, but not everyone is as diligent as I am.</p>
+
+<p>The real problem is that there is a mathematical meaning to the term "broken," and cryptographers sometimes forget that they're talking to the general public and not members of their own tribe.</p>
+</div>
+<p class="posted">Posted by: <a href="http://www.schneier.com" rel="nofollow">Bruce Schneier</a>  at <a href="http://www.schneier.com/blog/archives/2005/02/cryptanalysis_o.html#c1805">February 20, 2005 01:52 PM</a></p>
+<hr class="comment-separator">
+</div>
+
+<div class="commentbody">
+<a name="c1806"></a>
+<div id="c1806">
+<p>Bruce Schneier, could you possibly produce a shortened edition of Applied Cryptography in paparback that costs only about $30?  $60 for a paperback is pretty steep.</p>
+
+<p>Despite your relative calm about the rate at which SHA-1 will be broken in practice, I'm concerned about the legal validity of digital signatures. These are generally regarded as binding now, and many contracts last a long time. In many cases it would be worth breaking the digital signature on a contract in order to falsify the contract terms and reseal it, even five or ten years into the contract term. Do I have a valid concern here?<br />
+</p>
+</div>
+<p class="posted">Posted by: <a href="http://n/a" rel="nofollow">Tobias D. Robison</a>  at <a href="http://www.schneier.com/blog/archives/2005/02/cryptanalysis_o.html#c1806">February 20, 2005 02:22 PM</a></p>
+<hr class="comment-separator">
+</div>
+
+<div class="commentbody">
+<a name="c1808"></a>
+<div id="c1808">
+<p>I think one of the causes of the misunderstanding is that Bruce lists two security properties in his post, whereas there are really at least six one could consider:</p>
+
+<p>a) Given H and a set A of "well-formed" messages, find M in A such that SHA1(M)=H.<br />
+b) Given M1 and a set A of "well-formed" messages, find M2 in A such that SHA1(M2)=SHA1(M1).<br />
+c) Given a set A of "well-formed" messages, find M1 and M2 in A such that SHA1(M1)=SHA1(M2).<br />
+d) Given H, find any M such that SHA1(M)=H<br />
+e) Given M1, find any M2 such that SHA1(M2)=SHA1(M1)<br />
+f) Given nothing, find any M1 and M2 such that SHA1(M1)=SHA2(M2).</p>
+
+<p>What the Chinese have demonstrated, according to Bruce, is that (f) is not as hard as it was previously believed. So what? say some readers; (f) is only of theoretical interest, and a real attacker would have to solve one of the presumably harder (a), (b), or (c).</p>
+
+<p>One thing these people miss is that it is not sound *engineering* to consider only (a), (b), (c), because the set A is different for every application and for every mode of attack. Some A's may have some internal structure that makes an attack easier, so if (a), (b) and (c) were the only problems we could consider, we'd have to analyse the security of our hash function from first principles for *each* *individual* application of it. That would pretty much invalidate every advantage of having a common hash function as an off-the-shelf component, except for the very minor matter of reusing source code.</p>
+
+<p>Another more subtle point is the (f) is the easiest of the six problems - any feasible solution to one of the others would immediately produce a feasible answer to (f). And much of the confidence that (a)-(e) is hard is based on the evidence that *even (f)* was so hard that nobody could find a better method than brute-forcing it. This premise has fallen away now, which forces Bruce and his community to reconsider which reasons they have to think that the harder problems are sufficiently hard.</p>
+
+<p>It is conceivable that we are actually still safe, and that there exists a way of thinking about SHA-1 that allows an argument that the underlying ideas behind the Chinese break is actually only good for (f) and cannot possibly scale to the more immediately interesting (d) and (e). But the cryptographic community seems to believe that it would be *easier* to reestablish trust by finding aother hash function where (f) is still hard. And they are really the only ones who can have an informed belief about which option would have the best chance of success.</p>
+
+<p>As for cryptographers defining "hard enough" as "so hard that no algorithm is appreciably cheaper than a brute-force search", it's really a tribute to their ingenuity that they've been able to define anything that even looked as if it would meet this standard, and I think the rest of us should approve of them trying to reach it for as long as they have any hope left. (Though something  with a proven lower bound, even one significantly below brute-force level, would be better if anybody could figure out how to do that).</p>
+
+<p><br />
+[Disclaimer: I have officially no idea what I'm talking about, but it soulds cool]</p>
+</div>
+<p class="posted">Posted by: <a href="http://henning.makholm.net/" rel="nofollow">Henning Makholm</a>  at <a href="http://www.schneier.com/blog/archives/2005/02/cryptanalysis_o.html#c1808">February 20, 2005 03:05 PM</a></p>
+<hr class="comment-separator">
+</div>
+
+<div class="commentbody">
+<a name="c1810"></a>
+<div id="c1810">
+<p>Why is the solution not to use two very different cryptographic hashes?  It should be exponentially more difficult to find matching hashes from two separate algorithms, but only a constant work addition on the confirmation side.  Heck, you could use rather insecure hashes and still have a near-unsolvable problems.  Being little more than a dabbler in math, mabey ye learned people can enlighten me.</p>
+</div>
+<p class="posted">Posted by: <a href="http://cv.arnists.com" rel="nofollow">√Årni St. Sigur√∞sson</a>  at <a href="http://www.schneier.com/blog/archives/2005/02/cryptanalysis_o.html#c1810">February 20, 2005 05:37 PM</a></p>
+<hr class="comment-separator">
+</div>
+
+<div class="commentbody">
+<a name="c1811"></a>
+<div id="c1811">
+<p>(Disclaimer - also not a cryptographer.)</p>
+
+<p>Henning - I don't see much practical difference between (d) and (e) in your list.</p>
+
+<p>From my understanding of the previous reports, the break wasn't in the (f) slot but in the (e) slot. I could be wrong.</p>
+</div>
+<p class="posted">Posted by: <a href="http://www.blacksun.org.uk/" rel="nofollow">Paul Walker</a>  at <a href="http://www.schneier.com/blog/archives/2005/02/cryptanalysis_o.html#c1811">February 20, 2005 05:44 PM</a></p>
+<hr class="comment-separator">
+</div>
+
+<div class="commentbody">
+<a name="c1812"></a>
+<div id="c1812">
+<p>Regarding the comment that there are 6 security properties of hash functions instead of two: Keep in mind the idea, espoused in /Practical Crytography/, that our security primitives be black boxes, whose weaknesses we don't need to worry about when constructing systems around them. </p>
+
+<p>From that perspective, it is unacceptable to have to worry about: </p>
+
+<p>1) Whether our restrictions on message format reduce the message-space enough to eliminate attacks. That will likely require a statistical calculation particular to the strength of the attack and the space of legal messages, a calculation we _should not have to make_ to guarantee security. This eliminates the distinction between {abc} and {def}. </p>
+
+<p>2) Whether the message being hashed is a secret or not. This assumption blurs the line between authentication (for which we should be able to use a hash function) and encryption (which should be completely orthogonal). That eliminates the distinction between {ad} and {be}.</p>
+
+<p>Keeping that in mind, we are left with two interesting properties: essentially E and F. All the others are redundant. B ut the extra complexity isn't that interesting anyway: your line of reasoning is still fine. The fact that F is no longer "hard," for a cryptographer's definition of hard, means it's time to start looking for a new hash function, because 1) we're no longer _sure_ that E is hard, having been shown that F is not, and 2) we don't want to have to distinguish between "hash functions that are universal," and "hash functions that are only good for E but not F" for reasons of engineering.</p>
+</div>
+<p class="posted">Posted by: Glenn Willen  at <a href="http://www.schneier.com/blog/archives/2005/02/cryptanalysis_o.html#c1812">February 20, 2005 07:23 PM</a></p>
+<hr class="comment-separator">
+</div>
+
+<div class="commentbody">
+<a name="c1814"></a>
+<div id="c1814">
+<p>Paul:<br />
+> Henning - I don't see much practical difference between (d) and (e) in your list.</p>
+
+<p>(d) is the problem you have to solve if you know the hash of a password and want to get in. It is intrinsically harder than (e). For example, consider a hash function that strips off and forgets the first byte of its input and then computes a real, crytographically strong, hash of the rest. I can do (e) for this function with no effort at all, but (d) remains difficult.</p>
+
+<p>> From my understanding of the previous reports, the break wasn't in the (f) slot but in the (e) slot. I could be wrong.</p>
+
+<p>If the break had been for (e), the brute-force comparison would have been 2^160, not 2^80. The birthday paradox technique that allows you to halve the bit count only works when you get to select both of M1 and M2 yourself, i.e. problem (f).</p>
+
+<p>Glenn:<br />
+I think we are in complete agreement and actually trying to make the same points. I listed the six different problems not because I think each is an interesting property to analyse for, but because some posters in the thead (or whatever it is called in blogspeak) seemed to be confused by the differences between them. In particular I wanted to *state* the questions in order to get a language in which I could try to explain why cryptographers care about the seemingly insignificant (f).</p>
+
+<p>In fact, as long as (f) is technologically infeasible we don't need to worry about (e) either, because any feasible solution to (e) can trivially be turned into one for (f). Research that specifically aims at attacking (e) - such as the 2^106 attack mentioned in Bruce's original item - is useful because it is one possible strategy for breaking (e), but also because (e) is the second line of defense. Even if a feasible attack on (f) is demonstrated, if we still have some faith in (e) we'll have a little breathing space that we can use to switch to another hash function, because *most* applications of cryptographic hashes do not depend that much on (f). [I acknowledge that we'd still have to worry about a gajilion instances of (c) then, so it won't be apicnic]. On the other hand, if (e) gets cracked we'll basically have no guarantees left about _anything_.</p>
+</div>
+<p class="posted">Posted by: <a href="http://henning.makholm.net/" rel="nofollow">Henning Makholm</a>  at <a href="http://www.schneier.com/blog/archives/2005/02/cryptanalysis_o.html#c1814">February 21, 2005 12:17 AM</a></p>
+<hr class="comment-separator">
+</div>
+
+<div class="commentbody">
+<a name="c1816"></a>
+<div id="c1816">
+<p>"If you hashed 2^80 random messages, you'd find one pair that hashed to the same value."<br />
+Ah, but finding that pair would require storing 2^80 hashes in "memory" no? </p>
+
+<p>The nature of keysearches is that they are cpu-bound: memory latency isn't a problem. I'd be somewhat surprised if that was the case this new attack. So it may not be "on the far edge of feasibility". Or it may: I'm not in a position to know.</p>
+</div>
+<p class="posted">Posted by: Andrew Wade  at <a href="http://www.schneier.com/blog/archives/2005/02/cryptanalysis_o.html#c1816">February 21, 2005 01:33 AM</a></p>
+<hr class="comment-separator">
+</div>
+
+<div class="commentbody">
+<a name="c1818"></a>
+<div id="c1818">
+<p>Hey Bruce, why don't you design a hash function?</p>
+
+<p>Honestly, I prefer Twofish over AES, it simply looks better (from the naive point of view of a programmer like me).</p>
+
+<p>So how about creating a hash function? Do you think it would be possible to base a hash function on Twofish, similar as Whirpool is based on a function very similar to AES? Any idea how good such a function would be?</p>
+
+<p>I personally don't trust SHA-256 or higher either. I never liked SHA in the first place.</p>
+</div>
+<p class="posted">Posted by: Markus Hanauska  at <a href="http://www.schneier.com/blog/archives/2005/02/cryptanalysis_o.html#c1818">February 21, 2005 05:04 AM</a></p>
+<hr class="comment-separator">
+</div>
+
+<div class="commentbody">
+<a name="c1819"></a>
+<div id="c1819">
+<p>Quoting Bruce...<br />
+"Here's one scenario: [snip] Get victim to sign one message, and now you have the other message signed."</p>
+
+<p>Whilst I agree that SHA1 needs to be replaced, the *short* term work-around would be to only ever sign things you write yourself. Never sign anything from someone else, even if it looks right.</p>
+
+<p>(Unless I've overlooked something. Me no cryptographer.)</p>
+
+<p>In case you missed it, that's a SHORT term work-around. And its only a work-around, not a fix.</p>
+
+<p>(Side note, I clicked preview, but all the line-ends had been removed. If this appears as one big paragraph, something's up.)</p>
+</div>
+<p class="posted">Posted by: <a href="http://billpg.me.uk/" rel="nofollow">Bill Godfrey</a>  at <a href="http://www.schneier.com/blog/archives/2005/02/cryptanalysis_o.html#c1819">February 21, 2005 05:12 AM</a></p>
+<hr class="comment-separator">
+</div>
+
+<div class="commentbody">
+<a name="c1821"></a>
+<div id="c1821">
+<p>Just one thought, IF these three bods have broaken SHA-1 (and I see no reason why they have not) what other use could there technique be put to, as Bruce pointed out some hash functions have a lot of similarities when compared.</p>
+
+<p>Therefore I think before I start walking, I would like to know the direction I am heading is away from the fire not towards it...</p>
+</div>
+<p class="posted">Posted by: Clive Robinson  at <a href="http://www.schneier.com/blog/archives/2005/02/cryptanalysis_o.html#c1821">February 21, 2005 07:01 AM</a></p>
+<hr class="comment-separator">
+</div>
+
+<div class="commentbody">
+<a name="c1823"></a>
+<div id="c1823">
+<p>I am not a Cryptographer either myself but I have two questions regarding the use of Hash functions.</p>
+
+<p></p>
+
+<p>One of them has already been asked here and is "How hard would it really be to find, given a message M1, another message M2 that has the same hashes as M1 with two different hash algorithms? MD5 has been 'broken', so has SHA-1, but is it feasibly possible to find M1 and M2 so that MD5(M1)=MD5(M2) and SHA-1(M1)=SHA-1(M2)?"</p>
+
+<p><br />
+The second question is, how hard would it be, given M1, to find M2 so that SHA-1(M1+MD5(M1))=SHA-1(M2+MD5(M2))? This second composition leads to a 160 bit hash and seems not to be vulnerable to either the MD5 or SHA-1 brokerage.</p>
+
+<p><br />
+Once again I would love to be enlighted on these two options, not being a cryptographer very often makes me not see the obvious flaws.<br />
+</p>
+</div>
+<p class="posted">Posted by: Mathias  at <a href="http://www.schneier.com/blog/archives/2005/02/cryptanalysis_o.html#c1823">February 21, 2005 07:16 AM</a></p>
+<hr class="comment-separator">
+</div>
+
+<div class="commentbody">
+<a name="c1824"></a>
+<div id="c1824">
+<p>> Ah, but finding that pair would require storing 2^80 hashes in "memory" no?<br />
+Er, make that messages, not hashes.</p>
+
+<p>Tobias:<br />
+> In many cases it would be worth breaking the digital signature on a contract in order to falsify the contract terms and reseal it, even five or ten years into the contract term. Do I have a valid concern here?<br />
+Yes -- but. Such a forgery leaves evidence; namely the original contract with an identical hash. If you had the original contract you could produce it in court. What happens then is a question for lawyers. But there's also a flip side: if signatures are too easily forgable, they may cease to mean very much and other parties may have trouble enforcing countracts you have digitally signed. </p>
+</div>
+<p class="posted">Posted by: Andrew Wade  at <a href="http://www.schneier.com/blog/archives/2005/02/cryptanalysis_o.html#c1824">February 21, 2005 07:59 AM</a></p>
+<hr class="comment-separator">
+</div>
+
+<div class="commentbody">
+<a name="c1829"></a>
+<div id="c1829">
+<p>I'd like to reply to Terry who said that you just need to ensure there aren't any nulls at the end of the message. Now think of a legal document: they're usually quite long and full of big words, not the trivial example Bruce presented. Any other useful document is usually quite long and nontrivial, by the way. Once you have a feasible, better-than-brute-force attack on the hash, you will probably be able to find the hash you're looking for by changing a few letters here and there and it will look like an innocent typo. Nobody is going to get suspicious for a typo in a real-life document -- usually there are some already. If that's a concern, you could even spell-check the doctored text and use the corrections as your starting point. :)</p>
+
+<p>(I am not a cryptanalist. Bruce, if I said something stupid, feel free to point it out.)</p>
+</div>
+<p class="posted">Posted by: flavio  at <a href="http://www.schneier.com/blog/archives/2005/02/cryptanalysis_o.html#c1829">February 21, 2005 10:24 AM</a></p>
+<hr class="comment-separator">
+</div>
+
+<div class="commentbody">
+<a name="c1830"></a>
+<div id="c1830">
+<p>"Why is the solution not to use two very different cryptographic hashes?"</p>
+
+<p>Correct me if I'm wrong, but wouldn't that be equivalent to using a stronger hash with roughly as many bits as the other two combined? And you have the added advantage that you can choose a not-already-broken hash.</p>
+
+<p>In other words, how does the cost of computing a hash vary with the hash length?</p>
+</div>
+<p class="posted">Posted by: flavio  at <a href="http://www.schneier.com/blog/archives/2005/02/cryptanalysis_o.html#c1830">February 21, 2005 10:34 AM</a></p>
+<hr class="comment-separator">
+</div>
+
+<div class="commentbody">
+<a name="c1837"></a>
+<div id="c1837">
+<p>since 15 NOV 2001 their is an DES cracker for 1000$ that cracks it in average 25 hours<br />
+<a href="http://www.cl.cam.ac.uk/~rnc1/descrack/index.html" rel="nofollow">http://www.cl.cam.ac.uk/~rnc1/descrack/index.html</a></p>
+
+<p>today it should be much faster. I think ten times. The fpga are bigger (more crackers in parallel) and faster (clock speed)</p>
+</div>
+<p class="posted">Posted by: n/a  at <a href="http://www.schneier.com/blog/archives/2005/02/cryptanalysis_o.html#c1837">February 21, 2005 12:33 PM</a></p>
+<hr class="comment-separator">
+</div>
+
+<div class="commentbody">
+<a name="c1840"></a>
+<div id="c1840">
+<p>flavio:  I have seen others refer to that but still, you have to find a match between the hash functions.  It's not to match either one, you must match BOTH.</p>
+</div>
+<p class="posted">Posted by: <a href="http://cv.arnists.com" rel="nofollow">¡rni St. Sigursson</a>  at <a href="http://www.schneier.com/blog/archives/2005/02/cryptanalysis_o.html#c1840">February 21, 2005 02:19 PM</a></p>
+<hr class="comment-separator">
+</div>
+
+<div class="commentbody">
+<a name="c1841"></a>
+<div id="c1841">
+<p>So how well does the new attack parallelize and how much memory does it require?</p>
+
+<p>If it doesn't parallelize at all, then it might actually be harder to carry out than a brute force attack.</p>
+
+<p>OTOH if it needs little memory and scales perfectly with parallelization and pipelining then it may be even better compared to brute force than the number of operations suggest.</p>
+</div>
+<p class="posted">Posted by: Ralph Loader  at <a href="http://www.schneier.com/blog/archives/2005/02/cryptanalysis_o.html#c1841">February 21, 2005 02:42 PM</a></p>
+<hr class="comment-separator">
+</div>
+
+<div class="commentbody">
+<a name="c1842"></a>
+<div id="c1842">
+<p>Reply to Andrew Wade:</p>
+
+<p>Brute forcing can be done without huge amount of memory if you're clever.  Let S^n(x) be SHA-1 iterated n times starting with x.  So S(x) is SHA-1 of x, S^2(x) = S(S(x)) etc.</p>
+
+<p>Then fix x and compute S^n(x) and S^2n(x) for successive values of n.  You expect to find a pair S^n(x)=S^2n(x) in around 2^80 operations.  (More generally 2^(k/2) operations for a k bit hash).</p>
+
+<p>That algorithm doesn't parallelize at all well, but a variant does:  on each processor, choose x at random [different for each processor] and then compute</p>
+
+<p>min( S^n(x), S^{n+1}(x) ... S^{2n}(x) )</p>
+
+<p>where n is choosen so that (n times number of processors) is about 2^80.</p>
+
+<p>[actually it's better to keep the smallest few hash values, not just the smallest one.]</p>
+
+<p>Collect all the minimums together and see if any are equal.</p>
+
+<p>Then again you expect to find a collision in about 2^80 operations.<br />
+</p>
+</div>
+<p class="posted">Posted by: Ralph Loader  at <a href="http://www.schneier.com/blog/archives/2005/02/cryptanalysis_o.html#c1842">February 21, 2005 03:43 PM</a></p>
+<hr class="comment-separator">
+</div>
+
+<div class="commentbody">
+<a name="c1845"></a>
+<div id="c1845">
+<p>Earlier there were some discussions of adding null characters to files and other various tricks. I've got two ways that's easier than most people seem to think.</p>
+
+<p>Firstly, you could substitute a different format of file - maybe I could use a WordPerfect file instead of a text file. People send all sorts of file formats, why does the replacement have to be the same?</p>
+
+<p>Secondly - an idea inspired by the first - many complicated file formats are capable of nearly arbitrary manipulation while retaining their original contents using traditional viewers.</p>
+
+<p>What I mean is - Microsoft Word documents contain undo metadata, and all sorts of other metadata which is not obviously viewable, and which does not need to match in any way at all the original document. Many versions of Word even used sparse files - not writing at all in certain sections. You could hack a file and put whatever you wanted into the sparse sections.</p>
+
+<p>Another example is something like a video file. QuickTime, say, lets you have multiple streams of many different formats. You could have a video, audio, and "other" stream, the "other" stream being meaningless data for hash function manipulation.</p>
+
+<p>Final example is TIFF. TIFF lets you encode many, many different types of data. Microsoft TabletPCs, I've been told, can use TIFFs to transfer an image of your handwriting - with an extra layer containing the vector stroke data.</p>
+
+<p>How many file formats simply ignore garbage appended to the end? Xmodem in some (all?) variants, I believe, would "round" transferred files to the block size you used back in the BBS modem days.</p>
+
+<p>While it would be hard to use a broken hash to exploit short pure ASCII messages, I think it's very clear that more complicate file formats are wide open, and in many cases nearly trivial to modify without making it apparent.</p>
+
+<p>Even if you do as a developer protect the file format in your application, in the real business world, chances are somebody could encode the same document in an easily modifiable format without arousing suspicion.</p>
+</div>
+<p class="posted">Posted by: Gopi Flaherty  at <a href="http://www.schneier.com/blog/archives/2005/02/cryptanalysis_o.html#c1845">February 21, 2005 04:56 PM</a></p>
+<hr class="comment-separator">
+</div>
+
+<div class="commentbody">
+<a name="c1847"></a>
+<div id="c1847">
+<p>A minor error in the article: "If you hashed 2^80 random messages, you'd find one pair that hashed to the same value."</p>
+
+<p>No, if you had one message you wished to match, you'd find (on average) one match for it in 2^80 random messages. </p>
+
+<p>This is the "Birthday problem": "How many people do you need so that there is a 50% chance that a pair of them share the same birthday?" The answer is 23. It is a different question from "How many people do you need so that there is at least a 50% chance that one of them shares *my* birthday", for which the answer is >183. (365 times whatever the mean of a Poisson distribution has to be for P(0) &lt; 0.5)</p>
+
+<p><a href="http://mathworld.wolfram.com/BirthdayProblem.html" rel="nofollow">http://mathworld.wolfram.com/BirthdayProblem.html</a></p>
+</div>
+<p class="posted">Posted by: Filias Cupio  at <a href="http://www.schneier.com/blog/archives/2005/02/cryptanalysis_o.html#c1847">February 21, 2005 05:35 PM</a></p>
+<hr class="comment-separator">
+</div>
+
+<div class="commentbody">
+<a name="c1848"></a>
+<div id="c1848">
+<p>Sorry, I hadn't read all the comments (I did skim them before posting, but missed the relevant bits.) It looks like this has already been accounted for in the difference between 2^160 and 2^80. (I.e. there are 2^160 possible 'birthdays', so we need 2^80 people to find a single pair that share a birthday.)</p>
+</div>
+<p class="posted">Posted by: Filias Cupio  at <a href="http://www.schneier.com/blog/archives/2005/02/cryptanalysis_o.html#c1848">February 21, 2005 05:47 PM</a></p>
+<hr class="comment-separator">
+</div>
+
+<div class="commentbody">
+<a name="c1849"></a>
+<div id="c1849">
+<p>"A minor error in the article: 'If you hashed 2^80 random messages, you'd find one pair that hashed to the same value.'</p>
+
+<p>"No, if you had one message you wished to match, you'd find (on average) one match for it in 2^80 random messages."</p>
+
+<p>No, I'm right.  The second problem requires 2**160 random messages.  The first problem requires 2**80 messages.  And yes, it is an example of the Birthday problem.</p>
+</div>
+<p class="posted">Posted by: <a href="http://www.schneier.com" rel="nofollow">Bruce Schneier</a>  at <a href="http://www.schneier.com/blog/archives/2005/02/cryptanalysis_o.html#c1849">February 21, 2005 09:13 PM</a></p>
+<hr class="comment-separator">
+</div>
+
+<div class="commentbody">
+<a name="c1850"></a>
+<div id="c1850">
+<p>Ralph Loader,<br />
+     That's clever all right; thanks for the explanations. And I can see how to extend it along the lines of Mr. Schneier's example:<br />
+Instead of SHA-1, use SHA-1':<br />
+SHA-1'(x) = SHA-1("message-id: " + x + "\n\nBuy " + x[0] + "000 shares.")</p>
+
+<p>Since the method you described produces a sequence of collisions, one could pick the desired collision from the sequence so long as the difference between the two messages is quite small.</p>
+
+<p>I guess we'll have to wait to see what sorts of attacks the new technique allows. But I take Bruce Schneier's point: even if the current attack isn't exploitable, it is a starting point for developing better attacks. </p>
+</div>
+<p class="posted">Posted by: Andrew Wade  at <a href="http://www.schneier.com/blog/archives/2005/02/cryptanalysis_o.html#c1850">February 21, 2005 10:56 PM</a></p>
+<hr class="comment-separator">
+</div>
+
+<div class="commentbody">
+<a name="c1855"></a>
+<div id="c1855">
+<p>I will accept the engineering advice and will end up using whatever turns out to be outside the exits that cryptographers are now walking towards...</p>
+
+<p>But it still seems to me - as a lawyer not a cryptographer or engineer - to be a slow walk.  By applying 2**69 computing power (possibly years of work or many parallel computers), one can get *one* random message that will match the one you start with. But how much computing power and time is needed to get a *useful* message that matches the one you start with?</p>
+
+<p>Bruce mentions the "zillions" of messages (he's surely allowed to be imprecise when he chooses to be!) to sort through to find a "sell 1000 shares" message to substitute for a "buy 1000 shares" message.  But if I have a digitally signed contract, how long will it take someone to come up with an apparently identically signed contract that has only a meaningful change and otherwise appears to be credible (even allowing for a few typos and invisible metadata)?</p>
+
+<p>Surely a VERY long time.</p>
+
+<p>It will be a while as well before there are tools available to apply to existing digitally signed documents to create useful (to the bad sort of people) variants that will appear legitimate.</p>
+
+<p>And the signature and the encryption and the hashing all produce SOME evidence, and not usually the best.</p>
+
+<p>I recognize that there are lots of other uses of hashes, as Bruce says in his original article, and they need to work reliably for many systems to work.  That's why I will expect the engineers and cryptgraphers to change hashes, but why I would not advise my clients to panic, or even to settle ...<br />
+</p>
+</div>
+<p class="posted">Posted by: John Gregory  at <a href="http://www.schneier.com/blog/archives/2005/02/cryptanalysis_o.html#c1855">February 22, 2005 05:58 AM</a></p>
+<hr class="comment-separator">
+</div>
+
+<div class="commentbody">
+<a name="c1864"></a>
+<div id="c1864">
+<p>A few people seem to be bothered by the fact that the SHA-1 paper isn't in print yet.  Academic papers take a long time to get published.  As an example, the submission deadline for Crypto 2005 was February 14 and the conference is in August.</p>
+</div>
+<p class="posted">Posted by: Steven  at <a href="http://www.schneier.com/blog/archives/2005/02/cryptanalysis_o.html#c1864">February 22, 2005 10:47 AM</a></p>
+<hr class="comment-separator">
+</div>
+
+<div class="commentbody">
+<a name="c1873"></a>
+<div id="c1873">
+<p>I wrote:<br />
+> Since the method you described produces a sequence of collisions,<br />
+Well, I'm embarassed; that's just not true. Still the difference between '1' and '5' in ascii is just one bit so if you're a bit lucky, one collision is all you need.</p>
+
+<p>John Gregory wrote:<br />
+> But if I have a digitally signed contract, how long will it take someone to come up with an apparently identically signed contract that has only a meaningful change and otherwise appears to be credible (even allowing for a few typos and invisible metadata)?<br />
+That's not what this current attack does, rather it is a way of finding two messages with the same hash (If one is signed, the signature is valid for the other as well). For the brute-force attack, producing two contracts where one has a '5' in place of a '1' in the other (and invisible metadata changed) is easy enough. For the new attack, well we just don't know. </p>
+</div>
+<p class="posted">Posted by: Andrew Wade  at <a href="http://www.schneier.com/blog/archives/2005/02/cryptanalysis_o.html#c1873">February 22, 2005 02:03 PM</a></p>
+<hr class="comment-separator">
+</div>
+
+<div class="commentbody">
+<a name="c1883"></a>
+<div id="c1883">
+<p>I'd like to respond to John Gregory's and Andrew Wade's message by drawing an analogy between the need for competent software engineers as mentioned by "Terry" and Bruce Schneier and the need for competent lawyers applying cryptographic procedures: Simply applying existing techniques without thinking thoroughly about the consequences can get you in deep trouble, especially if one element you were relying on appears broken, which now is the case with SHA-1. I'm convinced that the risks in using digital signatures for contracts that are based on SHA-1 now that SHA-1 has been broken can be reduced to an acceptable level (risk=0 does not exist) by applying additional measures that are thoroughly thought out.</p>
+
+<p>Bruce Schneier pointed out in several of his comment messages that SHA-1 being broken is bad, and he's in a much better position than I am to say so. That being said, one should not forget that in many fields hashing is not the only element that is of importance, so the specialists may often be able to reduce the now-increased risk again by applying other measures. However, cryptology cannot be expected to take all fields of application of a hash algorithm into account, so it needs one that's not broken.</p>
+</div>
+<p class="posted">Posted by: Bo Overgaauw  at <a href="http://www.schneier.com/blog/archives/2005/02/cryptanalysis_o.html#c1883">February 22, 2005 09:34 PM</a></p>
+<hr class="comment-separator">
+</div>
+
+<div class="commentbody">
+<a name="c1884"></a>
+<div id="c1884">
+<p>Finding two messages with the same hash in 2**69 computations is impressive to the  cryptographer, but not to the person interested in a transaction.</p>
+
+<p>If I have a short message (and a lot of contracts are not short) saying something like "I accept your offer to buy 1000 widgets for $100 each for delivery on March 1 in Chicago" - then there is no point in doing 2**69 computations to get a message that has the same hash but which reads "Home, home on the range, where the deer and the antelope play", or (more likely) "dowinr02asvi0nvewt0svj0wr2309fj jdjr032493jr0d9j()D9JR)#(jFDj ".  </p>
+
+<p>It would be almost inconceivable to find a message that shared a hash with another message that was identical to it except for a significant credible variation.</p>
+
+<p>And how long does the bad guy/good cryptographer have to come up with the variation?  In my little example, if it's not by March 1, forget it.</p>
+
+<p>Presumably once the hash is broken, it will be further broken, i.e. the computations required to find a matching hash will fall from 2**69 to something less over time - but it's still going to be a challenge to find the significant credible variation.</p>
+
+<p>Besides, there is usually lots of evidence about what a transaction is or was, besides the document or the signature.  (I have long thought that high-value e-commerce between strangers was unlikely, without a trusted intermediary, not a CA but a financial institution.)  So a court would usually be able to figure out which variant of a document was credible, just as it does now for paper documents that vary when they are not supposed to.</p>
+
+<p>So it's going to be a very slow walk to the exits for the lawyers.  We'll adopt what the engineers and cryptographers are selling long before we need it, because they need it more and will change the market accordingly.</p>
+</div>
+<p class="posted">Posted by: John Gregory  at <a href="http://www.schneier.com/blog/archives/2005/02/cryptanalysis_o.html#c1884">February 22, 2005 10:25 PM</a></p>
+<hr class="comment-separator">
+</div>
+
+<div class="commentbody">
+<a name="c1885"></a>
+<div id="c1885">
+<p>Hi:<br />
+Had anyone tested the test vectors provided by Xiaoyun Wang and others in their short paper on collision search attacks on SHA-1<br />
+</p>
+</div>
+<p class="posted">Posted by: <a href="http://www.isrc.qut.edu.au" rel="nofollow">Praveen</a>  at <a href="http://www.schneier.com/blog/archives/2005/02/cryptanalysis_o.html#c1885">February 22, 2005 10:58 PM</a></p>
+<hr class="comment-separator">
+</div>
+
+<div class="commentbody">
+<a name="c1887"></a>
+<div id="c1887">
+<p>As John Gregory pointed out for a lot of things there is a timleyness required for the search.</p>
+
+<p>There are three points to consider,</p>
+
+<p>The first, is some contracts (ie your home mortgage for instance) have a very long time to run, often the important thing in long contracts are the termination clauses (think leasess and in the UK the PFI contracts).</p>
+
+<p>The second, is usually any new attack leads to insite into other attacks (The history of FEAL for instance) as noted above the NSA have a saying about attackes getting better not worse.</p>
+
+<p>The Third and perhaps the most important, is perception, currently it is very difficult to explain digital signitures and crypto attacks to involved parties such as engineers, think what problems our legislators are going to have. Any successfull attack on any crypto primative is going to erode confidence and delay any eventual acceptance of digital contracts etc.</p>
+</div>
+<p class="posted">Posted by: Clive Robinson  at <a href="http://www.schneier.com/blog/archives/2005/02/cryptanalysis_o.html#c1887">February 23, 2005 06:07 AM</a></p>
+<hr class="comment-separator">
+</div>
+
+<div class="commentbody">
+<a name="c1919"></a>
+<div id="c1919">
+<p>I Googled Whirlpool NESSIE and found the documentation/specifications. </p>
+
+<p>Thanks<br />
+</p>
+</div>
+<p class="posted">Posted by: <a href="http://www.ptdd.com" rel="nofollow">tely</a>  at <a href="http://www.schneier.com/blog/archives/2005/02/cryptanalysis_o.html#c1919">February 23, 2005 08:33 PM</a></p>
+<hr class="comment-separator">
+</div>
+
+<div class="commentbody">
+<a name="c1922"></a>
+<div id="c1922">
+<p>Is this the paper??! Still 3 pages??!<br />
+<a href="http://theory.csail.mit.edu/~yiqun/shanote.pdf" rel="nofollow">http://theory.csail.mit.edu/~yiqun/shanote.pdf</a></p>
+
+<p>So if this IS THE summary, then I assume the page 3 is the result of the attack? It seems to me that nowhere on the paper it showed and proved the full ***80-step SHA-1*** was cracked; the page 3 summary showed a ***58-step SHA-1*** attack. Can you even call that SHA-1?</p>
+
+<p>Maybe I'm stupid, but page 1 seems to have lots of vague and misleading clauses to me.</p>
+
+<p>"Our analysis shows that collisions of SHA1 can be found with complexity less than 2^69 hash operations. This is the first attack on the full 80-step SHA1 with complexity less than the 2^80 theoretical bound."</p>
+
+<p>This makes you think, oh SHA-1 (the real 80-step one) collision was found. And next sentence it says</p>
+
+<p>"Based on our ***ESTIMATION?!**, we expect that real collisions of SHA1 reduced to 70-steps can be found using today's supercomputers."</p>
+
+<p>And only in the final paragraph it mentioned</p>
+
+<p>"We also ***implemented*** the attack on SHA1 reduced to 58 steps and found real collisions with less than 2^33 hash operations."</p>
+
+<p>So it seems to me the 2^69 number was an ***estimated result" based on the 58-step attack??</p>
+
+<p>The whole hell raising alarm about the "broken SHA-1" was based on this (3 page) paper or is there something else?</p>
+</div>
+<p class="posted">Posted by: <a href="http://gmail.com" rel="nofollow">Yen</a>  at <a href="http://www.schneier.com/blog/archives/2005/02/cryptanalysis_o.html#c1922">February 24, 2005 01:53 AM</a></p>
+<hr class="comment-separator">
+</div>
+
+<div class="commentbody">
+<a name="c1924"></a>
+<div id="c1924">
+<p>Read Cryptanalysis of SHA-1 by Bruce Schneier. </p>
+</div>
+<p class="posted">Posted by: <a href="http://marshaler.blogspot.com/2005/02/cryptanalysis-of-sha-1.html" rel="nofollow">Rupreet Singh</a>  at <a href="http://www.schneier.com/blog/archives/2005/02/cryptanalysis_o.html#c1924">February 24, 2005 04:00 AM</a></p>
+<hr class="comment-separator">
+</div>
+
+<div class="commentbody">
+<a name="c1934"></a>
+<div id="c1934">
+<p>Yen,</p>
+
+<p>That is the summary.  The final paper is not yet (to my knowledge) openly public information, and is significantly longer.</p>
+</div>
+<p class="posted">Posted by: Jarrod  at <a href="http://www.schneier.com/blog/archives/2005/02/cryptanalysis_o.html#c1934">February 24, 2005 10:35 AM</a></p>
+<hr class="comment-separator">
+</div>
+
+<div class="commentbody">
+<a name="c1952"></a>
+<div id="c1952">
+<p>This is a comment to John Gregory.</p>
+
+<p><br />
+John, it's not necessary to find a meaningful message that collides<br />
+with a similar meaningful message to do damage. In many transactions it's sufficent<br />
+to have a random message and meaningful message collide.</p>
+
+<p><br />
+Say I email you:</p>
+
+<p><br />
+ 'John I've some business I'd like to discuss with you but I'd like<br />
+ to be sure that it's you I'm dealing with. Can you please digitally sign this<br />
+ random string and send it back to me: "90823jkasdc9ujasdcv zai".<br />
+ The reason I'm asking you to sign something random is so that someone<br />
+ can't grab a previously signed "Yes, it's me message" out of their mail<br />
+ from you and forward it to me.'</p>
+
+<p> <br />
+On the surface that's a reasonable request to identify yourself with a<br />
+protocol that avoids replay attacks.</p>
+
+<p> <br />
+You then do as I ask unknowing that I have prepared a message:</p>
+
+<p><br />
+    "I agree to pay Ian 1,000,000 Guineas Sterling for a short and<br />
+    painful lesson in cryptographic protocols."</p>
+
+<p>    <br />
+which has a hash collision with the random string I sent you. I substitute<br />
+that string for the random one in your signed message and then instruct<br />
+my own lawyer to recover the 1,000,000 guineas from you. I chose the message<br />
+then I found a random collision for it and presented it so that a random<br />
+string looked reasonable to you.</p>
+</div>
+<p class="posted">Posted by: Ian Mason  at <a href="http://www.schneier.com/blog/archives/2005/02/cryptanalysis_o.html#c1952">February 24, 2005 07:53 PM</a></p>
+<hr class="comment-separator">
+</div>
+
+<div class="commentbody">
+<a name="c1956"></a>
+<div id="c1956">
+<p>I'm not a lawyer, but I don't think that random message thing can even fool me.</p>
+
+<p>First of all, if I'd even consider signing something like that, it'd be for the entire message string (from "John..." to "...zai"). What is the chance the signatures will match? There are enough this kind of cheap pranks around; I think I'm educated enough thank you.</p>
+
+<p>Even if somebody is dumb enough to sign something like that; I would think it'd be from a trusted friend. And if just by chance, the poor guy actually kept a copy of the thing signed and produced the evidence in court, what's going to happen to you?</p>
+
+<p>Thirdly, the collision case found so far is only a 58th-step ***intermediate hash value***, the SHA-1 algorithm wasn't even finished yet. There is really no proof of the 2^69 number yet at this time; or if a collision can really be found in 2^69. And even if that number actually works, how long it's gonna take you to find the random string?</p>
+
+<p>It's easier to put invisible inks on paper.</p>
+</div>
+<p class="posted">Posted by: <a href="http://www.schneier.com/blog/archives/2005/02/cryptanalysis_o.html" rel="nofollow">Yen</a>  at <a href="http://www.schneier.com/blog/archives/2005/02/cryptanalysis_o.html#c1956">February 25, 2005 12:50 AM</a></p>
+<hr class="comment-separator">
+</div>
+
+<div class="commentbody">
+<a name="c1960"></a>
+<div id="c1960">
+<p>It's an exemplar to demonstrate how a random string can be useful, as opposed to a pair of choosen plaintexts.</p>
+
+<p>Substitute 'program' for 'John' and 'nonce' for random string and this hits a number of common cryptographic protocols. </p>
+
+<p>That's why collisions matter and that's why it matters finding them in less than brute force order. If the probability of a failure, and the associated risk assessment, is based on the brute force order then reducing the attack difficulty by a factor of 10^(80-69) = 10^11 may be significant.</p>
+
+<p>If your original risk assessment said "We'll take a 1 in one billion risk" (very acceptable for most commercial ventures) you've just been holed below the waterline.</p>
+</div>
+<p class="posted">Posted by: Ian Mason  at <a href="http://www.schneier.com/blog/archives/2005/02/cryptanalysis_o.html#c1960">February 25, 2005 04:09 AM</a></p>
+<hr class="comment-separator">
+</div>
+
+<div class="commentbody">
+<a name="c1974"></a>
+<div id="c1974">
+<p>Praveen,</p>
+
+<p>Seems like everybody is waiting for somebody else to do the work.. well, I guess curiosity kills the cat..</p>
+
+<p>Here is what I found with the messages. The 58th-step hashes do match for the two messages, but the number I got is different from the 'h1' in the paper. I don't know what kind of SHA-1 was implemented for the paper, but I'm quite sure my SHA-1 module is fine. The NIST test case of ASCII "abc" was put through the module first and produced correct results.</p>
+
+<p>See the numbers below.</p>
+
+<p>M0<br />
+  0 67452301 efcdab89 98badcfe 10325476 c3d2e1f0<br />
+  1 b2dff369 67452301 7bf36ae2 98badcfe 10325476<br />
+  2 63c4b1a2 b2dff369 59d148c0 7bf36ae2 98badcfe<br />
+  3 21c2b110 63c4b1a2 6cb7fcda 59d148c0 7bf36ae2<br />
+  4 d526702c 21c2b110 98f12c68 6cb7fcda 59d148c0<br />
+  5 ac4ec847 d526702c 0870ac44 98f12c68 6cb7fcda<br />
+  6 c6d362df ac4ec847 35499c0b 0870ac44 98f12c68<br />
+  7 fedf5182 c6d362df eb13b211 35499c0b 0870ac44<br />
+  8 9a011586 fedf5182 f1b4d8b7 eb13b211 35499c0b<br />
+  9 14c400ae 9a011586 bfb7d460 f1b4d8b7 eb13b211<br />
+ 10 7dfbe037 14c400ae a6804561 bfb7d460 f1b4d8b7<br />
+ 11 c16f7ec0 7dfbe037 8531002b a6804561 bfb7d460<br />
+ 12 726e4ae7 c16f7ec0 df7ef80d 8531002b a6804561<br />
+ 13 c1a839e2 726e4ae7 305bdfb0 df7ef80d 8531002b<br />
+ 14 e54d04c6 c1a839e2 dc9b92b9 305bdfb0 df7ef80d<br />
+ 15 153ba8f4 e54d04c6 b06a0e78 dc9b92b9 305bdfb0<br />
+ 16 c0d64826 153ba8f4 b9534131 b06a0e78 dc9b92b9<br />
+ 17 147d4058 c0d64826 054eea3d b9534131 b06a0e78<br />
+ 18 e461e220 147d4058 b0359209 054eea3d b9534131<br />
+ 19 ce1df558 e461e220 051f5016 b0359209 054eea3d<br />
+ 20 5e5b3fb3 ce1df558 39187888 051f5016 b0359209<br />
+ 21 4b677212 5e5b3fb3 33877d56 39187888 051f5016<br />
+ 22 4bf71507 4b677212 d796cfec 33877d56 39187888<br />
+ 23 49e94c70 4bf71507 92d9dc84 d796cfec 33877d56<br />
+ 24 dcf8b25b 49e94c70 d2fdc541 92d9dc84 d796cfec<br />
+ 25 93d5228f dcf8b25b 127a531c d2fdc541 92d9dc84<br />
+ 26 6125fb2b 93d5228f f73e2c96 127a531c d2fdc541<br />
+ 27 8f908be1 6125fb2b e4f548a3 f73e2c96 127a531c<br />
+ 28 4a77363c 8f908be1 d8497eca e4f548a3 f73e2c96<br />
+ 29 ff239bb0 4a77363c 63e422f8 d8497eca e4f548a3<br />
+ 30 ef956859 ff239bb0 129dcd8f 63e422f8 d8497eca<br />
+ 31 54ae55d3 ef956859 3fc8e6ec 129dcd8f 63e422f8<br />
+ 32 a621f9ba 54ae55d3 7be55a16 3fc8e6ec 129dcd8f<br />
+ 33 2f1abebf a621f9ba d52b9574 7be55a16 3fc8e6ec<br />
+ 34 80e6475c 2f1abebf a9887e6e d52b9574 7be55a16<br />
+ 35 d0a4b9ef 80e6475c cbc6afaf a9887e6e d52b9574<br />
+ 36 534c5fb3 d0a4b9ef 203991d7 cbc6afaf a9887e6e<br />
+ 37 99d06606 534c5fb3 f4292e7b 203991d7 cbc6afaf<br />
+ 38 8dd54d7c 99d06606 d4d317ec f4292e7b 203991d7<br />
+ 39 8a19d0a8 8dd54d7c a6741981 d4d317ec f4292e7b<br />
+ 40 a6faa511 8a19d0a8 2375535f a6741981 d4d317ec<br />
+ 41 a5b11b6d a6faa511 2286742a 2375535f a6741981<br />
+ 42 abee3f71 a5b11b6d 69bea944 2286742a 2375535f<br />
+ 43 f37f0648 abee3f71 696c46db 69bea944 2286742a<br />
+ 44 98bcd7e3 f37f0648 6afb8fdc 696c46db 69bea944<br />
+ 45 336146e9 98bcd7e3 3cdfc192 6afb8fdc 696c46db<br />
+ 46 bbb96c36 336146e9 e62f35f8 3cdfc192 6afb8fdc<br />
+ 47 63fee1b4 bbb96c36 4cd851ba e62f35f8 3cdfc192<br />
+ 48 8c97f438 63fee1b4 aeee5b0d 4cd851ba e62f35f8<br />
+ 49 8fe05a9d 8c97f438 18ffb86d aeee5b0d 4cd851ba<br />
+ 50 1ee99f6f 8fe05a9d 2325fd0e 18ffb86d aeee5b0d<br />
+ 51 dc3c9013 1ee99f6f 63f816a7 2325fd0e 18ffb86d<br />
+ 52 8bd58e52 dc3c9013 c7ba67db 63f816a7 2325fd0e<br />
+ 53 9f10dbc8 8bd58e52 f70f2404 c7ba67db 63f816a7<br />
+ 54 13ef5790 9f10dbc8 a2f56394 f70f2404 c7ba67db<br />
+ 55 0553cd66 13ef5790 27c436f2 a2f56394 f70f2404<br />
+ 56 1d628100 0553cd66 04fbd5e4 27c436f2 a2f56394<br />
+ 57 c69503f9 1d628100 8154f359 04fbd5e4 27c436f2<br />
+ 58 3023c438 c69503f9 0758a040 8154f359 04fbd5e4<br />
+ 59 f76cb30f 3023c438 71a540fe 0758a040 8154f359<br />
+ 60 c16ec0d8 f76cb30f 0c08f10e 71a540fe 0758a040<br />
+ 61 8b3ad4e3 c16ec0d8 fddb2cc3 0c08f10e 71a540fe<br />
+ 62 ad71f311 8b3ad4e3 305bb036 fddb2cc3 0c08f10e<br />
+ 63 6b3a54d9 ad71f311 e2ceb538 305bb036 fddb2cc3<br />
+ 64 f712c417 6b3a54d9 6b5c7cc4 e2ceb538 305bb036<br />
+ 65 ecdb21d2 f712c417 5ace9536 6b5c7cc4 e2ceb538<br />
+ 66 8d795749 ecdb21d2 fdc4b105 5ace9536 6b5c7cc4<br />
+ 67 4f79f3b1 8d795749 bb36c874 fdc4b105 5ace9536<br />
+ 68 c07ce060 4f79f3b1 635e55d2 bb36c874 fdc4b105<br />
+ 69 ca0f4e43 c07ce060 53de7cec 635e55d2 bb36c874<br />
+ 70 a8a8fbb5 ca0f4e43 301f3818 53de7cec 635e55d2<br />
+ 71 b59bf4b5 a8a8fbb5 f283d390 301f3818 53de7cec<br />
+ 72 26e22807 b59bf4b5 6a2a3eed f283d390 301f3818<br />
+ 73 d5cfa569 26e22807 6d66fd2d 6a2a3eed f283d390<br />
+ 74 a481a976 d5cfa569 c9b88a01 6d66fd2d 6a2a3eed<br />
+ 75 7c364bfe a481a976 7573e95a c9b88a01 6d66fd2d<br />
+ 76 cb5f624b 7c364bfe a9206a5d 7573e95a c9b88a01<br />
+ 77 406ad09e cb5f624b 9f0d92ff a9206a5d 7573e95a<br />
+ 78 9c1f2847 406ad09e f2d7d892 9f0d92ff a9206a5d<br />
+ 79 425dc5e2 9c1f2847 901ab427 f2d7d892 9f0d92ff<br />
+b4ea80a8 322b716b 7fc2a70f a04d089d b6aaba82</p>
+
+<p>M0'<br />
+  0 67452301 efcdab89 98badcfe 10325476 c3d2e1f0<br />
+  1 d2dff369 67452301 7bf36ae2 98badcfe 10325476<br />
+  2 83c4b1b4 d2dff369 59d148c0 7bf36ae2 98badcfe<br />
+  3 21c2b311 83c4b1b4 74b7fcda 59d148c0 7bf36ae2<br />
+  4 d526b01a 21c2b311 20f12c6d 74b7fcda 59d148c0<br />
+  5 b456c646 d526b01a 4870acc4 20f12c6d 74b7fcda<br />
+  6 c7d3a2df b456c646 b549ac06 4870acc4 20f12c6d<br />
+  7 fecf520b c7d3a2df ad15b191 b549ac06 4870acc4<br />
+  8 99ff1586 fecf520b f1f4e8b7 ad15b191 b549ac06<br />
+  9 94c3ffac 99ff1586 ffb3d482 f1f4e8b7 ad15b191<br />
+ 10 7dfbe037 94c3ffac a67fc561 ffb3d482 f1f4e8b7<br />
+ 11 416f7fc2 7dfbe037 2530ffeb a67fc561 ffb3d482<br />
+ 12 726e4ae7 416f7fc2 df7ef80d 2530ffeb a67fc561<br />
+ 13 c1a839e0 726e4ae7 905bdff0 df7ef80d 2530ffeb<br />
+ 14 e54d04c6 c1a839e0 dc9b92b9 905bdff0 df7ef80d<br />
+ 15 153ba8f5 e54d04c6 306a0e78 dc9b92b9 905bdff0<br />
+ 16 c0d64826 153ba8f5 b9534131 306a0e78 dc9b92b9<br />
+ 17 147d405a c0d64826 454eea3d b9534131 306a0e78<br />
+ 18 e461e222 147d405a b0359209 454eea3d b9534131<br />
+ 19 ce1df559 e461e222 851f5016 b0359209 454eea3d<br />
+ 20 5e5b3fb3 ce1df559 b9187888 851f5016 b0359209<br />
+ 21 4b677210 5e5b3fb3 73877d56 b9187888 851f5016<br />
+ 22 4bf71505 4b677210 d796cfec 73877d56 b9187888<br />
+ 23 49e94c71 4bf71505 12d9dc84 d796cfec 73877d56<br />
+ 24 dcf8b25b 49e94c71 52fdc541 12d9dc84 d796cfec<br />
+ 25 93d5228f dcf8b25b 527a531c 52fdc541 12d9dc84<br />
+ 26 6125fb29 93d5228f f73e2c96 527a531c 52fdc541<br />
+ 27 8f908be0 6125fb29 e4f548a3 f73e2c96 527a531c<br />
+ 28 4a77363c 8f908be0 58497eca e4f548a3 f73e2c96<br />
+ 29 ff239bb2 4a77363c 23e422f8 58497eca e4f548a3<br />
+ 30 ef95685b ff239bb2 129dcd8f 23e422f8 58497eca<br />
+ 31 54ae55d3 ef95685b bfc8e6ec 129dcd8f 23e422f8<br />
+ 32 a621f9ba 54ae55d3 fbe55a16 bfc8e6ec 129dcd8f<br />
+ 33 2f1abebd a621f9ba d52b9574 fbe55a16 bfc8e6ec<br />
+ 34 80e6475c 2f1abebd a9887e6e d52b9574 fbe55a16<br />
+ 35 d0a4b9ef 80e6475c 4bc6afaf a9887e6e d52b9574<br />
+ 36 534c5fb3 d0a4b9ef 203991d7 4bc6afaf a9887e6e<br />
+ 37 99d06604 534c5fb3 f4292e7b 203991d7 4bc6afaf<br />
+ 38 8dd54d7c 99d06604 d4d317ec f4292e7b 203991d7<br />
+ 39 8a19d0aa 8dd54d7c 26741981 d4d317ec f4292e7b<br />
+ 40 a6faa511 8a19d0aa 2375535f 26741981 d4d317ec<br />
+ 41 a5b11b6f a6faa511 a286742a 2375535f 26741981<br />
+ 42 abee3f71 a5b11b6f 69bea944 a286742a 2375535f<br />
+ 43 f37f064a abee3f71 e96c46db 69bea944 a286742a<br />
+ 44 98bcd7e3 f37f064a 6afb8fdc e96c46db 69bea944<br />
+ 45 336146e9 98bcd7e3 bcdfc192 6afb8fdc e96c46db<br />
+ 46 bbb96c36 336146e9 e62f35f8 bcdfc192 6afb8fdc<br />
+ 47 63fee1b4 bbb96c36 4cd851ba e62f35f8 bcdfc192<br />
+ 48 8c97f438 63fee1b4 aeee5b0d 4cd851ba e62f35f8<br />
+ 49 8fe05a9d 8c97f438 18ffb86d aeee5b0d 4cd851ba<br />
+ 50 1ee99f6f 8fe05a9d 2325fd0e 18ffb86d aeee5b0d<br />
+ 51 dc3c9013 1ee99f6f 63f816a7 2325fd0e 18ffb86d<br />
+ 52 8bd58e52 dc3c9013 c7ba67db 63f816a7 2325fd0e<br />
+ 53 9f10dbc8 8bd58e52 f70f2404 c7ba67db 63f816a7<br />
+ 54 13ef5790 9f10dbc8 a2f56394 f70f2404 c7ba67db<br />
+ 55 0553cd66 13ef5790 27c436f2 a2f56394 f70f2404<br />
+ 56 1d628100 0553cd66 04fbd5e4 27c436f2 a2f56394<br />
+ 57 c69503f9 1d628100 8154f359 04fbd5e4 27c436f2<br />
+ 58 3023c438 c69503f9 0758a040 8154f359 04fbd5e4<br />
+ 59 f76cb313 3023c438 71a540fe 0758a040 8154f359<br />
+ 60 c16ec1d8 f76cb313 0c08f10e 71a540fe 0758a040<br />
+ 61 8b3af4c3 c16ec1d8 fddb2cc4 0c08f10e 71a540fe<br />
+ 62 ad75ee15 8b3af4c3 305bb076 fddb2cc4 0c08f10e<br />
+ 63 6bb9d4b5 ad75ee15 e2cebd30 305bb076 fddb2cc4<br />
+ 64 06feacd5 6bb9d4b5 6b5d7b85 e2cebd30 305bb076<br />
+ 65 e9d9ae9d 06feacd5 5aee752d 6b5d7b85 e2cebd30<br />
+ 66 9e186b3b e9d9ae9d 41bfab35 5aee752d 6b5d7b85<br />
+ 67 0a14db72 9e186b3b 7a766ba7 41bfab35 5aee752d<br />
+ 68 ee4036c4 0a14db72 e7861ace 7a766ba7 41bfab35<br />
+ 69 c74854f8 ee4036c4 828536dc e7861ace 7a766ba7<br />
+ 70 a94fc71d c74854f8 3b900db1 828536dc e7861ace<br />
+ 71 232c8bd9 a94fc71d 31d2153e 3b900db1 828536dc<br />
+ 72 40759dc0 232c8bd9 6a53f1c7 31d2153e 3b900db1<br />
+ 73 5f2a875e 40759dc0 48cb22f6 6a53f1c7 31d2153e<br />
+ 74 506a906f 5f2a875e 101d6770 48cb22f6 6a53f1c7<br />
+ 75 9067de61 506a906f 97caa1d7 101d6770 48cb22f6<br />
+ 76 ec68629c 9067de61 d41aa41b 97caa1d7 101d6770<br />
+ 77 db41cbf7 ec68629c 6419f798 d41aa41b 97caa1d7<br />
+ 78 784e0231 db41cbf7 3b1a18a7 6419f798 d41aa41b<br />
+ 79 49c4c137 784e0231 f6d072fd 3b1a18a7 6419f798<br />
+1d887dc1 39926cc0 f6ce5d8a 0702c773 feecfa97</p>
+
+<p>NIST ASCII "abc" Test Case<br />
+  0 67452301 efcdab89 98badcfe 10325476 c3d2e1f0<br />
+  1 0116fc33 67452301 7bf36ae2 98badcfe 10325476<br />
+  2 8990536d 0116fc33 59d148c0 7bf36ae2 98badcfe<br />
+  3 a1390f08 8990536d c045bf0c 59d148c0 7bf36ae2<br />
+  4 cdd8e11b a1390f08 626414db c045bf0c 59d148c0<br />
+  5 cfd499de cdd8e11b 284e43c2 626414db c045bf0c<br />
+  6 3fc7ca40 cfd499de f3763846 284e43c2 626414db<br />
+  7 993e30c1 3fc7ca40 b3f52677 f3763846 284e43c2<br />
+  8 9e8c07d4 993e30c1 0ff1f290 b3f52677 f3763846<br />
+  9 4b6ae328 9e8c07d4 664f8c30 0ff1f290 b3f52677<br />
+ 10 8351f929 4b6ae328 27a301f5 664f8c30 0ff1f290<br />
+ 11 fbda9e89 8351f929 12dab8ca 27a301f5 664f8c30<br />
+ 12 63188fe4 fbda9e89 60d47e4a 12dab8ca 27a301f5<br />
+ 13 4607b664 63188fe4 7ef6a7a2 60d47e4a 12dab8ca<br />
+ 14 9128f695 4607b664 18c623f9 7ef6a7a2 60d47e4a<br />
+ 15 196bee77 9128f695 1181ed99 18c623f9 7ef6a7a2<br />
+ 16 20bdd62f 196bee77 644a3da5 1181ed99 18c623f9<br />
+ 17 4e925823 20bdd62f c65afb9d 644a3da5 1181ed99<br />
+ 18 82aa6728 4e925823 c82f758b c65afb9d 644a3da5<br />
+ 19 dc64901d 82aa6728 d3a49608 c82f758b c65afb9d<br />
+ 20 fd9e1d7d dc64901d 20aa99ca d3a49608 c82f758b<br />
+ 21 1a37b0ca fd9e1d7d 77192407 20aa99ca d3a49608<br />
+ 22 33a23bfc 1a37b0ca 7f67875f 77192407 20aa99ca<br />
+ 23 21283486 33a23bfc 868dec32 7f67875f 77192407<br />
+ 24 d541f12d 21283486 0ce88eff 868dec32 7f67875f<br />
+ 25 c7567dc6 d541f12d 884a0d21 0ce88eff 868dec32<br />
+ 26 48413ba4 c7567dc6 75507c4b 884a0d21 0ce88eff<br />
+ 27 be35fbd5 48413ba4 b1d59f71 75507c4b 884a0d21<br />
+ 28 4aa84d97 be35fbd5 12104ee9 b1d59f71 75507c4b<br />
+ 29 8370b52e 4aa84d97 6f8d7ef5 12104ee9 b1d59f71<br />
+ 30 c5fbaf5d 8370b52e d2aa1365 6f8d7ef5 12104ee9<br />
+ 31 1267b407 c5fbaf5d a0dc2d4b d2aa1365 6f8d7ef5<br />
+ 32 3b845d33 1267b407 717eebd7 a0dc2d4b d2aa1365<br />
+ 33 046faa0a 3b845d33 c499ed01 717eebd7 a0dc2d4b<br />
+ 34 2c0ebc11 046faa0a cee1174c c499ed01 717eebd7<br />
+ 35 21796ad4 2c0ebc11 811bea82 cee1174c c499ed01<br />
+ 36 dcbbb0cb 21796ad4 4b03af04 811bea82 cee1174c<br />
+ 37 0f511fd8 dcbbb0cb 085e5ab5 4b03af04 811bea82<br />
+ 38 dc63973f 0f511fd8 f72eec32 085e5ab5 4b03af04<br />
+ 39 4c986405 dc63973f 03d447f6 f72eec32 085e5ab5<br />
+ 40 32de1cba 4c986405 f718e5cf 03d447f6 f72eec32<br />
+ 41 fc87dedf 32de1cba 53261901 f718e5cf 03d447f6<br />
+ 42 970a0d5c fc87dedf 8cb7872e 53261901 f718e5cf<br />
+ 43 7f193dc5 970a0d5c ff21f7b7 8cb7872e 53261901<br />
+ 44 ee1b1aaf 7f193dc5 25c28357 ff21f7b7 8cb7872e<br />
+ 45 40f28e09 ee1b1aaf 5fc64f71 25c28357 ff21f7b7<br />
+ 46 1c51e1f2 40f28e09 fb86c6ab 5fc64f71 25c28357<br />
+ 47 a01b846c 1c51e1f2 503ca382 fb86c6ab 5fc64f71<br />
+ 48 bead02ca a01b846c 8714787c 503ca382 fb86c6ab<br />
+ 49 baf39337 bead02ca 2806e11b 8714787c 503ca382<br />
+ 50 120731c5 baf39337 afab40b2 2806e11b 8714787c<br />
+ 51 641db2ce 120731c5 eebce4cd afab40b2 2806e11b<br />
+ 52 3847ad66 641db2ce 4481cc71 eebce4cd afab40b2<br />
+ 53 e490436d 3847ad66 99076cb3 4481cc71 eebce4cd<br />
+ 54 27e9f1d8 e490436d 8e11eb59 99076cb3 4481cc71<br />
+ 55 7b71f76d 27e9f1d8 792410db 8e11eb59 99076cb3<br />
+ 56 5e6456af 7b71f76d 09fa7c76 792410db 8e11eb59<br />
+ 57 c846093f 5e6456af 5edc7ddb 09fa7c76 792410db<br />
+ 58 d262ff50 c846093f d79915ab 5edc7ddb 09fa7c76<br />
+ 59 09d785fd d262ff50 f211824f d79915ab 5edc7ddb<br />
+ 60 3f52de5a 09d785fd 3498bfd4 f211824f d79915ab<br />
+ 61 d756c147 3f52de5a 4275e17f 3498bfd4 f211824f<br />
+ 62 548c9cb2 d756c147 8fd4b796 4275e17f 3498bfd4<br />
+ 63 b66c020b 548c9cb2 f5d5b051 8fd4b796 4275e17f<br />
+ 64 6b61c9e1 b66c020b 9523272c f5d5b051 8fd4b796<br />
+ 65 19dfa7ac 6b61c9e1 ed9b0082 9523272c f5d5b051<br />
+ 66 101655f9 19dfa7ac 5ad87278 ed9b0082 9523272c<br />
+ 67 0c3df2b4 101655f9 0677e9eb 5ad87278 ed9b0082<br />
+ 68 78dd4d2b 0c3df2b4 4405957e 0677e9eb 5ad87278<br />
+ 69 497093c0 78dd4d2b 030f7cad 4405957e 0677e9eb<br />
+ 70 3f2588c2 497093c0 de37534a 030f7cad 4405957e<br />
+ 71 c199f8c7 3f2588c2 125c24f0 de37534a 030f7cad<br />
+ 72 39859de7 c199f8c7 8fc96230 125c24f0 de37534a<br />
+ 73 edb42de4 39859de7 f0667e31 8fc96230 125c24f0<br />
+ 74 11793f6f edb42de4 ce616779 f0667e31 8fc96230<br />
+ 75 5ee76897 11793f6f 3b6d0b79 ce616779 f0667e31<br />
+ 76 63f7dab7 5ee76897 c45e4fdb 3b6d0b79 ce616779<br />
+ 77 a079b7d9 63f7dab7 d7b9da25 c45e4fdb 3b6d0b79<br />
+ 78 860d21cc a079b7d9 d8fdf6ad d7b9da25 c45e4fdb<br />
+ 79 5738d5e1 860d21cc 681e6df6 d8fdf6ad d7b9da25<br />
+a9993e36 4706816a ba3e2571 7850c26c 9cd0d89d<br />
+</p>
+</div>
+<p class="posted">Posted by: <a href="http://www.financialcryptography.com/mt/archives/000357.html" rel="nofollow">Yen</a>  at <a href="http://www.schneier.com/blog/archives/2005/02/cryptanalysis_o.html#c1974">February 25, 2005 06:41 PM</a></p>
+<hr class="comment-separator">
+</div>
+
+<div class="commentbody">
+<a name="c1976"></a>
+<div id="c1976">
+<p>oops.. mis-stepped just a little bit.. here is take two</p>
+
+<p>M0<br />
+  0 b2dff369 67452301 7bf36ae2 98badcfe 10325476<br />
+  1 63c4b1a2 b2dff369 59d148c0 7bf36ae2 98badcfe<br />
+  2 21c2b110 63c4b1a2 6cb7fcda 59d148c0 7bf36ae2<br />
+  3 d526702c 21c2b110 98f12c68 6cb7fcda 59d148c0<br />
+  4 ac4ec847 d526702c 0870ac44 98f12c68 6cb7fcda<br />
+  5 c6d362df ac4ec847 35499c0b 0870ac44 98f12c68<br />
+  6 fedf5182 c6d362df eb13b211 35499c0b 0870ac44<br />
+  7 9a011586 fedf5182 f1b4d8b7 eb13b211 35499c0b<br />
+  8 14c400ae 9a011586 bfb7d460 f1b4d8b7 eb13b211<br />
+  9 7dfbe037 14c400ae a6804561 bfb7d460 f1b4d8b7<br />
+ 10 c16f7ec0 7dfbe037 8531002b a6804561 bfb7d460<br />
+ 11 726e4ae7 c16f7ec0 df7ef80d 8531002b a6804561<br />
+ 12 c1a839e2 726e4ae7 305bdfb0 df7ef80d 8531002b<br />
+ 13 e54d04c6 c1a839e2 dc9b92b9 305bdfb0 df7ef80d<br />
+ 14 153ba8f4 e54d04c6 b06a0e78 dc9b92b9 305bdfb0<br />
+ 15 c0d64826 153ba8f4 b9534131 b06a0e78 dc9b92b9<br />
+ 16 147d4058 c0d64826 054eea3d b9534131 b06a0e78<br />
+ 17 e461e220 147d4058 b0359209 054eea3d b9534131<br />
+ 18 ce1df558 e461e220 051f5016 b0359209 054eea3d<br />
+ 19 5e5b3fb3 ce1df558 39187888 051f5016 b0359209<br />
+ 20 4b677212 5e5b3fb3 33877d56 39187888 051f5016<br />
+ 21 4bf71507 4b677212 d796cfec 33877d56 39187888<br />
+ 22 49e94c70 4bf71507 92d9dc84 d796cfec 33877d56<br />
+ 23 dcf8b25b 49e94c70 d2fdc541 92d9dc84 d796cfec<br />
+ 24 93d5228f dcf8b25b 127a531c d2fdc541 92d9dc84<br />
+ 25 6125fb2b 93d5228f f73e2c96 127a531c d2fdc541<br />
+ 26 8f908be1 6125fb2b e4f548a3 f73e2c96 127a531c<br />
+ 27 4a77363c 8f908be1 d8497eca e4f548a3 f73e2c96<br />
+ 28 ff239bb0 4a77363c 63e422f8 d8497eca e4f548a3<br />
+ 29 ef956859 ff239bb0 129dcd8f 63e422f8 d8497eca<br />
+ 30 54ae55d3 ef956859 3fc8e6ec 129dcd8f 63e422f8<br />
+ 31 a621f9ba 54ae55d3 7be55a16 3fc8e6ec 129dcd8f<br />
+ 32 2f1abebf a621f9ba d52b9574 7be55a16 3fc8e6ec<br />
+ 33 80e6475c 2f1abebf a9887e6e d52b9574 7be55a16<br />
+ 34 d0a4b9ef 80e6475c cbc6afaf a9887e6e d52b9574<br />
+ 35 534c5fb3 d0a4b9ef 203991d7 cbc6afaf a9887e6e<br />
+ 36 99d06606 534c5fb3 f4292e7b 203991d7 cbc6afaf<br />
+ 37 8dd54d7c 99d06606 d4d317ec f4292e7b 203991d7<br />
+ 38 8a19d0a8 8dd54d7c a6741981 d4d317ec f4292e7b<br />
+ 39 a6faa511 8a19d0a8 2375535f a6741981 d4d317ec<br />
+ 40 a5b11b6d a6faa511 2286742a 2375535f a6741981<br />
+ 41 abee3f71 a5b11b6d 69bea944 2286742a 2375535f<br />
+ 42 f37f0648 abee3f71 696c46db 69bea944 2286742a<br />
+ 43 98bcd7e3 f37f0648 6afb8fdc 696c46db 69bea944<br />
+ 44 336146e9 98bcd7e3 3cdfc192 6afb8fdc 696c46db<br />
+ 45 bbb96c36 336146e9 e62f35f8 3cdfc192 6afb8fdc<br />
+ 46 63fee1b4 bbb96c36 4cd851ba e62f35f8 3cdfc192<br />
+ 47 8c97f438 63fee1b4 aeee5b0d 4cd851ba e62f35f8<br />
+ 48 8fe05a9d 8c97f438 18ffb86d aeee5b0d 4cd851ba<br />
+ 49 1ee99f6f 8fe05a9d 2325fd0e 18ffb86d aeee5b0d<br />
+ 50 dc3c9013 1ee99f6f 63f816a7 2325fd0e 18ffb86d<br />
+ 51 8bd58e52 dc3c9013 c7ba67db 63f816a7 2325fd0e<br />
+ 52 9f10dbc8 8bd58e52 f70f2404 c7ba67db 63f816a7<br />
+ 53 13ef5790 9f10dbc8 a2f56394 f70f2404 c7ba67db<br />
+ 54 0553cd66 13ef5790 27c436f2 a2f56394 f70f2404<br />
+ 55 1d628100 0553cd66 04fbd5e4 27c436f2 a2f56394<br />
+ 56 c69503f9 1d628100 8154f359 04fbd5e4 27c436f2<br />
+ 57 3023c438 c69503f9 0758a040 8154f359 04fbd5e4<br />
+ 58 f76cb30f 3023c438 71a540fe 0758a040 8154f359<br />
+ 59 c16ec0d8 f76cb30f 0c08f10e 71a540fe 0758a040<br />
+ 60 8b3ad4e3 c16ec0d8 fddb2cc3 0c08f10e 71a540fe<br />
+ 61 ad71f311 8b3ad4e3 305bb036 fddb2cc3 0c08f10e<br />
+ 62 6b3a54d9 ad71f311 e2ceb538 305bb036 fddb2cc3<br />
+ 63 f712c417 6b3a54d9 6b5c7cc4 e2ceb538 305bb036<br />
+ 64 ecdb21d2 f712c417 5ace9536 6b5c7cc4 e2ceb538<br />
+ 65 8d795749 ecdb21d2 fdc4b105 5ace9536 6b5c7cc4<br />
+ 66 4f79f3b1 8d795749 bb36c874 fdc4b105 5ace9536<br />
+ 67 c07ce060 4f79f3b1 635e55d2 bb36c874 fdc4b105<br />
+ 68 ca0f4e43 c07ce060 53de7cec 635e55d2 bb36c874<br />
+ 69 a8a8fbb5 ca0f4e43 301f3818 53de7cec 635e55d2<br />
+ 70 b59bf4b5 a8a8fbb5 f283d390 301f3818 53de7cec<br />
+ 71 26e22807 b59bf4b5 6a2a3eed f283d390 301f3818<br />
+ 72 d5cfa569 26e22807 6d66fd2d 6a2a3eed f283d390<br />
+ 73 a481a976 d5cfa569 c9b88a01 6d66fd2d 6a2a3eed<br />
+ 74 7c364bfe a481a976 7573e95a c9b88a01 6d66fd2d<br />
+ 75 cb5f624b 7c364bfe a9206a5d 7573e95a c9b88a01<br />
+ 76 406ad09e cb5f624b 9f0d92ff a9206a5d 7573e95a<br />
+ 77 9c1f2847 406ad09e f2d7d892 9f0d92ff a9206a5d<br />
+ 78 425dc5e2 9c1f2847 901ab427 f2d7d892 9f0d92ff<br />
+ 79 4da55da7 425dc5e2 e707ca11 901ab427 f2d7d892<br />
+b4ea80a8 322b716b 7fc2a70f a04d089d b6aaba82</p>
+
+<p>M0'<br />
+  0 d2dff369 67452301 7bf36ae2 98badcfe 10325476<br />
+  1 83c4b1b4 d2dff369 59d148c0 7bf36ae2 98badcfe<br />
+  2 21c2b311 83c4b1b4 74b7fcda 59d148c0 7bf36ae2<br />
+  3 d526b01a 21c2b311 20f12c6d 74b7fcda 59d148c0<br />
+  4 b456c646 d526b01a 4870acc4 20f12c6d 74b7fcda<br />
+  5 c7d3a2df b456c646 b549ac06 4870acc4 20f12c6d<br />
+  6 fecf520b c7d3a2df ad15b191 b549ac06 4870acc4<br />
+  7 99ff1586 fecf520b f1f4e8b7 ad15b191 b549ac06<br />
+  8 94c3ffac 99ff1586 ffb3d482 f1f4e8b7 ad15b191<br />
+  9 7dfbe037 94c3ffac a67fc561 ffb3d482 f1f4e8b7<br />
+ 10 416f7fc2 7dfbe037 2530ffeb a67fc561 ffb3d482<br />
+ 11 726e4ae7 416f7fc2 df7ef80d 2530ffeb a67fc561<br />
+ 12 c1a839e0 726e4ae7 905bdff0 df7ef80d 2530ffeb<br />
+ 13 e54d04c6 c1a839e0 dc9b92b9 905bdff0 df7ef80d<br />
+ 14 153ba8f5 e54d04c6 306a0e78 dc9b92b9 905bdff0<br />
+ 15 c0d64826 153ba8f5 b9534131 306a0e78 dc9b92b9<br />
+ 16 147d405a c0d64826 454eea3d b9534131 306a0e78<br />
+ 17 e461e222 147d405a b0359209 454eea3d b9534131<br />
+ 18 ce1df559 e461e222 851f5016 b0359209 454eea3d<br />
+ 19 5e5b3fb3 ce1df559 b9187888 851f5016 b0359209<br />
+ 20 4b677210 5e5b3fb3 73877d56 b9187888 851f5016<br />
+ 21 4bf71505 4b677210 d796cfec 73877d56 b9187888<br />
+ 22 49e94c71 4bf71505 12d9dc84 d796cfec 73877d56<br />
+ 23 dcf8b25b 49e94c71 52fdc541 12d9dc84 d796cfec<br />
+ 24 93d5228f dcf8b25b 527a531c 52fdc541 12d9dc84<br />
+ 25 6125fb29 93d5228f f73e2c96 527a531c 52fdc541<br />
+ 26 8f908be0 6125fb29 e4f548a3 f73e2c96 527a531c<br />
+ 27 4a77363c 8f908be0 58497eca e4f548a3 f73e2c96<br />
+ 28 ff239bb2 4a77363c 23e422f8 58497eca e4f548a3<br />
+ 29 ef95685b ff239bb2 129dcd8f 23e422f8 58497eca<br />
+ 30 54ae55d3 ef95685b bfc8e6ec 129dcd8f 23e422f8<br />
+ 31 a621f9ba 54ae55d3 fbe55a16 bfc8e6ec 129dcd8f<br />
+ 32 2f1abebd a621f9ba d52b9574 fbe55a16 bfc8e6ec<br />
+ 33 80e6475c 2f1abebd a9887e6e d52b9574 fbe55a16<br />
+ 34 d0a4b9ef 80e6475c 4bc6afaf a9887e6e d52b9574<br />
+ 35 534c5fb3 d0a4b9ef 203991d7 4bc6afaf a9887e6e<br />
+ 36 99d06604 534c5fb3 f4292e7b 203991d7 4bc6afaf<br />
+ 37 8dd54d7c 99d06604 d4d317ec f4292e7b 203991d7<br />
+ 38 8a19d0aa 8dd54d7c 26741981 d4d317ec f4292e7b<br />
+ 39 a6faa511 8a19d0aa 2375535f 26741981 d4d317ec<br />
+ 40 a5b11b6f a6faa511 a286742a 2375535f 26741981<br />
+ 41 abee3f71 a5b11b6f 69bea944 a286742a 2375535f<br />
+ 42 f37f064a abee3f71 e96c46db 69bea944 a286742a<br />
+ 43 98bcd7e3 f37f064a 6afb8fdc e96c46db 69bea944<br />
+ 44 336146e9 98bcd7e3 bcdfc192 6afb8fdc e96c46db<br />
+ 45 bbb96c36 336146e9 e62f35f8 bcdfc192 6afb8fdc<br />
+ 46 63fee1b4 bbb96c36 4cd851ba e62f35f8 bcdfc192<br />
+ 47 8c97f438 63fee1b4 aeee5b0d 4cd851ba e62f35f8<br />
+ 48 8fe05a9d 8c97f438 18ffb86d aeee5b0d 4cd851ba<br />
+ 49 1ee99f6f 8fe05a9d 2325fd0e 18ffb86d aeee5b0d<br />
+ 50 dc3c9013 1ee99f6f 63f816a7 2325fd0e 18ffb86d<br />
+ 51 8bd58e52 dc3c9013 c7ba67db 63f816a7 2325fd0e<br />
+ 52 9f10dbc8 8bd58e52 f70f2404 c7ba67db 63f816a7<br />
+ 53 13ef5790 9f10dbc8 a2f56394 f70f2404 c7ba67db<br />
+ 54 0553cd66 13ef5790 27c436f2 a2f56394 f70f2404<br />
+ 55 1d628100 0553cd66 04fbd5e4 27c436f2 a2f56394<br />
+ 56 c69503f9 1d628100 8154f359 04fbd5e4 27c436f2<br />
+ 57 3023c438 c69503f9 0758a040 8154f359 04fbd5e4<br />
+ 58 f76cb313 3023c438 71a540fe 0758a040 8154f359<br />
+ 59 c16ec1d8 f76cb313 0c08f10e 71a540fe 0758a040<br />
+ 60 8b3af4c3 c16ec1d8 fddb2cc4 0c08f10e 71a540fe<br />
+ 61 ad75ee15 8b3af4c3 305bb076 fddb2cc4 0c08f10e<br />
+ 62 6bb9d4b5 ad75ee15 e2cebd30 305bb076 fddb2cc4<br />
+ 63 06feacd5 6bb9d4b5 6b5d7b85 e2cebd30 305bb076<br />
+ 64 e9d9ae9d 06feacd5 5aee752d 6b5d7b85 e2cebd30<br />
+ 65 9e186b3b e9d9ae9d 41bfab35 5aee752d 6b5d7b85<br />
+ 66 0a14db72 9e186b3b 7a766ba7 41bfab35 5aee752d<br />
+ 67 ee4036c4 0a14db72 e7861ace 7a766ba7 41bfab35<br />
+ 68 c74854f8 ee4036c4 828536dc e7861ace 7a766ba7<br />
+ 69 a94fc71d c74854f8 3b900db1 828536dc e7861ace<br />
+ 70 232c8bd9 a94fc71d 31d2153e 3b900db1 828536dc<br />
+ 71 40759dc0 232c8bd9 6a53f1c7 31d2153e 3b900db1<br />
+ 72 5f2a875e 40759dc0 48cb22f6 6a53f1c7 31d2153e<br />
+ 73 506a906f 5f2a875e 101d6770 48cb22f6 6a53f1c7<br />
+ 74 9067de61 506a906f 97caa1d7 101d6770 48cb22f6<br />
+ 75 ec68629c 9067de61 d41aa41b 97caa1d7 101d6770<br />
+ 76 db41cbf7 ec68629c 6419f798 d41aa41b 97caa1d7<br />
+ 77 784e0231 db41cbf7 3b1a18a7 6419f798 d41aa41b<br />
+ 78 49c4c137 784e0231 f6d072fd 3b1a18a7 6419f798<br />
+ 79 b6435ac0 49c4c137 5e13808c f6d072fd 3b1a18a7<br />
+1d887dc1 39926cc0 f6ce5d8a 0702c773 feecfa97</p>
+
+<p>NIST ASCII "abc" Test Case<br />
+  0 0116fc33 67452301 7bf36ae2 98badcfe 10325476<br />
+  1 8990536d 0116fc33 59d148c0 7bf36ae2 98badcfe<br />
+  2 a1390f08 8990536d c045bf0c 59d148c0 7bf36ae2<br />
+  3 cdd8e11b a1390f08 626414db c045bf0c 59d148c0<br />
+  4 cfd499de cdd8e11b 284e43c2 626414db c045bf0c<br />
+  5 3fc7ca40 cfd499de f3763846 284e43c2 626414db<br />
+  6 993e30c1 3fc7ca40 b3f52677 f3763846 284e43c2<br />
+  7 9e8c07d4 993e30c1 0ff1f290 b3f52677 f3763846<br />
+  8 4b6ae328 9e8c07d4 664f8c30 0ff1f290 b3f52677<br />
+  9 8351f929 4b6ae328 27a301f5 664f8c30 0ff1f290<br />
+ 10 fbda9e89 8351f929 12dab8ca 27a301f5 664f8c30<br />
+ 11 63188fe4 fbda9e89 60d47e4a 12dab8ca 27a301f5<br />
+ 12 4607b664 63188fe4 7ef6a7a2 60d47e4a 12dab8ca<br />
+ 13 9128f695 4607b664 18c623f9 7ef6a7a2 60d47e4a<br />
+ 14 196bee77 9128f695 1181ed99 18c623f9 7ef6a7a2<br />
+ 15 20bdd62f 196bee77 644a3da5 1181ed99 18c623f9<br />
+ 16 4e925823 20bdd62f c65afb9d 644a3da5 1181ed99<br />
+ 17 82aa6728 4e925823 c82f758b c65afb9d 644a3da5<br />
+ 18 dc64901d 82aa6728 d3a49608 c82f758b c65afb9d<br />
+ 19 fd9e1d7d dc64901d 20aa99ca d3a49608 c82f758b<br />
+ 20 1a37b0ca fd9e1d7d 77192407 20aa99ca d3a49608<br />
+ 21 33a23bfc 1a37b0ca 7f67875f 77192407 20aa99ca<br />
+ 22 21283486 33a23bfc 868dec32 7f67875f 77192407<br />
+ 23 d541f12d 21283486 0ce88eff 868dec32 7f67875f<br />
+ 24 c7567dc6 d541f12d 884a0d21 0ce88eff 868dec32<br />
+ 25 48413ba4 c7567dc6 75507c4b 884a0d21 0ce88eff<br />
+ 26 be35fbd5 48413ba4 b1d59f71 75507c4b 884a0d21<br />
+ 27 4aa84d97 be35fbd5 12104ee9 b1d59f71 75507c4b<br />
+ 28 8370b52e 4aa84d97 6f8d7ef5 12104ee9 b1d59f71<br />
+ 29 c5fbaf5d 8370b52e d2aa1365 6f8d7ef5 12104ee9<br />
+ 30 1267b407 c5fbaf5d a0dc2d4b d2aa1365 6f8d7ef5<br />
+ 31 3b845d33 1267b407 717eebd7 a0dc2d4b d2aa1365<br />
+ 32 046faa0a 3b845d33 c499ed01 717eebd7 a0dc2d4b<br />
+ 33 2c0ebc11 046faa0a cee1174c c499ed01 717eebd7<br />
+ 34 21796ad4 2c0ebc11 811bea82 cee1174c c499ed01<br />
+ 35 dcbbb0cb 21796ad4 4b03af04 811bea82 cee1174c<br />
+ 36 0f511fd8 dcbbb0cb 085e5ab5 4b03af04 811bea82<br />
+ 37 dc63973f 0f511fd8 f72eec32 085e5ab5 4b03af04<br />
+ 38 4c986405 dc63973f 03d447f6 f72eec32 085e5ab5<br />
+ 39 32de1cba 4c986405 f718e5cf 03d447f6 f72eec32<br />
+ 40 fc87dedf 32de1cba 53261901 f718e5cf 03d447f6<br />
+ 41 970a0d5c fc87dedf 8cb7872e 53261901 f718e5cf<br />
+ 42 7f193dc5 970a0d5c ff21f7b7 8cb7872e 53261901<br />
+ 43 ee1b1aaf 7f193dc5 25c28357 ff21f7b7 8cb7872e<br />
+ 44 40f28e09 ee1b1aaf 5fc64f71 25c28357 ff21f7b7<br />
+ 45 1c51e1f2 40f28e09 fb86c6ab 5fc64f71 25c28357<br />
+ 46 a01b846c 1c51e1f2 503ca382 fb86c6ab 5fc64f71<br />
+ 47 bead02ca a01b846c 8714787c 503ca382 fb86c6ab<br />
+ 48 baf39337 bead02ca 2806e11b 8714787c 503ca382<br />
+ 49 120731c5 baf39337 afab40b2 2806e11b 8714787c<br />
+ 50 641db2ce 120731c5 eebce4cd afab40b2 2806e11b<br />
+ 51 3847ad66 641db2ce 4481cc71 eebce4cd afab40b2<br />
+ 52 e490436d 3847ad66 99076cb3 4481cc71 eebce4cd<br />
+ 53 27e9f1d8 e490436d 8e11eb59 99076cb3 4481cc71<br />
+ 54 7b71f76d 27e9f1d8 792410db 8e11eb59 99076cb3<br />
+ 55 5e6456af 7b71f76d 09fa7c76 792410db 8e11eb59<br />
+ 56 c846093f 5e6456af 5edc7ddb 09fa7c76 792410db<br />
+ 57 d262ff50 c846093f d79915ab 5edc7ddb 09fa7c76<br />
+ 58 09d785fd d262ff50 f211824f d79915ab 5edc7ddb<br />
+ 59 3f52de5a 09d785fd 3498bfd4 f211824f d79915ab<br />
+ 60 d756c147 3f52de5a 4275e17f 3498bfd4 f211824f<br />
+ 61 548c9cb2 d756c147 8fd4b796 4275e17f 3498bfd4<br />
+ 62 b66c020b 548c9cb2 f5d5b051 8fd4b796 4275e17f<br />
+ 63 6b61c9e1 b66c020b 9523272c f5d5b051 8fd4b796<br />
+ 64 19dfa7ac 6b61c9e1 ed9b0082 9523272c f5d5b051<br />
+ 65 101655f9 19dfa7ac 5ad87278 ed9b0082 9523272c<br />
+ 66 0c3df2b4 101655f9 0677e9eb 5ad87278 ed9b0082<br />
+ 67 78dd4d2b 0c3df2b4 4405957e 0677e9eb 5ad87278<br />
+ 68 497093c0 78dd4d2b 030f7cad 4405957e 0677e9eb<br />
+ 69 3f2588c2 497093c0 de37534a 030f7cad 4405957e<br />
+ 70 c199f8c7 3f2588c2 125c24f0 de37534a 030f7cad<br />
+ 71 39859de7 c199f8c7 8fc96230 125c24f0 de37534a<br />
+ 72 edb42de4 39859de7 f0667e31 8fc96230 125c24f0<br />
+ 73 11793f6f edb42de4 ce616779 f0667e31 8fc96230<br />
+ 74 5ee76897 11793f6f 3b6d0b79 ce616779 f0667e31<br />
+ 75 63f7dab7 5ee76897 c45e4fdb 3b6d0b79 ce616779<br />
+ 76 a079b7d9 63f7dab7 d7b9da25 c45e4fdb 3b6d0b79<br />
+ 77 860d21cc a079b7d9 d8fdf6ad d7b9da25 c45e4fdb<br />
+ 78 5738d5e1 860d21cc 681e6df6 d8fdf6ad d7b9da25<br />
+ 79 42541b35 5738d5e1 21834873 681e6df6 d8fdf6ad<br />
+a9993e36 4706816a ba3e2571 7850c26c 9cd0d89d<br />
+</p>
+</div>
+<p class="posted">Posted by: <a href="http://www.financialcryptography.com/mt/archives/000357.html" rel="nofollow">Yen</a>  at <a href="http://www.schneier.com/blog/archives/2005/02/cryptanalysis_o.html#c1976">February 25, 2005 08:18 PM</a></p>
+<hr class="comment-separator">
+</div>
+
+<div class="commentbody">
+<a name="c2058"></a>
+<div id="c2058">
+<p>Yen, did you note the part of the paper that suggests: "[...] padding rules were not applied to the messages."</p>
+</div>
+<p class="posted">Posted by: Michael Silk  at <a href="http://www.schneier.com/blog/archives/2005/02/cryptanalysis_o.html#c2058">March  1, 2005 11:35 PM</a></p>
+<hr class="comment-separator">
+</div>
+
+<div class="commentbody">
+<a name="c2103"></a>
+<div id="c2103">
+<p>:D</p>
+</div>
+<p class="posted">Posted by: haithanh  at <a href="http://www.schneier.com/blog/archives/2005/02/cryptanalysis_o.html#c2103">March  3, 2005 07:14 AM</a></p>
+<hr class="comment-separator">
+</div>
+
+<div class="commentbody">
+<a name="c109951"></a>
+<div id="c109951">
+<p>I am wondering how this can be applied to highly structured messages such as validated XML. Example: assuming you manipulate an HTML document, add an appendix after the closing html-tag, no browser will worry about displaying the gibberish but will only display the manipulated page. The security mechanisms will tell the user everything is ok, since they consider the whole document.</p>
+
+<p>Now if you take a validated XML document and an XML Signature (according to W3C specs) from all I know this is to ignore extra whitespace and obviously any gibberish not obeying the XML structure will render the document invalid.</p>
+
+<p>Does this now justify the conclusion that highly structured content such as validated XML is more robust against this kind of collision attacks?</p>
+</div>
+<p class="posted">Posted by: <a href="http://blog.raschi.de" rel="nofollow">raschi</a>  at <a href="http://www.schneier.com/blog/archives/2005/02/cryptanalysis_o.html#c109951">August 27, 2006 01:09 PM</a></p>
+<hr class="comment-separator">
+</div>
+
+<div class="commentbody">
+<a name="c110787"></a>
+<div id="c110787">
+<p>What about composing a message M1 and a large random string C1 and transmitting the following data:<br />
+M1, C1, SHA1(M1), SHA1(C1), SHA1(M1+C1)</p>
+
+<p>Try to crack this by making a forged "valid" message like:</p>
+
+<p>M2, C2, SHA1(M2), SHA1(C2), SHA1(M2+C2)</p>
+
+<p>This is the same as solving a problem (e) for M and solving problem (f) for C, but at the same time <br />
+try to make the SHA1 of the sum of M+C in the forged situation equal to the SHA1 of the original M+C.<br />
+The last SHA1 causes that the common results of the full result set of the first, second and third problem <br />
+will be a very meager collection of possibilities, although a brute force attack might result in a solution.</p>
+
+<p>If such a combination of criteria makes it difficult to find a solution, the combination can be expanded with more random data strings and SHA1's and more SHA1-ed additions.</p>
+
+<p>I'm not a cryptographer but does this make the forging attempts much more difficult?</p>
+</div>
+<p class="posted">Posted by: Rene  at <a href="http://www.schneier.com/blog/archives/2005/02/cryptanalysis_o.html#c110787">August 31, 2006 05:03 PM</a></p>
+<hr class="comment-separator">
+</div>
+
+<div class="commentbody">
+<a name="c113353"></a>
+<div id="c113353">
+<p>Mann what are you doing?</p>
+</div>
+<p class="posted">Posted by: <a href="http://texcel.yoll.net/page1.html" rel="nofollow">Wadim</a>  at <a href="http://www.schneier.com/blog/archives/2005/02/cryptanalysis_o.html#c113353">September 13, 2006 06:29 AM</a></p>
+<hr class="comment-separator">
+</div>
+
+<div class="commentbody">
+<a name="c129304"></a>
+<div id="c129304">
+<p>Related Pages in AI Topics: General Index by Topic to AI in the news ... World chess champion Vladimir Kramnik defends tenaciously to draw computer Deep ... </p>
+</div>
+<p class="posted">Posted by: tarst  at <a href="http://www.schneier.com/blog/archives/2005/02/cryptanalysis_o.html#c129304">December  6, 2006 12:54 PM</a></p>
+<hr class="comment-separator">
+</div>
+
+<div class="commentbody">
+<a name="c140342"></a>
+<div id="c140342">
+<p>Any word on how SSHA (salted SHA-1) might be affected by this?</p>
+</div>
+<p class="posted">Posted by: ahnold  at <a href="http://www.schneier.com/blog/archives/2005/02/cryptanalysis_o.html#c140342">January 23, 2007 11:11 AM</a></p>
+<hr class="comment-separator">
+</div>
+
+
+
+<div class="postcomment">
+
+
+
+
+<h2>Post a comment</h2>
+
+ 
+
+
+
+<form method="post" action="cgi-bin/mt/mt-comments.cgi" name="comments_form" onsubmit="if (this.bakecookie[0].checked) rememberMe(this)">
+<input type="hidden" name="static" value="1">
+<input type="hidden" name="entry_id" value="132">
+
+<div id="name_email">
+<p><label for="author">Name:</label><br>
+<input tabindex="1" id="author" name="author">
+<br>Real names aren't required, but please give us something to call you.  Conversations among several people called "Anonymous" get too confusing.</p>
+<p><label for="email">Email Address:</label><br>
+<input tabindex="2" id="email" name="email">
+<br>E-mail is optional and will not be displayed on the site.</p>
+</div>
+
+
+
+<p><label for="url">URL:</label><br>
+<input tabindex="3" type="text" name="url" id="url">
+Remember Me?
+<input type="radio" id="remember" onclick="rememberMe(this.form)" name="bakecookie"><label for="remember">Yes</label><input type="radio" id="forget" name="bakecookie" onclick="forgetMe(this.form)" value="Forget Info" style="margin-left: 15px;"><label for="forget">No</label><br style="clear: both;">
+</p>
+
+<p><label for="text">Comments:</label> <br>
+<textarea tabindex="4" id="text" name="text" rows="10" cols="40"></textarea></p>
+
+<div align="center">
+<input type="submit" name="preview" tabindex="5" 
+    value="&nbsp;Preview&nbsp;">
+<input style="font-weight: bold;" type="submit" name="post" 
+    tabindex="6" value="&nbsp;Post&nbsp;">
+</div>
+</form>
+
+
+
+
+
+<script type="text/javascript" language="javascript">
+<!--
+if (document.comments_form.email != undefined)
+    document.comments_form.email.value = getCookie("mtcmtmail");
+if (document.comments_form.author != undefined)
+    document.comments_form.author.value = getCookie("mtcmtauth");
+if (document.comments_form.url != undefined)
+    document.comments_form.url.value = getCookie("mtcmthome");
+if (getCookie("mtcmtauth") || getCookie("mtcmthome")) {
+    document.comments_form.bakecookie[0].checked = true;
+} else {
+    document.comments_form.bakecookie[1].checked = true;
+}
+//-->
+</script>
+
+
+
+
+</div>
+
+
+
+<div id="powered">
+Powered by <a href="http://www.movabletype.org">Movable Type 3.2</a>.  Photo at top by Steve Woit.
+
+<p>
+<!--WEBBOT bot="HTMLMarkup" startspan ALT="Site Meter" -->
+<script type="text/javascript" language="JavaScript">var site="s16schneier"</script>
+<script type="text/javascript" language="JavaScript1.2" src="http://s16.sitemeter.com/js/counter.js?site=s16schneier">
+</script>
+<noscript>
+<a href="http://s16.sitemeter.com/stats.asp?site=s16schneier" target="_top">
+<img src="http://s16.sitemeter.com/meter.asp?site=s16schneier" alt="Site Meter" border="0"/></a>
+</noscript>
+<!-- Copyright (c)2005 Site Meter -->
+<!--WEBBOT bot="HTMLMarkup" Endspan -->
+</div>
+
+<!-- end page content -->
+
+<!-- robots content="noindex" -->
+
+<p class="disclaim">Schneier.com is a personal website.  Opinions expressed are not necessarily those of <a href="http://www.counterpane.com/">BT Counterpane</a>.
+</td>
+<td class="kludge">&nbsp;</td>
+<td class="rightcol">
+
+<table class="sidephoto" cellspacing=0><tr>
+<td><img src="/images/bruce-blog.jpg" width=150 height=225 alt="Bruce Schneier">
+</td></tr></table>
+
+<table class="sidebox" cellspacing=0><tr><td class="sidemast">Blog Menu</td></tr>
+<tr><td class="sidebody">
+
+<h3 class="first">Search</h3>
+<form method="get" action="http://www.schneier.com/cgi-bin/search/search.pl">
+<input id="search" name="Terms" size="15"><br>
+<input type="radio" name="Realm" value="blog" checked>blog only<br>
+<input type="radio" name="Realm" value="whole site">whole site<br>
+<input type="submit" value="Search">
+</form>
+
+<h3>Recent Entries</h3>
+
+<ul>
+
+<li><a href="http://www.schneier.com/blog/archives/2007/04/friday_squid_bl_68.html">Friday Squid Blogging: Giant Squids off California!</a></li>
+
+<li><a href="http://www.schneier.com/blog/archives/2007/04/bruce_schneier_1.html">Bruce Schneier T-Shirt</a></li>
+
+<li><a href="http://www.schneier.com/blog/archives/2007/04/consequences_of.html">Consequences of a Nuclear Explosion in an American City</a></li>
+
+<li><a href="http://www.schneier.com/blog/archives/2007/04/more_random_num.html">More Random Number Humor</a></li>
+
+<li><a href="http://www.schneier.com/blog/archives/2007/04/ru_sirius_inter.html">RU Sirius Interview</a></li>
+
+<li><a href="http://www.schneier.com/blog/archives/2007/04/the_doghouse_br.html">The Doghouse:  Brutuslib</a></li>
+
+<li><a href="http://www.schneier.com/blog/archives/2007/04/cyberattack.html">Cyber-Attack</a></li>
+
+<li><a href="http://www.schneier.com/blog/archives/2007/04/breaking_wep_in.html">Breaking WEP in Under a Minute</a></li>
+
+<li><a href="http://www.schneier.com/blog/archives/2007/04/story_of_a_cred.html">Story of a Credit Card Fraudster</a></li>
+
+<li><a href="http://www.schneier.com/blog/archives/2007/04/vbootkit_bypass.html">VBootkit Bypasses Vista's Code Signing Mechanisms</a></li>
+
+</ul>
+
+<h3>Comments</h3>
+<ul>
+<li><a href="blog/newcomments.html">100 Latest Comments</a>
+</ul>
+
+<h3>Archives</h3>
+
+<ul>
+
+<li><a href="http://www.schneier.com/blog/archives/2007/04/">April 2007</a></li>
+
+<li><a href="http://www.schneier.com/blog/archives/2007/03/">March 2007</a></li>
+
+<li><a href="http://www.schneier.com/blog/archives/2007/02/">February 2007</a></li>
+
+<li><a href="http://www.schneier.com/blog/archives/2007/01/">January 2007</a></li>
+
+<li><a href="http://www.schneier.com/blog/archives/2006/12/">December 2006</a></li>
+
+<li><a href="http://www.schneier.com/blog/archives/2006/11/">November 2006</a></li>
+
+<li><a href="http://www.schneier.com/blog/archives/2006/10/">October 2006</a></li>
+
+<li><a href="http://www.schneier.com/blog/archives/2006/09/">September 2006</a></li>
+
+<li><a href="http://www.schneier.com/blog/archives/2006/08/">August 2006</a></li>
+
+<li><a href="http://www.schneier.com/blog/archives/2006/07/">July 2006</a></li>
+
+<li><a href="http://www.schneier.com/blog/archives/2006/06/">June 2006</a></li>
+
+<li><a href="http://www.schneier.com/blog/archives/2006/05/">May 2006</a></li>
+
+<li><a href="http://www.schneier.com/blog/archives/2006/04/">April 2006</a></li>
+
+<li><a href="http://www.schneier.com/blog/archives/2006/03/">March 2006</a></li>
+
+<li><a href="http://www.schneier.com/blog/archives/2006/02/">February 2006</a></li>
+
+<li><a href="http://www.schneier.com/blog/archives/2006/01/">January 2006</a></li>
+
+<li><a href="http://www.schneier.com/blog/archives/2005/12/">December 2005</a></li>
+
+<li><a href="http://www.schneier.com/blog/archives/2005/11/">November 2005</a></li>
+
+<li><a href="http://www.schneier.com/blog/archives/2005/10/">October 2005</a></li>
+
+<li><a href="http://www.schneier.com/blog/archives/2005/09/">September 2005</a></li>
+
+<li><a href="http://www.schneier.com/blog/archives/2005/08/">August 2005</a></li>
+
+<li><a href="http://www.schneier.com/blog/archives/2005/07/">July 2005</a></li>
+
+<li><a href="http://www.schneier.com/blog/archives/2005/06/">June 2005</a></li>
+
+<li><a href="http://www.schneier.com/blog/archives/2005/05/">May 2005</a></li>
+
+<li><a href="http://www.schneier.com/blog/archives/2005/04/">April 2005</a></li>
+
+<li><a href="http://www.schneier.com/blog/archives/2005/03/">March 2005</a></li>
+
+<li><a href="http://www.schneier.com/blog/archives/2005/02/">February 2005</a></li>
+
+<li><a href="http://www.schneier.com/blog/archives/2005/01/">January 2005</a></li>
+
+<li><a href="http://www.schneier.com/blog/archives/2004/12/">December 2004</a></li>
+
+<li><a href="http://www.schneier.com/blog/archives/2004/11/">November 2004</a></li>
+
+<li><a href="http://www.schneier.com/blog/archives/2004/10/">October 2004</a></li>
+
+</ul>
+
+<!-- begin EFF Blogger's Rights campaign code -->
+<DIV id="eff" ALIGN="CENTER"><A HREF="http://www.eff.org/bloggers/join/"><IMG SRC="http://www.eff.org/bloggers/badges/blog_150x40.gif" ALT="Support Blogger's Rights!" WIDTH="150" HEIGHT="40" BORDER="0" ALIGN="MIDDLE"></A></DIV>
+<!-- end EFF Blogger's Rights campaign code -->
+
+</td></tr></table>
+
+
+<table class="sidebox" cellspacing=0><tr><td class="sidemast">Syndication</td></tr>
+<tr><td class="sidebody">
+<a href="http://www.schneier.com/blog/index.rdf">RSS 1.0</a> (full text)
+<br><a href="http://www.schneier.com/blog/index.xml">RSS 2.0</a> (excerpts)
+</td></tr></table>
+
+
+<table class="sidebox" cellspacing=0><tr><td class="sidemast">Crypto-Gram Newsletter</td></tr>
+<tr><td class="sidebody">
+If you prefer to receive Bruce Schneier's comments on security as a monthly e-mail digest, subscribe to Schneier on Security's sister publication, Crypto-Gram.  
+<br><a href="crypto-gram.html">read more</a>
+
+</td></tr></table>
+<!-- /robots -->
+
+</td></tr>
+</table>
+</body>
+</html>

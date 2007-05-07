@@ -6,19 +6,16 @@
 #include "const.h"
 
 typedef struct {
-	char *head;		//hlavicka emailu
-	char *body;		//telo emailu
-	char *hash;		//hash tela emailu
-	char *filesystem;//filesystem where stored email file
-	char *to;		//local user
-	int to_uid;	//uid of local user
-	char *homedir;	//homedir of local user
-	char *filepath;	//cesta k emailu spolu s nazvom suboru
-	int hardlink;	//ulozit ako hardlinku
-	int size;		//velkost celeho emailu
-	int done;		//flag, ze email je spravne spracovany
-	long id;		//id in database
-	long inode;		//inode na fs
+	char *head;			//head of email
+	char *body;			//body of email
+	char *hash;			//hash of body
+	char *to;			//local user
+	char *homedir;		//homedir of local user
+	char *filepath;		//full path to email file
+	int to_uid;			//uid of local user
+	int done;			//flag, ze email je spravne spracovany
+	long id;			//id in database
+	long inode;			//inode na fs
 } email;
 
 /* reading email from input */

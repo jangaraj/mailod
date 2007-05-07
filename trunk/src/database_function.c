@@ -70,7 +70,7 @@ int insert_email(dbi_conn conn, email *new_email)
     dbi_result result;
 	char sql[1024];  //TODO betonovana konstanta 1024
 	//TODO nazvy tabuliek a stlpcov do const.h
-	sprintf(sql,"INSERT INTO mailod (body_hash, body_length, filepath, inode) VALUES (\"%s\",%d,\"%s\",%ld);", new_email->hash,new_email->size, new_email->filepath, new_email->inode);
+	sprintf(sql,"INSERT INTO mailod (body_hash, filepath, inode) VALUES (\"%s\",\"%s\",%ld);", new_email->hash, new_email->filepath, new_email->inode);
    	result = dbi_conn_query(conn,sql);
 	if(dbi_result_get_numrows_affected(result)!=1) return 1;   // 0 affected rows - not inserted
 	dbi_result_free(result);

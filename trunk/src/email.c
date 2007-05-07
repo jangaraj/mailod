@@ -58,7 +58,6 @@ email *readmail(int input)
 		strncat(reading_email_all, buffer, read_size);
 		nblock++;							//counter na citaci cyklus - pocet alokovanych blokov
 	}
-	read_email->size = nblock*BUFFER_SIZE+read_size;
 	//divide head from all
 	position = strstr(reading_email_all, DIVIDER_HEAD_BODY);
 	if(position==NULL) {

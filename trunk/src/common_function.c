@@ -96,7 +96,6 @@ int readconf( char conffile[], config *conf )
 
 	}
 	fclose(fp);
-	//TODO ak daco potrebne nensatavene default hodnotu z const.h
 	/*
 	if( !conf->db_driver ) {
 		fprintf(stderr,"Error, missing db_driver <param> in %s\n", conffile );

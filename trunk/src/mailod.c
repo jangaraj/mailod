@@ -61,14 +61,14 @@ int main(void)
 		exit(1);
 	}
 	my_addr.sin_family = AF_INET;		 	//host byte order
-	my_addr.sin_port = htons(MYPORT);	 	//short, network byte order
+	my_addr.sin_port = htons(conf_struct->port);	 	//short, network byte order
 	my_addr.sin_addr.s_addr = INADDR_ANY; 	//automatically fill with my IP
 	memset(&(my_addr.sin_zero), '\0', 8); 	//zero the rest of the struct
 	if (bind(sockfd, (struct sockaddr *)&my_addr, sizeof(struct sockaddr)) == -1) {
 		perror("bind");
 		exit(1);
 	}
-	if (listen(sockfd, BACKLOG) == -1) {
+	if (listen(sockfd, conf_struct->backlog) == -1) {
 		perror("listen");
 		exit(1);
 	}
@@ -152,18 +152,15 @@ int main(void)
 					}
 				}	
 			}
-			
 			free((void *) conf_struct);
 			free((void *) new_email->to);
 			free((void *) new_email->head);
 			free((void *) new_email->hash);
 			free((void *) new_email->body);
 			free((void *) new_email->filepath);
-//			free((void *) new_email->homedir); 		//num_chuck erorr!!!
 			free((void *) new_email);
 			stop_log();
-
-			exit(0);
+			exit (0);
 		}
 	close(new_fd);  								// parent doesn't need this
 	}

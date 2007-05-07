@@ -1,0 +1,581 @@
+ 
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><!-- #BeginTemplate "/Templates/index.dwt" -->
+<head>
+<!-- #BeginEditable "header" --> <!-- #EndEditable -->
+<!-- #BeginEditable "doctitle" --> 
+<title>Mail Server Survey March 2004 - FalkoTimme.com</title>
+<!-- #EndEditable -->
+<meta name="keywords" content="Linux, Howto, Tutorial, News, Debian, RedHat, Mandrake, SuSE, FreeBSD, Support, Falko Timme, Apache, PHP, Programming, Postfix, Sendmail, MySQL, SSL, FTP, SMTP-AUTH, Procmail, Firebird">
+<meta name="description" content="This site is mainly dedicated to the Linux OS. It has the following to offer: Linux HOWTOs and Tutorials, Linux News, Linux Support, an overview over my projects, etc.">
+<style>
+td{
+font-family:verdana;
+font-size:7pt;
+color:#666666;
+}
+.menu{
+font-size:8pt;
+color:#021B26;
+text-decoration:none;
+}
+.menu:hover{
+text-decoration:underline;
+}
+.link {  color: #FF6600}
+.button {
+        border-color : #666699 #666699 #666699 #666699;
+        border-width : 1 1 1 1; color : Black;
+        background-color : #FFFFFF;
+        height : 19px;
+        font-size : 10px;
+}
+textarea,input.text,select,option{
+        color:#000000;
+        font-family:CourierNew,Courier,monospace;
+        background-color:#FCFCFC;
+        font-size:14px;
+        font-style:normal;
+        font-variant:normal;
+        font-weight:normal;
+        scrollbar-arrow-color:#FFFFFF;
+        scrollbar-track-color:#025CCA;
+        scrollbar-face-color:#025CCA;
+        scrollbar-base-color:#025CCA;
+        scrollbar-3dlight-color:#025CCA;
+        border: 1 solid #666666;
+        position: relative;
+}
+</style>
+<script language="JavaScript">
+<!--
+function MM_preloadImages() { //v3.0
+  var d=document; if(d.images){ if(!d.MM_p) d.MM_p=new Array();
+    var i,j=d.MM_p.length,a=MM_preloadImages.arguments; for(i=0; i<a.length; i++)
+    if (a[i].indexOf("#")!=0){ d.MM_p[j]=new Image; d.MM_p[j++].src=a[i];}}
+}
+
+function MM_swapImgRestore() { //v3.0
+  var i,x,a=document.MM_sr; for(i=0;a&&i<a.length&&(x=a[i])&&x.oSrc;i++) x.src=x.oSrc;
+}
+
+function MM_findObj(n, d) { //v4.0
+  var p,i,x;  if(!d) d=document; if((p=n.indexOf("?"))>0&&parent.frames.length) {
+    d=parent.frames[n.substring(p+1)].document; n=n.substring(0,p);}
+  if(!(x=d[n])&&d.all) x=d.all[n]; for (i=0;!x&&i<d.forms.length;i++) x=d.forms[i][n];
+  for(i=0;!x&&d.layers&&i<d.layers.length;i++) x=MM_findObj(n,d.layers[i].document);
+  if(!x && document.getElementById) x=document.getElementById(n); return x;
+}
+
+function MM_swapImage() { //v3.0
+  var i,j=0,x,a=MM_swapImage.arguments; document.MM_sr=new Array; for(i=0;i<(a.length-2);i+=3)
+   if ((x=MM_findObj(a[i]))!=null){document.MM_sr[j++]=x; if(!x.oSrc) x.oSrc=x.src; x.src=a[i+2];}
+}
+//-->
+</script>
+</head>
+
+<body topmargin="0" bgcolor="#FFFFFF" rightmargin="0" marginwidth="0" marginheight="0" leftmargin="0" bottommargin="0" onLoad="MM_preloadImages('../images/m1_.jpg','../images/m2_.jpg','../images/m4_.jpg','../images/m5_.jpg')">
+<!--
+<table width="800" height="100%" align="center" border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="1" bgcolor="#000000"><img src="images/schwarz.gif" width="1" height="1"></td>
+<td>
+//-->
+<map name="map">
+     
+  <area shape="rect" coords="291,29,357,44" href="../index.php">
+     
+  <area shape="rect" coords="292,43,358,57" href="../sitemap.php">
+     
+  <area shape="rect" coords="294,57,360,69" href="../contacts.php">
+   </map>
+<table width="100%" cellspacing="0" cellpadding="0" border="0" height="100%">
+    <tr>
+    <td valign="top" colspan="3"><a href="../index.php" onMouseOut="MM_swapImgRestore()" onMouseOver="MM_swapImage('Image1','','../images/m1home_.gif',1)"><img src="../images/m1home.gif" border="0" width="97" height="25" alt="" name="Image1"></a><a href="../news.php" onMouseOut="MM_swapImgRestore()" onMouseOver="MM_swapImage('Image8','','../images/m8news_.gif',1)"><img src="../images/m8news.gif" border="0" width="97" height="25" alt="" name="Image8"></a><a href="../howtos/index.php" onMouseOut="MM_swapImgRestore()" onMouseOver="MM_swapImage('Image2','','../images/m2howtos_.gif',1)"><img src="../images/m2howtos.gif" border="0" width="97" height="25" alt="" name="Image2"></a><a href="index.php" onMouseOut="MM_swapImgRestore()" onMouseOver="MM_swapImage('Image3','','../images/m3projects_.gif',1)"><img src="../images/m3projects.gif" border="0" width="97" height="25" alt="" name="Image3"></a><a href="../forum/index.php" onMouseOut="MM_swapImgRestore()" onMouseOver="MM_swapImage('Image9','','../images/m9forums_.gif',1)"><img src="../images/m9forums.gif" border="0" width="97" height="25" alt="" name="Image9"></a><a href="../support.php" onMouseOut="MM_swapImgRestore()" onMouseOver="MM_swapImage('Image4','','../images/m4support_.gif',1)"><img src="../images/m4support.gif" border="0" width="97" height="25" alt="" name="Image4"></a><a href="../aboutme.php" onMouseOut="MM_swapImgRestore()" onMouseOver="MM_swapImage('Image5','','../images/m5aboutme_.gif',1)"><img src="../images/m5aboutme.gif" border="0" width="97" height="25" alt="" name="Image5"></a><a href="../contacts.php" onMouseOut="MM_swapImgRestore()" onMouseOver="MM_swapImage('Image6','','../images/m6contacts_.gif',1)"><img src="../images/m6contacts.gif" border="0" width="97" height="25" alt="" name="Image6" class="link"></a><img src="../images/mfuell.gif" border="0" width="24" height="25" alt=""><br>
+      <img src="../images/name.jpg" border="0" width="800" height="101" alt="" usemap="#map"><br>
+	  <img src="../images/slogan.jpg" border="0" width="800" height="122" alt=""></td>     
+      <td width="100%" background="../images/rr.jpg"></td>
+    </tr>
+    <tr>
+      <td valign="top" background="../images/bg.jpg" height="100%" width="14"><img src="../images/left.jpg" border="0" width="14" height="144" alt=""></td>
+      
+    <td valign="top" background="../images/bg.jpg" width="786" height="100%">
+	  <table width="100%" cellspacing="0" cellpadding="0" border="0" height="31">
+	    <tr>
+	      <td valign="middle" background="../images/welcome.jpg" width="406">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b class="menu"><!-- #BeginEditable "ueberschrift" -->Mail 
+            Server Survey March 2004<!-- #EndEditable --></b></td>
+		  <td valign="top" background="../images/rr2.jpg">&nbsp;</td>
+		</tr>
+      </table>
+	  <table width="100%" cellspacing="0" cellpadding="10" border="0">
+	    <tr>
+		  <td valign="top" width="100%"> 
+      <!-- #BeginEditable "main" --> 
+            <p><a href="smtp_surveys.php" class="link">&lt;&lt; Mail Server Surveys Index</a></p>
+			<form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_blank">
+			<p>If you find this page useful you can acknowledge your gratitude by making a donation (through <b>PayPal</b>):</p>
+<input type="hidden" name="cmd" value="_s-xclick">
+<input type="image" src="http://www.falkotimme.com/images/paypal_donate.gif" border="0" name="submit" alt="">
+<input type="hidden" name="encrypted" value="-----BEGIN PKCS7-----
+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
+-----END PKCS7-----
+">
+</form>
+			<form method="GET" action="../work/mailgust/index.php?" name="subscribe">
+<input type="hidden" name="lid" value="1">
+<input type="hidden" name="list" value="subscription">
+<input type="hidden" name="method" value="create">
+<input type="hidden" name="fromext" value="1">
+<input type="hidden" name="digest" value="0">
+<table cellspacing="0" cellpadding="4" border="0" width="150" align="right" style="border-width:1px; border-style:dashed; border-color:#99CCFF;padding:5px;">
+<tr><td colspan="2" align="center">
+<b>Subscribe to FalkoTimme.com Newsletter</b><br>
+and stay informed about my latest HOWTOs and projects.
+</td></tr>
+<tr>
+<td>Email</td>
+<td>
+<input type="text" name="email" value="enter email address" size="19" class="text" onClick="document.subscribe.email.value = ''">
+</td>
+</tr>
+<tr>
+<td colspan="2" align="center">
+<input type="submit" border="0" name="Submit" value="OK" class="button">
+</td>
+</tr>
+<tr><td colspan="2" align="center">
+(If you want to unsubscribe from our newsletter send a blank email with the subject 'unsubscribe' to:
+<br><a href="mailto:%6e%65%77%73%6c%65%74%74%65%72%40%66%61%6c%6b%6f%74%69%6d%6d%65%2e%63%6f%6d?subject=unsubscribe" class="link">&#110;&#101;&#119;&#115;&#108;&#101;&#116;&#116;&#101;&#114;&#64;&#102;&#97;&#108;&#107;&#111;&#116;&#105;&#109;&#109;&#101;&#46;&#99;&#111;&#109;</a>.)
+</td></tr>
+<tr>
+</table>
+</form>
+			<p><b>Method:</b></p>
+            <ul>
+              <li>Scanning: Scanning is done on an IP basis, i.e., I do not scan 
+                domains/fully qualified domains (FQDN), but IP addresses. By doing 
+                so I avoid to scan the same IP address twice or more because of 
+                multiple domains that share the same IP address.</li>
+              <li>I try to focus on subnets of hosting companies that offer dedicated 
+                servers to their customers. Usually these dedicated servers come 
+                with only one IP address so the percentage of mail servers spreading 
+                across multiple IP addresses is low.</li>
+              <li>Results: I try to list the most popular mail servers in the 
+                results table. Other mail servers with a minor role are merged 
+                under &quot;Unknown / Other&quot;. &quot;Unknown / Other&quot; 
+                also contains the mail servers that do not tell what software 
+                they are running. Thus, it is possible that (e.g.) a mail server 
+                running Postfix is listed under &quot;Unknown / Other&quot; because 
+                it does not tell that it is running Postfix.</li>
+            </ul>
+            <p>In this survey I mainly scanned subnets that are allocated to Germany, 
+              but also from some other European countries as well as the U.S.A. 
+              I will try to extend future surveys to other countries as well.</p>
+            <p><b>Results:</b></p>
+            <table border="0" width="100%" cellspacing="0" cellpadding="1" bgcolor="#000000">
+			<tr><td>
+			<table border="0" width="100%" cellspacing="0" cellpadding="3">
+              <tr bgcolor="#FFFFFF"> 
+                <td><b>Mail Server</b></td>
+                <td align="right"><b>Quantity</b></td>
+                <td align="right"><b>Percentage</b></td>
+              </tr>
+              <tr bgcolor="#EEEEEE"> 
+                <td>CMailServer</td>
+                <td align="right">2</td>
+                <td align="right">0.00%</td>
+              </tr>
+              <tr bgcolor="#FFFFFF"> 
+                <td>CommuniGate Pro</td>
+                <td align="right">104</td>
+                <td align="right">0.10%</td>
+              </tr>
+              <tr bgcolor="#EEEEEE"> 
+                <td>DynFX</td>
+                <td align="right">135</td>
+                <td align="right">0.13%</td>
+              </tr>
+              <tr bgcolor="#FFFFFF"> 
+                <td>Exim</td>
+                <td align="right">6,311</td>
+                <td align="right">5.94%</td>
+              </tr>
+              <tr bgcolor="#EEEEEE"> 
+                <td>GroupWise</td>
+                <td align="right">31</td>
+                <td align="right">0.03%</td>
+              </tr>
+              <tr bgcolor="#FFFFFF"> 
+                <td>IMail</td>
+                <td align="right">19,928</td>
+                <td align="right">18.75%</td>
+              </tr>
+              <tr bgcolor="#EEEEEE"> 
+                <td>InterScan</td>
+                <td align="right">65</td>
+                <td align="right">0.06%</td>
+              </tr>
+              <tr bgcolor="#FFFFFF"> 
+                <td>Kerio MailServer</td>
+                <td align="right">26</td>
+                <td align="right">0.02%</td>
+              </tr>
+              <tr bgcolor="#EEEEEE"> 
+                <td>Lotus Domino</td>
+                <td align="right">278</td>
+                <td align="right">0.26%</td>
+              </tr>
+              <tr bgcolor="#FFFFFF"> 
+                <td>MailEnable</td>
+                <td align="right">245</td>
+                <td align="right">0.23%</td>
+              </tr>
+              <tr bgcolor="#EEEEEE"> 
+                <td>MDaemon</td>
+                <td align="right">366</td>
+                <td align="right">0.34%</td>
+              </tr>
+              <tr bgcolor="#FFFFFF"> 
+                <td>Merak</td>
+                <td align="right">452</td>
+                <td align="right">0.43%</td>
+              </tr>
+              <tr bgcolor="#EEEEEE"> 
+                <td>MERCUR</td>
+                <td align="right">346</td>
+                <td align="right">0.33%</td>
+              </tr>
+              <tr bgcolor="#FFFFFF"> 
+                <td>Microsoft ESMTP MAIL Service</td>
+                <td align="right">2,252</td>
+                <td align="right">2.12%</td>
+              </tr>
+              <tr bgcolor="#EEEEEE"> 
+                <td>Microsoft Exchange</td>
+                <td align="right">103</td>
+                <td align="right">0.10%</td>
+              </tr>
+              <tr bgcolor="#FFFFFF"> 
+                <td>Netscape Messaging Server</td>
+                <td align="right">1</td>
+                <td align="right">0.00%</td>
+              </tr>
+              <tr bgcolor="#EEEEEE"> 
+                <td>NTMail</td>
+                <td align="right">235</td>
+                <td align="right">0.22%</td>
+              </tr>
+              <tr bgcolor="#FFFFFF"> 
+                <td>Postfix</td>
+                <td align="right">21,834</td>
+                <td align="right">20.55%</td>
+              </tr>
+              <tr bgcolor="#EEEEEE"> 
+                <td>QMail</td>
+                <td align="right">37</td>
+                <td align="right">0.03%</td>
+              </tr>
+              <tr bgcolor="#FFFFFF"> 
+                <td>Sendmail</td>
+                <td align="right">30,755</td>
+                <td align="right">28.94%</td>
+              </tr>
+              <tr bgcolor="#EEEEEE"> 
+                <td>WinRoute Pro</td>
+                <td align="right">5</td>
+                <td align="right">0.00%</td>
+              </tr>
+              <tr bgcolor="#FFFFFF"> 
+                <td>XMail</td>
+                <td align="right">241</td>
+                <td align="right">0.23%</td>
+              </tr>
+              <tr bgcolor="#EEEEEE"> 
+                <td>Unknown / Other</td>
+                <td align="right">22,517</td>
+                <td align="right">21.19%</td>
+              </tr>
+			  <tr bgcolor="#FFFFFF"> 
+                <td><b><u>Total:</u></b></td>
+                <td align="right"><b><u>106,269</u></b></td>
+                <td align="right"><b><u>100.00%</u></b></td>
+              </tr>
+            </table>
+			</td></tr>
+			</table>
+            <p>&nbsp;</p><center>
+			<p><img src="images/smtp_surveys/03_2004.png" width="700" height="550"></p>
+            <p><img src="images/smtp_surveys/03_2004_without_unknown.png" width="700" height="550"></p>
+			</center>
+            <p><b>Conclusion:</b></p>
+            <p>The big share of IMail is interesting, if not unexpected. From 
+              the data I gathered I could see though that IMail is mainly used 
+              in two subnets and plays a minor role in all other subnets. Without 
+              those two subnets the result would look a little bit different. 
+              I will try to track the IMail development in future surveys.</p>
+            <p>The success of the well-known mail servers Sendmail, Postfix and 
+              Exim does not come as a surprise, and in contrast to IMail these 
+              mail servers spread across nearly all subnets so it cannot be explained 
+              with a single hosting company using a specific mail server on all 
+              systems. </p>
+            <p>If you do not consider the &quot;Unknown / Other&quot; share Sendmail, 
+              Postfix and Exim make up for over 70% of the mail servers in this 
+              survey. As these servers are usually running under a *nix-like operating 
+              system (Unix, Linux, FreeBSD, Solaris, etc.) it shows the power 
+              of *nix-like operating systems in the mail server market.</p>
+            <p><b>Links:</b></p>
+            <table border="0" width="100%" cellspacing="0" cellpadding="3">
+<tr>
+
+                <td width="24%">CMailServer:</td>
+                <td width="76%"><a href="http://www.computalynx.net/" target="_blank" class="link">http://www.computalynx.net/</a></td>
+
+  </tr>
+    <tr>
+
+                <td width="24%">CommuniGate Pro:</td>
+                <td width="76%"><a href="http://www.stalker.com/" target="_blank" class="link">http://www.stalker.com/</a></td>
+
+  </tr>
+    <tr>
+
+                <td width="24%">DynFX:</td>
+                <td width="76%"><a href="http://www.dynfx.de/" target="_blank" class="link">http://www.dynfx.de/</a></td>
+
+  </tr>
+    <tr>
+
+                <td width="24%">Exim:</td>
+                <td width="76%"><a href="http://www.exim.org/" target="_blank" class="link">http://www.exim.org/</a></td>
+
+  </tr>
+    <tr>
+
+                <td width="24%">GroupWise:</td>
+                <td width="76%"><a href="http://www.novell.com/" target="_blank" class="link">http://www.novell.com/</a></td>
+
+  </tr>
+    <tr>
+
+                <td width="24%">IMail:</td>
+                <td width="76%"><a href="http://www.ipswitch.com/" target="_blank" class="link">http://www.ipswitch.com/</a></td>
+
+  </tr>
+    <tr>
+
+                <td width="24%">InterScan:</td>
+                <td width="76%"><a href="http://www.trendmicro.com/" target="_blank" class="link">http://www.trendmicro.com/</a></td>
+
+  </tr>
+    <tr>
+
+                <td width="24%">Kerio MailServer:</td>
+                <td width="76%"><a href="http://www.kerio.com/" target="_blank" class="link">http://www.kerio.com/</a></td>
+
+  </tr>
+    <tr>
+
+                <td width="24%">Lotus Domino:</td>
+                <td width="76%"><a href="http://www.lotus.com/" target="_blank" class="link">http://www.lotus.com/</a></td>
+
+  </tr>
+    <tr>
+
+                <td width="24%">MailEnable:</td>
+                <td width="76%"><a href="http://www.mailenable.com/" target="_blank" class="link">http://www.mailenable.com/</a></td>
+
+  </tr>
+    <tr>
+
+                <td width="24%">MDaemon:</td>
+                <td width="76%"><a href="http://www.altn.com/" target="_blank" class="link">http://www.altn.com/</a></td>
+
+  </tr>
+    <tr>
+
+                <td width="24%">Merak:</td>
+                <td width="76%"><a href="http://www.merakmailserver.com/" target="_blank" class="link">http://www.merakmailserver.com/</a></td>
+
+  </tr>
+    <tr>
+
+                <td width="24%">MERCUR:</td>
+                <td width="76%"><a href="http://www.atrium-software.com/" target="_blank" class="link">http://www.atrium-software.com/</a></td>
+
+  </tr>
+    <tr>
+
+                <td width="24%">Microsoft ESMTP MAIL Service:</td>
+                <td width="76%"><a href="http://www.microsoft.com/" target="_blank" class="link">http://www.microsoft.com/</a></td>
+
+  </tr>
+    <tr>
+
+                <td width="24%">Microsoft Exchange:</td>
+                <td width="76%"><a href="http://www.microsoft.com/" target="_blank" class="link">http://www.microsoft.com/</a></td>
+
+  </tr>
+    <tr>
+
+                <td width="24%">Netscape Messaging Server:</td>
+                <td width="76%"><a href="http://wp.netscape.com/messaging/v3.5/" target="_blank" class="link">http://wp.netscape.com/messaging/v3.5/</a></td>
+
+  </tr>
+    <tr>
+
+                <td width="24%">NTMail:</td>
+                <td width="76%"><a href="http://www.ntmail.co.uk/" target="_blank" class="link">http://www.ntmail.co.uk/</a></td>
+
+  </tr>
+    <tr>
+
+                <td width="24%">Postfix:</td>
+                <td width="76%"><a href="http://www.postfix.org/" target="_blank" class="link">http://www.postfix.org/</a></td>
+
+  </tr>
+    <tr>
+
+                <td width="24%">QMail:</td>
+                <td width="76%"><a href="http://www.qmail.org/" target="_blank" class="link">http://www.qmail.org/</a></td>
+
+  </tr>
+    <tr>
+
+                <td width="24%">Sendmail:</td>
+                <td width="76%"><a href="http://www.sendmail.org/" target="_blank" class="link">http://www.sendmail.org/</a></td>
+
+  </tr>
+    <tr>
+
+                <td width="24%">WinRoute Pro:</td>
+                <td width="76%"><a href="http://www.kerio.com/" target="_blank" class="link">http://www.kerio.com/</a></td>
+
+  </tr>
+    <tr>
+
+                <td width="24%">XMail:</td>
+                <td width="76%"><a href="http://www.xmailserver.org/" target="_blank" class="link">http://www.xmailserver.org/</a></td>
+
+  </tr>
+</table>
+<p>&nbsp;</p><form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_blank">
+			<p>If you find this page useful you can acknowledge your gratitude by making a donation (through <b>PayPal</b>):</p>
+<input type="hidden" name="cmd" value="_s-xclick">
+<input type="image" src="http://www.falkotimme.com/images/paypal_donate.gif" border="0" name="submit" alt="">
+<input type="hidden" name="encrypted" value="-----BEGIN PKCS7-----
+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
+-----END PKCS7-----
+">
+</form>
+<p><a href="smtp_surveys.php" class="link">&lt;&lt; Mail Server Surveys Index</a></p>
+            <!-- #EndEditable -->
+	      </td>
+		</tr>
+	  </table>
+	  </td>
+      <td colspan="2" width="100%" valign="top" height="100%" background="../images/bg.jpg">
+	  <table width="100%" cellspacing="0" cellpadding="0" border="0" height="31">
+	    <tr>
+	      <td valign="top" background="../images/rr2.jpg" width="100%">&nbsp;</td>
+		</tr>
+      </table>
+	  </td>
+    </tr>
+    <tr>
+      <td valign="middle" colspan="3" background="../images/l1.jpg" height="76">
+            <div style="color: #09445F; padding-right: 50; padding-left: 450">Copyright 
+              2006, Falko Timme. All rights reserved.</div>
+          </td>      
+      <td width="100%" background="../images/l1.jpg"></td>
+    </tr>
+    <tr>
+      
+    <td valign="middle" colspan="3" background="../images/l2.jpg" height="26">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="../index.php" class="menu">Home</a>&nbsp;&nbsp;|&nbsp;&nbsp;<a href="../news.php" class="menu">News</a>&nbsp;&nbsp;|&nbsp;&nbsp;<a href="../howtos/index.php" class="menu">HOWTOs</a>&nbsp;&nbsp;|&nbsp;&nbsp;<a href="index.php" class="menu">Projects</a>&nbsp;&nbsp;|&nbsp;&nbsp;<a href="../forum/index.php" class="menu">Forums</a>&nbsp;&nbsp;|&nbsp;&nbsp;<a href="../support.php" class="menu">Support</a>&nbsp;&nbsp;|&nbsp;&nbsp;<a href="../aboutme.php" class="menu">About 
+      Me </a>&nbsp;&nbsp;|&nbsp;&nbsp;<a href="../contacts.php" class="menu">Contact Information</a>&nbsp;&nbsp;|&nbsp;&nbsp;<a href="../sitemap.php" class="menu">Site 
+      Map</a></td>     
+      <td width="100%" background="../images/l2.jpg"></td>
+    </tr>
+</table>
+<!--
+</td>
+<td width="1" bgcolor="#000000"><img src="images/schwarz.gif" width="1" height="1"></td>
+</tr>
+</table>
+//-->
+</body>
+<!-- #EndTemplate --></html>

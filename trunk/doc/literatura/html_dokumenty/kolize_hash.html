@@ -1,0 +1,2240 @@
+<html xmlns:v="urn:schemas-microsoft-com:vml"
+xmlns:o="urn:schemas-microsoft-com:office:office"
+xmlns:w="urn:schemas-microsoft-com:office:word"
+xmlns="http://www.w3.org/TR/REC-html40">
+
+<head>
+<meta http-equiv=Content-Type content="text/html; charset=windows-1250">
+<meta name=ProgId content=Word.Document>
+<meta name=Generator content="Microsoft Word 9">
+<meta name=Originator content="Microsoft Word 9">
+<link rel=File-List href="./kolize_hash_soubory/filelist.xml">
+<title>MD5 prolomena, SHA-1,256,512,384,224 bezpečné, HMAC s MD napůl</title>
+<!--[if gte mso 9]><xml>
+ <o:DocumentProperties>
+  <o:Author>Vlastimil Klíma</o:Author>
+  <o:LastAuthor>Vlastimil Klima</o:LastAuthor>
+  <o:Revision>2</o:Revision>
+  <o:TotalTime>319</o:TotalTime>
+  <o:LastPrinted>2004-07-23T10:11:00Z</o:LastPrinted>
+  <o:Created>2006-11-05T15:48:00Z</o:Created>
+  <o:LastSaved>2006-11-05T15:48:00Z</o:LastSaved>
+  <o:Pages>3</o:Pages>
+  <o:Words>3054</o:Words>
+  <o:Characters>17413</o:Characters>
+  <o:Lines>145</o:Lines>
+  <o:Paragraphs>34</o:Paragraphs>
+  <o:CharactersWithSpaces>21384</o:CharactersWithSpaces>
+  <o:Version>9.6926</o:Version>
+ </o:DocumentProperties>
+</xml><![endif]--><!--[if gte mso 9]><xml>
+ <w:WordDocument>
+  <w:HyphenationZone>21</w:HyphenationZone>
+ </w:WordDocument>
+</xml><![endif]-->
+<style>
+<!--
+ /* Font Definitions */
+@font-face
+	{font-family:Courier;
+	panose-1:0 0 0 0 0 0 0 0 0 0;
+	mso-font-charset:0;
+	mso-generic-font-family:modern;
+	mso-font-format:other;
+	mso-font-pitch:fixed;
+	mso-font-signature:3 0 0 0 1 0;}
+@font-face
+	{font-family:"MS Sans Serif";
+	panose-1:0 0 0 0 0 0 0 0 0 0;
+	mso-font-charset:0;
+	mso-generic-font-family:swiss;
+	mso-font-format:other;
+	mso-font-pitch:variable;
+	mso-font-signature:3 0 0 0 1 0;}
+@font-face
+	{font-family:Wingdings;
+	panose-1:5 0 0 0 0 0 0 0 0 0;
+	mso-font-charset:2;
+	mso-generic-font-family:auto;
+	mso-font-pitch:variable;
+	mso-font-signature:0 268435456 0 0 -2147483648 0;}
+@font-face
+	{font-family:"Arial Unicode MS";
+	mso-font-alt:"MS Mincho";
+	mso-font-charset:128;
+	mso-generic-font-family:swiss;
+	mso-font-pitch:variable;
+	mso-font-signature:-1 -369098753 63 0 4129279 0;}
+@font-face
+	{font-family:Verdana;
+	panose-1:2 11 6 4 3 5 4 4 2 4;
+	mso-font-charset:238;
+	mso-generic-font-family:swiss;
+	mso-font-pitch:variable;
+	mso-font-signature:536871559 0 0 0 415 0;}
+@font-face
+	{font-family:Lucidasans;
+	panose-1:0 0 0 0 0 0 0 0 0 0;
+	mso-font-alt:"Times New Roman";
+	mso-font-charset:0;
+	mso-generic-font-family:auto;
+	mso-font-format:other;
+	mso-font-pitch:variable;
+	mso-font-signature:3 0 0 0 1 0;}
+@font-face
+	{font-family:"\@Arial Unicode MS";
+	mso-font-charset:128;
+	mso-generic-font-family:swiss;
+	mso-font-pitch:variable;
+	mso-font-signature:-1 -369098753 63 0 4129279 0;}
+ /* Style Definitions */
+p.MsoNormal, li.MsoNormal, div.MsoNormal
+	{mso-style-parent:"";
+	margin:0cm;
+	margin-bottom:.0001pt;
+	mso-pagination:widow-orphan;
+	font-size:12.0pt;
+	font-family:"Times New Roman";
+	mso-fareast-font-family:"Times New Roman";
+	color:windowtext;}
+h1
+	{mso-style-next:Normální;
+	margin:0cm;
+	margin-bottom:.0001pt;
+	mso-pagination:widow-orphan;
+	page-break-after:avoid;
+	mso-outline-level:1;
+	font-size:12.0pt;
+	font-family:"Times New Roman";
+	mso-fareast-font-family:"Times New Roman";
+	color:windowtext;
+	mso-font-kerning:0pt;
+	font-weight:bold;}
+h2
+	{margin-right:0cm;
+	mso-margin-top-alt:auto;
+	mso-margin-bottom-alt:auto;
+	margin-left:0cm;
+	mso-pagination:widow-orphan;
+	mso-outline-level:2;
+	font-size:18.0pt;
+	font-family:"Arial Unicode MS";
+	color:windowtext;
+	font-weight:bold;}
+h3
+	{margin-right:0cm;
+	mso-margin-top-alt:auto;
+	mso-margin-bottom-alt:auto;
+	margin-left:0cm;
+	mso-pagination:widow-orphan;
+	mso-outline-level:3;
+	font-size:13.5pt;
+	font-family:"Arial Unicode MS";
+	color:windowtext;
+	font-weight:bold;}
+h4
+	{mso-style-next:Normální;
+	margin:0cm;
+	margin-bottom:.0001pt;
+	mso-pagination:widow-orphan;
+	page-break-after:avoid;
+	mso-outline-level:4;
+	mso-layout-grid-align:none;
+	text-autospace:none;
+	font-size:8.5pt;
+	font-family:Verdana;
+	mso-fareast-font-family:"Times New Roman";
+	mso-bidi-font-family:"Times New Roman";
+	color:windowtext;
+	font-weight:bold;}
+h5
+	{mso-style-next:Normální;
+	margin:0cm;
+	margin-bottom:.0001pt;
+	mso-pagination:widow-orphan;
+	page-break-after:avoid;
+	mso-outline-level:5;
+	mso-layout-grid-align:none;
+	text-autospace:none;
+	font-size:11.0pt;
+	mso-bidi-font-size:8.5pt;
+	font-family:"Times New Roman";
+	mso-fareast-font-family:"Times New Roman";
+	color:windowtext;
+	font-weight:bold;}
+h6
+	{margin-top:0cm;
+	margin-right:0cm;
+	margin-bottom:2.25pt;
+	margin-left:0cm;
+	mso-pagination:widow-orphan;
+	mso-outline-level:6;
+	font-size:12.0pt;
+	font-family:"Arial Unicode MS";
+	color:#888888;
+	font-weight:normal;}
+p.MsoListBullet, li.MsoListBullet, div.MsoListBullet
+	{mso-style-update:auto;
+	margin-top:0cm;
+	margin-right:0cm;
+	margin-bottom:0cm;
+	margin-left:18.0pt;
+	margin-bottom:.0001pt;
+	text-indent:-18.0pt;
+	mso-pagination:widow-orphan;
+	mso-list:l9 level1 lfo7;
+	tab-stops:list 18.0pt;
+	font-size:12.0pt;
+	font-family:"Times New Roman";
+	mso-fareast-font-family:"Times New Roman";
+	color:windowtext;
+	mso-fareast-language:EN-US;}
+p.MsoListNumber, li.MsoListNumber, div.MsoListNumber
+	{margin-top:0cm;
+	margin-right:0cm;
+	margin-bottom:0cm;
+	margin-left:18.0pt;
+	margin-bottom:.0001pt;
+	text-indent:-18.0pt;
+	mso-pagination:widow-orphan;
+	mso-list:l8 level1 lfo2;
+	tab-stops:list 18.0pt;
+	font-size:12.0pt;
+	font-family:"Times New Roman";
+	mso-fareast-font-family:"Times New Roman";
+	color:windowtext;
+	mso-fareast-language:EN-US;}
+p.MsoListBullet2, li.MsoListBullet2, div.MsoListBullet2
+	{mso-style-update:auto;
+	margin-top:0cm;
+	margin-right:0cm;
+	margin-bottom:0cm;
+	margin-left:32.15pt;
+	margin-bottom:.0001pt;
+	text-indent:-18.0pt;
+	mso-pagination:widow-orphan;
+	mso-list:l7 level1 lfo8;
+	tab-stops:list 32.15pt;
+	font-size:12.0pt;
+	font-family:"Times New Roman";
+	mso-fareast-font-family:"Times New Roman";
+	color:windowtext;
+	mso-fareast-language:EN-US;}
+p.MsoListBullet3, li.MsoListBullet3, div.MsoListBullet3
+	{mso-style-update:auto;
+	margin-top:0cm;
+	margin-right:0cm;
+	margin-bottom:0cm;
+	margin-left:46.3pt;
+	margin-bottom:.0001pt;
+	text-indent:-18.0pt;
+	mso-pagination:widow-orphan;
+	mso-list:l6 level1 lfo9;
+	tab-stops:list 46.3pt;
+	font-size:12.0pt;
+	font-family:"Times New Roman";
+	mso-fareast-font-family:"Times New Roman";
+	color:windowtext;
+	mso-fareast-language:EN-US;}
+p.MsoListBullet4, li.MsoListBullet4, div.MsoListBullet4
+	{mso-style-update:auto;
+	margin-top:0cm;
+	margin-right:0cm;
+	margin-bottom:0cm;
+	margin-left:60.45pt;
+	margin-bottom:.0001pt;
+	text-indent:-18.0pt;
+	mso-pagination:widow-orphan;
+	mso-list:l5 level1 lfo10;
+	tab-stops:list 60.45pt;
+	font-size:12.0pt;
+	font-family:"Times New Roman";
+	mso-fareast-font-family:"Times New Roman";
+	color:windowtext;
+	mso-fareast-language:EN-US;}
+p.MsoListBullet5, li.MsoListBullet5, div.MsoListBullet5
+	{mso-style-update:auto;
+	margin-top:0cm;
+	margin-right:0cm;
+	margin-bottom:0cm;
+	margin-left:74.6pt;
+	margin-bottom:.0001pt;
+	text-indent:-18.0pt;
+	mso-pagination:widow-orphan;
+	mso-list:l4 level1 lfo11;
+	tab-stops:list 74.6pt;
+	font-size:12.0pt;
+	font-family:"Times New Roman";
+	mso-fareast-font-family:"Times New Roman";
+	color:windowtext;
+	mso-fareast-language:EN-US;}
+p.MsoListNumber2, li.MsoListNumber2, div.MsoListNumber2
+	{margin-top:0cm;
+	margin-right:0cm;
+	margin-bottom:0cm;
+	margin-left:32.15pt;
+	margin-bottom:.0001pt;
+	text-indent:-18.0pt;
+	mso-pagination:widow-orphan;
+	mso-list:l3 level1 lfo3;
+	tab-stops:list 32.15pt;
+	font-size:12.0pt;
+	font-family:"Times New Roman";
+	mso-fareast-font-family:"Times New Roman";
+	color:windowtext;
+	mso-fareast-language:EN-US;}
+p.MsoListNumber3, li.MsoListNumber3, div.MsoListNumber3
+	{margin-top:0cm;
+	margin-right:0cm;
+	margin-bottom:0cm;
+	margin-left:46.3pt;
+	margin-bottom:.0001pt;
+	text-indent:-18.0pt;
+	mso-pagination:widow-orphan;
+	mso-list:l2 level1 lfo4;
+	tab-stops:list 46.3pt;
+	font-size:12.0pt;
+	font-family:"Times New Roman";
+	mso-fareast-font-family:"Times New Roman";
+	color:windowtext;
+	mso-fareast-language:EN-US;}
+p.MsoListNumber4, li.MsoListNumber4, div.MsoListNumber4
+	{margin-top:0cm;
+	margin-right:0cm;
+	margin-bottom:0cm;
+	margin-left:60.45pt;
+	margin-bottom:.0001pt;
+	text-indent:-18.0pt;
+	mso-pagination:widow-orphan;
+	mso-list:l1 level1 lfo5;
+	tab-stops:list 60.45pt;
+	font-size:12.0pt;
+	font-family:"Times New Roman";
+	mso-fareast-font-family:"Times New Roman";
+	color:windowtext;
+	mso-fareast-language:EN-US;}
+p.MsoListNumber5, li.MsoListNumber5, div.MsoListNumber5
+	{margin-top:0cm;
+	margin-right:0cm;
+	margin-bottom:0cm;
+	margin-left:74.6pt;
+	margin-bottom:.0001pt;
+	text-indent:-18.0pt;
+	mso-pagination:widow-orphan;
+	mso-list:l0 level1 lfo6;
+	tab-stops:list 74.6pt;
+	font-size:12.0pt;
+	font-family:"Times New Roman";
+	mso-fareast-font-family:"Times New Roman";
+	color:windowtext;
+	mso-fareast-language:EN-US;}
+p.MsoBodyText, li.MsoBodyText, div.MsoBodyText
+	{margin:0cm;
+	margin-bottom:.0001pt;
+	mso-pagination:widow-orphan;
+	font-size:10.0pt;
+	font-family:Verdana;
+	mso-fareast-font-family:"Times New Roman";
+	mso-bidi-font-family:Arial;
+	color:windowtext;
+	font-weight:bold;}
+a:link, span.MsoHyperlink
+	{color:blue;
+	text-decoration:underline;
+	text-underline:single;}
+a:visited, span.MsoHyperlinkFollowed
+	{color:purple;
+	text-decoration:underline;
+	text-underline:single;}
+p
+	{margin-right:0cm;
+	mso-margin-top-alt:auto;
+	margin-bottom:11.25pt;
+	margin-left:0cm;
+	mso-pagination:widow-orphan;
+	font-size:9.0pt;
+	font-family:Verdana;
+	mso-fareast-font-family:"Arial Unicode MS";
+	mso-bidi-font-family:"Arial Unicode MS";
+	color:black;}
+pre
+	{margin:0cm;
+	margin-bottom:.0001pt;
+	mso-pagination:widow-orphan;
+	tab-stops:45.8pt 91.6pt 137.4pt 183.2pt 229.0pt 274.8pt 320.6pt 366.4pt 412.2pt 458.0pt 503.8pt 549.6pt 595.4pt 641.2pt 687.0pt 732.8pt;
+	font-size:9.0pt;
+	font-family:Courier;
+	mso-fareast-font-family:"Arial Unicode MS";
+	mso-bidi-font-family:"Arial Unicode MS";
+	color:windowtext;}
+span.mediumtext1
+	{mso-style-name:mediumtext1;
+	mso-ansi-font-size:8.5pt;
+	mso-bidi-font-size:8.5pt;
+	mso-ascii-font-family:Verdana;
+	mso-hansi-font-family:Verdana;
+	color:black;
+	font-weight:normal;}
+span.tiny1
+	{mso-style-name:tiny1;
+	mso-ansi-font-size:7.5pt;
+	mso-bidi-font-size:7.5pt;
+	mso-ascii-font-family:Verdana;
+	mso-hansi-font-family:Verdana;}
+span.small1
+	{mso-style-name:small1;
+	mso-ansi-font-size:10.0pt;
+	mso-bidi-font-size:10.0pt;
+	mso-ascii-font-family:Verdana;
+	mso-hansi-font-family:Verdana;}
+span.datecolour1
+	{mso-style-name:datecolour1;
+	color:#888888;}
+p.stbodytext, li.stbodytext, div.stbodytext
+	{mso-style-name:stbodytext;
+	margin-right:0cm;
+	mso-margin-top-alt:auto;
+	mso-margin-bottom-alt:auto;
+	margin-left:0cm;
+	mso-pagination:widow-orphan;
+	font-size:10.0pt;
+	font-family:"MS Sans Serif";
+	mso-fareast-font-family:"Arial Unicode MS";
+	mso-bidi-font-family:"Arial Unicode MS";
+	color:black;}
+span.h11
+	{mso-style-name:h11;
+	mso-ansi-font-size:13.5pt;
+	mso-bidi-font-size:13.5pt;
+	mso-ascii-font-family:Arial;
+	mso-hansi-font-family:Arial;
+	mso-bidi-font-family:Arial;
+	color:black;
+	mso-text-animation:none;
+	font-weight:bold;
+	text-decoration:none;
+	text-underline:none;
+	text-decoration:none;
+	text-line-through:none;}
+span.h1text
+	{mso-style-name:h1text;}
+span.stdeck4
+	{mso-style-name:stdeck4;
+	mso-ansi-font-size:10.0pt;
+	mso-bidi-font-size:10.0pt;
+	mso-ascii-font-family:"MS Sans Serif";
+	mso-hansi-font-family:"MS Sans Serif";
+	color:black;
+	mso-text-animation:none;
+	font-weight:bold;
+	text-decoration:none;
+	text-underline:none;
+	text-decoration:none;
+	text-line-through:none;}
+span.m11
+	{mso-style-name:m11;
+	mso-ansi-font-size:7.5pt;
+	mso-bidi-font-size:7.5pt;
+	mso-ascii-font-family:"MS Sans Serif";
+	mso-hansi-font-family:"MS Sans Serif";}
+span.m21
+	{mso-style-name:m21;
+	mso-ansi-font-size:10.0pt;
+	mso-bidi-font-size:10.0pt;
+	mso-ascii-font-family:"MS Sans Serif";
+	mso-hansi-font-family:"MS Sans Serif";}
+span.a41
+	{mso-style-name:a41;
+	mso-ansi-font-size:13.5pt;
+	mso-bidi-font-size:13.5pt;
+	mso-ascii-font-family:Arial;
+	mso-hansi-font-family:Arial;
+	mso-bidi-font-family:Arial;}
+span.nwspagetitle1
+	{mso-style-name:nwspagetitle1;
+	mso-ansi-font-size:11.5pt;
+	mso-bidi-font-size:11.5pt;
+	mso-ascii-font-family:Arial;
+	mso-hansi-font-family:Arial;
+	mso-bidi-font-family:Arial;
+	color:#993300;
+	font-weight:bold;}
+span.hspace31
+	{mso-style-name:hspace31;
+	mso-ansi-font-size:2.5pt;
+	mso-bidi-font-size:2.5pt;
+	mso-ascii-font-family:Arial;
+	mso-hansi-font-family:Arial;
+	mso-bidi-font-family:Arial;}
+span.arttext1
+	{mso-style-name:arttext1;
+	mso-ansi-font-size:9.0pt;
+	mso-bidi-font-size:9.0pt;
+	mso-ascii-font-family:Arial;
+	mso-hansi-font-family:Arial;
+	mso-bidi-font-family:Arial;}
+span.arttitle1
+	{mso-style-name:arttitle1;
+	mso-ansi-font-size:15.0pt;
+	mso-bidi-font-size:15.0pt;
+	mso-ascii-font-family:Arial;
+	mso-hansi-font-family:Arial;
+	mso-bidi-font-family:Arial;
+	letter-spacing:3293.0pt;
+	font-weight:bold;}
+p.articlebody, li.articlebody, div.articlebody
+	{mso-style-name:articlebody;
+	margin-right:0cm;
+	mso-margin-top-alt:auto;
+	mso-margin-bottom-alt:auto;
+	margin-left:0cm;
+	mso-pagination:widow-orphan;
+	font-size:12.0pt;
+	font-family:"Arial Unicode MS";
+	color:black;}
+span.datum-autor-11
+	{mso-style-name:datum-autor-11;}
+span.maintitle1
+	{mso-style-name:maintitle1;
+	mso-ansi-font-size:9.0pt;
+	mso-bidi-font-size:9.0pt;
+	mso-ascii-font-family:Verdana;
+	mso-hansi-font-family:Verdana;
+	color:#294468;
+	letter-spacing:12.0pt;
+	font-weight:bold;}
+span.bodytext1
+	{mso-style-name:bodytext1;
+	mso-ansi-font-size:9.0pt;
+	mso-bidi-font-size:9.0pt;
+	mso-ascii-font-family:Verdana;
+	mso-hansi-font-family:Verdana;
+	color:#111111;
+	mso-text-animation:none;
+	letter-spacing:13.5pt;
+	font-style:normal;
+	text-decoration:none;
+	text-underline:none;
+	text-decoration:none;
+	text-line-through:none;}
+span.bodytextsmdate1
+	{mso-style-name:bodytextsmdate1;
+	mso-ansi-font-size:8.5pt;
+	mso-bidi-font-size:8.5pt;
+	mso-ascii-font-family:Verdana;
+	mso-hansi-font-family:Verdana;
+	color:#999999;
+	mso-text-animation:none;
+	letter-spacing:12.0pt;
+	text-decoration:none;
+	text-underline:none;
+	text-decoration:none;
+	text-line-through:none;}
+span.content1
+	{mso-style-name:content1;
+	mso-ansi-font-size:10.0pt;
+	mso-bidi-font-size:10.0pt;
+	mso-ascii-font-family:Verdana;
+	mso-hansi-font-family:Verdana;
+	color:#333333;}
+span.Hypertextovodkaz2
+	{mso-style-name:"Hypertextový odkaz2";
+	color:black;
+	mso-text-animation:none;
+	text-decoration:underline;
+	text-underline:single;
+	text-decoration:none;
+	text-line-through:none;}
+p.previewtext, li.previewtext, div.previewtext
+	{mso-style-name:previewtext;
+	margin-right:0cm;
+	mso-margin-top-alt:auto;
+	mso-margin-bottom-alt:auto;
+	margin-left:0cm;
+	mso-pagination:widow-orphan;
+	font-size:10.5pt;
+	font-family:Arial;
+	mso-fareast-font-family:"Arial Unicode MS";
+	color:black;}
+span.InternetLink
+	{mso-style-name:"Internet Link";
+	mso-hansi-font-family:Lucidasans;
+	mso-bidi-font-family:Lucidasans;
+	color:#0000EB;
+	mso-ansi-language:EN-US;
+	text-decoration:underline;
+	text-underline:single;}
+@page Section1
+	{size:595.3pt 841.9pt;
+	margin:70.85pt 70.85pt 70.85pt 70.85pt;
+	mso-header-margin:35.4pt;
+	mso-footer-margin:35.4pt;
+	mso-paper-source:0;}
+div.Section1
+	{page:Section1;}
+ /* List Definitions */
+@list l0
+	{mso-list-id:-132;
+	mso-list-type:simple;
+	mso-list-template-ids:-436579536;}
+@list l0:level1
+	{mso-level-style-link:"Normální \(síť WWW\)";
+	mso-level-tab-stop:74.6pt;
+	mso-level-number-position:left;
+	margin-left:74.6pt;
+	text-indent:-18.0pt;}
+@list l1
+	{mso-list-id:-131;
+	mso-list-type:simple;
+	mso-list-template-ids:1183867754;}
+@list l1:level1
+	{mso-level-style-link:"Sledovaný odkaz";
+	mso-level-tab-stop:60.45pt;
+	mso-level-number-position:left;
+	margin-left:60.45pt;
+	text-indent:-18.0pt;}
+@list l2
+	{mso-list-id:-130;
+	mso-list-type:simple;
+	mso-list-template-ids:1474349356;}
+@list l2:level1
+	{mso-level-style-link:"Hypertextový odkaz";
+	mso-level-tab-stop:46.3pt;
+	mso-level-number-position:left;
+	margin-left:46.3pt;
+	text-indent:-18.0pt;}
+@list l3
+	{mso-list-id:-129;
+	mso-list-type:simple;
+	mso-list-template-ids:-1459562604;}
+@list l3:level1
+	{mso-level-tab-stop:32.15pt;
+	mso-level-number-position:left;
+	margin-left:32.15pt;
+	text-indent:-18.0pt;}
+@list l4
+	{mso-list-id:-128;
+	mso-list-type:simple;
+	mso-list-template-ids:-1257879836;}
+@list l4:level1
+	{mso-level-number-format:bullet;
+	mso-level-style-link:"Seznam s odrážkami 4";
+	mso-level-text:\F0B7;
+	mso-level-tab-stop:74.6pt;
+	mso-level-number-position:left;
+	margin-left:74.6pt;
+	text-indent:-18.0pt;
+	font-family:Symbol;}
+@list l5
+	{mso-list-id:-127;
+	mso-list-type:simple;
+	mso-list-template-ids:1563608662;}
+@list l5:level1
+	{mso-level-number-format:bullet;
+	mso-level-style-link:"Seznam s odrážkami 3";
+	mso-level-text:\F0B7;
+	mso-level-tab-stop:60.45pt;
+	mso-level-number-position:left;
+	margin-left:60.45pt;
+	text-indent:-18.0pt;
+	font-family:Symbol;}
+@list l6
+	{mso-list-id:-126;
+	mso-list-type:simple;
+	mso-list-template-ids:-993244134;}
+@list l6:level1
+	{mso-level-number-format:bullet;
+	mso-level-style-link:"Seznam s odrážkami 2";
+	mso-level-text:\F0B7;
+	mso-level-tab-stop:46.3pt;
+	mso-level-number-position:left;
+	margin-left:46.3pt;
+	text-indent:-18.0pt;
+	font-family:Symbol;}
+@list l7
+	{mso-list-id:-125;
+	mso-list-type:simple;
+	mso-list-template-ids:1066536530;}
+@list l7:level1
+	{mso-level-number-format:bullet;
+	mso-level-style-link:"Seznam s odrážkami";
+	mso-level-text:\F0B7;
+	mso-level-tab-stop:32.15pt;
+	mso-level-number-position:left;
+	margin-left:32.15pt;
+	text-indent:-18.0pt;
+	font-family:Symbol;}
+@list l8
+	{mso-list-id:-120;
+	mso-list-type:simple;
+	mso-list-template-ids:-560927248;}
+@list l8:level1
+	{mso-level-tab-stop:18.0pt;
+	mso-level-number-position:left;
+	margin-left:18.0pt;
+	text-indent:-18.0pt;}
+@list l9
+	{mso-list-id:-119;
+	mso-list-type:simple;
+	mso-list-template-ids:-1872973808;}
+@list l9:level1
+	{mso-level-number-format:bullet;
+	mso-level-style-link:"Číslovaný seznam 5";
+	mso-level-text:\F0B7;
+	mso-level-tab-stop:18.0pt;
+	mso-level-number-position:left;
+	margin-left:18.0pt;
+	text-indent:-18.0pt;
+	font-family:Symbol;}
+@list l10
+	{mso-list-id:12732242;
+	mso-list-type:hybrid;
+	mso-list-template-ids:-1693056180 67436545 67436547 67436549 67436545 67436547 67436549 67436545 67436547 67436549;}
+@list l10:level1
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0B7;
+	mso-level-tab-stop:36.0pt;
+	mso-level-number-position:left;
+	text-indent:-18.0pt;
+	font-family:Symbol;}
+@list l11
+	{mso-list-id:40982608;
+	mso-list-type:hybrid;
+	mso-list-template-ids:-1738084476 67436545 67436547 67436549 67436545 67436547 67436549 67436545 67436547 67436549;}
+@list l11:level1
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0B7;
+	mso-level-tab-stop:36.0pt;
+	mso-level-number-position:left;
+	text-indent:-18.0pt;
+	font-family:Symbol;}
+@list l12
+	{mso-list-id:54548329;
+	mso-list-type:hybrid;
+	mso-list-template-ids:549901624 67436545 67436547 67436549 67436545 67436547 67436549 67436545 67436547 67436549;}
+@list l12:level1
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0B7;
+	mso-level-tab-stop:36.0pt;
+	mso-level-number-position:left;
+	text-indent:-18.0pt;
+	font-family:Symbol;}
+@list l13
+	{mso-list-id:86925640;
+	mso-list-type:hybrid;
+	mso-list-template-ids:-1125226148 -2020068464 1743545908 824330144 588679856 78805680 1321006554 1897940484 1481039064 81661380;}
+@list l13:level1
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0B7;
+	mso-level-tab-stop:36.0pt;
+	mso-level-number-position:left;
+	text-indent:-18.0pt;
+	mso-ansi-font-size:10.0pt;
+	font-family:Symbol;}
+@list l14
+	{mso-list-id:90053171;
+	mso-list-type:hybrid;
+	mso-list-template-ids:-1245645418 67436545 67436547 67436549 67436545 67436547 67436549 67436545 67436547 67436549;}
+@list l14:level1
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0B7;
+	mso-level-tab-stop:36.0pt;
+	mso-level-number-position:left;
+	text-indent:-18.0pt;
+	font-family:Symbol;}
+@list l15
+	{mso-list-id:139659307;
+	mso-list-type:hybrid;
+	mso-list-template-ids:82739380 67436559 67436569 67436571 67436559 67436569 67436571 67436559 67436569 67436571;}
+@list l15:level1
+	{mso-level-tab-stop:36.0pt;
+	mso-level-number-position:left;
+	text-indent:-18.0pt;}
+@list l16
+	{mso-list-id:188225753;
+	mso-list-type:hybrid;
+	mso-list-template-ids:-203538534 67436545 67436547 67436549 67436545 67436547 67436549 67436545 67436547 67436549;}
+@list l16:level1
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0B7;
+	mso-level-tab-stop:71.45pt;
+	mso-level-number-position:left;
+	margin-left:71.45pt;
+	text-indent:-18.0pt;
+	font-family:Symbol;}
+@list l17
+	{mso-list-id:193229288;
+	mso-list-type:hybrid;
+	mso-list-template-ids:1326876008 67436545 67436547 67436549 67436545 67436547 67436549 67436545 67436547 67436549;}
+@list l17:level1
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0B7;
+	mso-level-tab-stop:36.0pt;
+	mso-level-number-position:left;
+	text-indent:-18.0pt;
+	font-family:Symbol;}
+@list l18
+	{mso-list-id:212473022;
+	mso-list-type:hybrid;
+	mso-list-template-ids:-339460508 67436545 67436547 67436549 67436545 67436547 67436549 67436545 67436547 67436549;}
+@list l18:level1
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0B7;
+	mso-level-tab-stop:36.0pt;
+	mso-level-number-position:left;
+	text-indent:-18.0pt;
+	font-family:Symbol;}
+@list l19
+	{mso-list-id:340622240;
+	mso-list-type:hybrid;
+	mso-list-template-ids:355625168 67436545 67436547 67436549 67436545 67436547 67436549 67436545 67436547 67436549;}
+@list l19:level1
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0B7;
+	mso-level-tab-stop:36.0pt;
+	mso-level-number-position:left;
+	text-indent:-18.0pt;
+	font-family:Symbol;}
+@list l20
+	{mso-list-id:348798724;
+	mso-list-type:hybrid;
+	mso-list-template-ids:1504623474 2038471068 -2017823676 -1300211944 -1618820470 -1345010476 -2105476110 747937796 893945356 187051662;}
+@list l20:level1
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0B7;
+	mso-level-tab-stop:36.0pt;
+	mso-level-number-position:left;
+	text-indent:-18.0pt;
+	mso-ansi-font-size:10.0pt;
+	font-family:Symbol;}
+@list l21
+	{mso-list-id:399712935;
+	mso-list-type:hybrid;
+	mso-list-template-ids:984282948 67436545 67436547 67436549 67436545 67436547 67436549 67436545 67436547 67436549;}
+@list l21:level1
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0B7;
+	mso-level-tab-stop:36.0pt;
+	mso-level-number-position:left;
+	text-indent:-18.0pt;
+	font-family:Symbol;}
+@list l22
+	{mso-list-id:408814880;
+	mso-list-type:hybrid;
+	mso-list-template-ids:-1330586488 67436545 67436547 67436549 67436545 67436547 67436549 67436545 67436547 67436549;}
+@list l22:level1
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0B7;
+	mso-level-tab-stop:36.0pt;
+	mso-level-number-position:left;
+	text-indent:-18.0pt;
+	font-family:Symbol;}
+@list l23
+	{mso-list-id:435558567;
+	mso-list-type:hybrid;
+	mso-list-template-ids:-228529342 67436545 67436547 67436549 67436545 67436547 67436549 67436545 67436547 67436549;}
+@list l23:level1
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0B7;
+	mso-level-tab-stop:36.0pt;
+	mso-level-number-position:left;
+	text-indent:-18.0pt;
+	font-family:Symbol;}
+@list l24
+	{mso-list-id:517475965;
+	mso-list-type:hybrid;
+	mso-list-template-ids:274468546 67436567 67436569 67436571 67436559 67436569 67436571 67436559 67436569 67436571;}
+@list l24:level1
+	{mso-level-number-format:alpha-lower;
+	mso-level-text:"%1\)";
+	mso-level-tab-stop:36.0pt;
+	mso-level-number-position:left;
+	text-indent:-18.0pt;}
+@list l25
+	{mso-list-id:624626720;
+	mso-list-template-ids:1119275122;}
+@list l25:level1
+	{mso-level-tab-stop:54.0pt;
+	mso-level-number-position:left;
+	margin-left:54.0pt;
+	text-indent:-18.0pt;}
+@list l25:level2
+	{mso-level-text:"%1\.%2\.";
+	mso-level-tab-stop:75.6pt;
+	mso-level-number-position:left;
+	margin-left:75.6pt;
+	text-indent:-21.6pt;}
+@list l25:level3
+	{mso-level-text:"%1\.%2\.%3\.";
+	mso-level-tab-stop:108.0pt;
+	mso-level-number-position:left;
+	margin-left:97.2pt;
+	text-indent:-25.2pt;}
+@list l25:level4
+	{mso-level-text:"%1\.%2\.%3\.%4\.";
+	mso-level-tab-stop:126.0pt;
+	mso-level-number-position:left;
+	margin-left:122.4pt;
+	text-indent:-32.4pt;}
+@list l25:level5
+	{mso-level-text:"%1\.%2\.%3\.%4\.%5\.";
+	mso-level-tab-stop:162.0pt;
+	mso-level-number-position:left;
+	margin-left:147.6pt;
+	text-indent:-39.6pt;}
+@list l25:level6
+	{mso-level-text:"%1\.%2\.%3\.%4\.%5\.%6\.";
+	mso-level-tab-stop:180.0pt;
+	mso-level-number-position:left;
+	margin-left:172.8pt;
+	text-indent:-46.8pt;}
+@list l25:level7
+	{mso-level-text:"%1\.%2\.%3\.%4\.%5\.%6\.%7\.";
+	mso-level-tab-stop:216.0pt;
+	mso-level-number-position:left;
+	margin-left:198.0pt;
+	text-indent:-54.0pt;}
+@list l25:level8
+	{mso-level-text:"%1\.%2\.%3\.%4\.%5\.%6\.%7\.%8\.";
+	mso-level-tab-stop:234.0pt;
+	mso-level-number-position:left;
+	margin-left:223.2pt;
+	text-indent:-61.2pt;}
+@list l25:level9
+	{mso-level-text:"%1\.%2\.%3\.%4\.%5\.%6\.%7\.%8\.%9\.";
+	mso-level-tab-stop:270.0pt;
+	mso-level-number-position:left;
+	margin-left:252.0pt;
+	text-indent:-72.0pt;}
+@list l26
+	{mso-list-id:643855708;
+	mso-list-type:hybrid;
+	mso-list-template-ids:1093825390 67436545 67436547 67436549 67436545 67436547 67436549 67436545 67436547 67436549;}
+@list l26:level1
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0B7;
+	mso-level-tab-stop:36.0pt;
+	mso-level-number-position:left;
+	text-indent:-18.0pt;
+	font-family:Symbol;}
+@list l27
+	{mso-list-id:644048544;
+	mso-list-type:hybrid;
+	mso-list-template-ids:-877463130 67436545 67436547 67436549 67436545 67436547 67436549 67436545 67436547 67436549;}
+@list l27:level1
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0B7;
+	mso-level-tab-stop:36.0pt;
+	mso-level-number-position:left;
+	text-indent:-18.0pt;
+	font-family:Symbol;}
+@list l28
+	{mso-list-id:660474307;
+	mso-list-type:hybrid;
+	mso-list-template-ids:1292954220 67436545 67436547 67436549 67436545 67436547 67436549 67436545 67436547 67436549;}
+@list l28:level1
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0B7;
+	mso-level-tab-stop:36.0pt;
+	mso-level-number-position:left;
+	text-indent:-18.0pt;
+	font-family:Symbol;}
+@list l29
+	{mso-list-id:706757653;
+	mso-list-type:hybrid;
+	mso-list-template-ids:1041553420 67436545 67436547 67436549 67436545 67436547 67436549 67436545 67436547 67436549;}
+@list l29:level1
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0B7;
+	mso-level-tab-stop:36.0pt;
+	mso-level-number-position:left;
+	text-indent:-18.0pt;
+	font-family:Symbol;}
+@list l30
+	{mso-list-id:815612699;
+	mso-list-type:hybrid;
+	mso-list-template-ids:1414437078 67436545 67436547 67436549 67436545 67436547 67436549 67436545 67436547 67436549;}
+@list l30:level1
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0B7;
+	mso-level-tab-stop:36.0pt;
+	mso-level-number-position:left;
+	text-indent:-18.0pt;
+	font-family:Symbol;}
+@list l31
+	{mso-list-id:817654403;
+	mso-list-type:hybrid;
+	mso-list-template-ids:-606948778 67436545 67436547 67436549 67436545 67436547 67436549 67436545 67436547 67436549;}
+@list l31:level1
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0B7;
+	mso-level-tab-stop:36.0pt;
+	mso-level-number-position:left;
+	text-indent:-18.0pt;
+	font-family:Symbol;}
+@list l32
+	{mso-list-id:831874997;
+	mso-list-type:hybrid;
+	mso-list-template-ids:-705638328 67436545 67436547 67436549 67436545 67436547 67436549 67436545 67436547 67436549;}
+@list l32:level1
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0B7;
+	mso-level-tab-stop:36.0pt;
+	mso-level-number-position:left;
+	text-indent:-18.0pt;
+	font-family:Symbol;}
+@list l33
+	{mso-list-id:859588786;
+	mso-list-type:hybrid;
+	mso-list-template-ids:464708494 67436545 67436547 67436549 67436545 67436547 67436549 67436545 67436547 67436549;}
+@list l33:level1
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0B7;
+	mso-level-tab-stop:36.0pt;
+	mso-level-number-position:left;
+	text-indent:-18.0pt;
+	font-family:Symbol;}
+@list l34
+	{mso-list-id:863446927;
+	mso-list-type:hybrid;
+	mso-list-template-ids:-1674697274 67436545 67436547 67436549 67436545 67436547 67436549 67436545 67436547 67436549;}
+@list l34:level1
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0B7;
+	mso-level-tab-stop:36.0pt;
+	mso-level-number-position:left;
+	text-indent:-18.0pt;
+	font-family:Symbol;}
+@list l35
+	{mso-list-id:893731775;
+	mso-list-type:hybrid;
+	mso-list-template-ids:-1839685396 -1080281504 67436569 67436571 67436559 67436569 67436571 67436559 67436569 67436571;}
+@list l35:level1
+	{mso-level-number-format:alpha-lower;
+	mso-level-text:"\(%1\)";
+	mso-level-tab-stop:36.0pt;
+	mso-level-number-position:left;
+	text-indent:-18.0pt;}
+@list l36
+	{mso-list-id:960647291;
+	mso-list-type:hybrid;
+	mso-list-template-ids:-2102782836 67436545 67436547 67436549 67436545 67436547 67436549 67436545 67436547 67436549;}
+@list l36:level1
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0B7;
+	mso-level-tab-stop:36.0pt;
+	mso-level-number-position:left;
+	text-indent:-18.0pt;
+	font-family:Symbol;}
+@list l37
+	{mso-list-id:1053845357;
+	mso-list-type:hybrid;
+	mso-list-template-ids:613042348 1206925592 -762669898 -2022284444 -2100391458 1916297554 593906978 -1730130818 83502306 952922010;}
+@list l37:level1
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0B7;
+	mso-level-tab-stop:36.0pt;
+	mso-level-number-position:left;
+	text-indent:-18.0pt;
+	mso-ansi-font-size:10.0pt;
+	font-family:Symbol;}
+@list l37:level2
+	{mso-level-number-format:bullet;
+	mso-level-text:o;
+	mso-level-tab-stop:72.0pt;
+	mso-level-number-position:left;
+	text-indent:-18.0pt;
+	mso-ansi-font-size:10.0pt;
+	font-family:"Courier New";
+	mso-bidi-font-family:"Times New Roman";}
+@list l38
+	{mso-list-id:1088238268;
+	mso-list-type:hybrid;
+	mso-list-template-ids:1252400820 67436545 67436547 67436549 67436545 67436547 67436549 67436545 67436547 67436549;}
+@list l38:level1
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0B7;
+	mso-level-tab-stop:36.0pt;
+	mso-level-number-position:left;
+	text-indent:-18.0pt;
+	font-family:Symbol;}
+@list l39
+	{mso-list-id:1135638215;
+	mso-list-type:hybrid;
+	mso-list-template-ids:-460024570 67436567 67436569 67436571 67436559 67436569 67436571 67436559 67436569 67436571;}
+@list l39:level1
+	{mso-level-number-format:alpha-lower;
+	mso-level-text:"%1\)";
+	mso-level-tab-stop:36.0pt;
+	mso-level-number-position:left;
+	text-indent:-18.0pt;}
+@list l40
+	{mso-list-id:1143935254;
+	mso-list-type:hybrid;
+	mso-list-template-ids:1834021828 67436545 67436547 67436549 67436545 67436547 67436549 67436545 67436547 67436549;}
+@list l40:level1
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0B7;
+	mso-level-tab-stop:36.0pt;
+	mso-level-number-position:left;
+	text-indent:-18.0pt;
+	font-family:Symbol;}
+@list l41
+	{mso-list-id:1166895416;
+	mso-list-type:hybrid;
+	mso-list-template-ids:-1662217656 67436545 67436547 67436549 67436545 67436547 67436549 67436545 67436547 67436549;}
+@list l41:level1
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0B7;
+	mso-level-tab-stop:36.0pt;
+	mso-level-number-position:left;
+	text-indent:-18.0pt;
+	font-family:Symbol;}
+@list l42
+	{mso-list-id:1189954509;
+	mso-list-type:hybrid;
+	mso-list-template-ids:-922551996 67436545 67436547 67436549 67436545 67436547 67436549 67436545 67436547 67436549;}
+@list l42:level1
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0B7;
+	mso-level-tab-stop:36.0pt;
+	mso-level-number-position:left;
+	text-indent:-18.0pt;
+	font-family:Symbol;}
+@list l43
+	{mso-list-id:1196043944;
+	mso-list-type:hybrid;
+	mso-list-template-ids:1022903794 67436545 67436547 67436549 67436545 67436547 67436549 67436545 67436547 67436549;}
+@list l43:level1
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0B7;
+	mso-level-tab-stop:36.0pt;
+	mso-level-number-position:left;
+	text-indent:-18.0pt;
+	font-family:Symbol;}
+@list l44
+	{mso-list-id:1216551902;
+	mso-list-type:hybrid;
+	mso-list-template-ids:-1521306658 67436545 67436547 67436549 67436545 67436547 67436549 67436545 67436547 67436549;}
+@list l44:level1
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0B7;
+	mso-level-tab-stop:36.0pt;
+	mso-level-number-position:left;
+	text-indent:-18.0pt;
+	font-family:Symbol;}
+@list l45
+	{mso-list-id:1290942037;
+	mso-list-type:hybrid;
+	mso-list-template-ids:303202840 67436545 67436547 67436549 67436545 67436547 67436549 67436545 67436547 67436549;}
+@list l45:level1
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0B7;
+	mso-level-tab-stop:36.0pt;
+	mso-level-number-position:left;
+	text-indent:-18.0pt;
+	font-family:Symbol;}
+@list l46
+	{mso-list-id:1374697141;
+	mso-list-type:hybrid;
+	mso-list-template-ids:-327127148 67436545 67436547 67436549 67436545 67436547 67436549 67436545 67436547 67436549;}
+@list l46:level1
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0B7;
+	mso-level-tab-stop:36.0pt;
+	mso-level-number-position:left;
+	text-indent:-18.0pt;
+	font-family:Symbol;}
+@list l47
+	{mso-list-id:1375621597;
+	mso-list-type:hybrid;
+	mso-list-template-ids:-486228000 67436561 67436569 67436571 67436559 67436569 67436571 67436559 67436569 67436571;}
+@list l47:level1
+	{mso-level-text:"%1\)";
+	mso-level-tab-stop:36.0pt;
+	mso-level-number-position:left;
+	text-indent:-18.0pt;}
+@list l48
+	{mso-list-id:1391928917;
+	mso-list-type:hybrid;
+	mso-list-template-ids:-1843903438 67436545 67436547 67436549 67436545 67436547 67436549 67436545 67436547 67436549;}
+@list l48:level1
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0B7;
+	mso-level-tab-stop:36.0pt;
+	mso-level-number-position:left;
+	text-indent:-18.0pt;
+	font-family:Symbol;}
+@list l49
+	{mso-list-id:1401516231;
+	mso-list-type:hybrid;
+	mso-list-template-ids:303202840 67436559 67436547 67436549 67436545 67436547 67436549 67436545 67436547 67436549;}
+@list l49:level1
+	{mso-level-tab-stop:36.0pt;
+	mso-level-number-position:left;
+	text-indent:-18.0pt;}
+@list l50
+	{mso-list-id:1475020784;
+	mso-list-type:hybrid;
+	mso-list-template-ids:1975038316 67436545 67436547 67436549 67436545 67436547 67436549 67436545 67436547 67436549;}
+@list l50:level1
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0B7;
+	mso-level-tab-stop:36.0pt;
+	mso-level-number-position:left;
+	text-indent:-18.0pt;
+	font-family:Symbol;}
+@list l51
+	{mso-list-id:1584602181;
+	mso-list-type:hybrid;
+	mso-list-template-ids:2135999698 67436545 67436547 67436549 67436545 67436547 67436549 67436545 67436547 67436549;}
+@list l51:level1
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0B7;
+	mso-level-tab-stop:36.0pt;
+	mso-level-number-position:left;
+	text-indent:-18.0pt;
+	font-family:Symbol;}
+@list l52
+	{mso-list-id:1632324006;
+	mso-list-type:hybrid;
+	mso-list-template-ids:1384691328 67436545 67436547 67436549 67436545 67436547 67436549 67436545 67436547 67436549;}
+@list l52:level1
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0B7;
+	mso-level-tab-stop:36.0pt;
+	mso-level-number-position:left;
+	text-indent:-18.0pt;
+	font-family:Symbol;}
+@list l53
+	{mso-list-id:1684815220;
+	mso-list-type:hybrid;
+	mso-list-template-ids:1966868852 67436545 67436547 67436549 67436545 67436547 67436549 67436545 67436547 67436549;}
+@list l53:level1
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0B7;
+	mso-level-tab-stop:36.0pt;
+	mso-level-number-position:left;
+	text-indent:-18.0pt;
+	font-family:Symbol;}
+@list l54
+	{mso-list-id:1710107184;
+	mso-list-template-ids:1826006572;}
+@list l54:level1
+	{mso-level-tab-stop:54.0pt;
+	mso-level-number-position:left;
+	margin-left:54.0pt;
+	text-indent:-18.0pt;}
+@list l54:level2
+	{mso-level-text:"%1\.%2\.";
+	mso-level-tab-stop:75.6pt;
+	mso-level-number-position:left;
+	margin-left:75.6pt;
+	text-indent:-21.6pt;}
+@list l54:level3
+	{mso-level-text:"%1\.%2\.%3\.";
+	mso-level-tab-stop:108.0pt;
+	mso-level-number-position:left;
+	margin-left:97.2pt;
+	text-indent:-25.2pt;}
+@list l54:level4
+	{mso-level-text:"%1\.%2\.%3\.%4\.";
+	mso-level-tab-stop:126.0pt;
+	mso-level-number-position:left;
+	margin-left:122.4pt;
+	text-indent:-32.4pt;}
+@list l54:level5
+	{mso-level-text:"%1\.%2\.%3\.%4\.%5\.";
+	mso-level-tab-stop:162.0pt;
+	mso-level-number-position:left;
+	margin-left:147.6pt;
+	text-indent:-39.6pt;}
+@list l54:level6
+	{mso-level-text:"%1\.%2\.%3\.%4\.%5\.%6\.";
+	mso-level-tab-stop:180.0pt;
+	mso-level-number-position:left;
+	margin-left:172.8pt;
+	text-indent:-46.8pt;}
+@list l54:level7
+	{mso-level-text:"%1\.%2\.%3\.%4\.%5\.%6\.%7\.";
+	mso-level-tab-stop:216.0pt;
+	mso-level-number-position:left;
+	margin-left:198.0pt;
+	text-indent:-54.0pt;}
+@list l54:level8
+	{mso-level-text:"%1\.%2\.%3\.%4\.%5\.%6\.%7\.%8\.";
+	mso-level-tab-stop:234.0pt;
+	mso-level-number-position:left;
+	margin-left:223.2pt;
+	text-indent:-61.2pt;}
+@list l54:level9
+	{mso-level-text:"%1\.%2\.%3\.%4\.%5\.%6\.%7\.%8\.%9\.";
+	mso-level-tab-stop:270.0pt;
+	mso-level-number-position:left;
+	margin-left:252.0pt;
+	text-indent:-72.0pt;}
+@list l55
+	{mso-list-id:1720200955;
+	mso-list-type:hybrid;
+	mso-list-template-ids:-59619406 67436559 67436569 67436571 67436559 67436569 67436571 67436559 67436569 67436571;}
+@list l55:level1
+	{mso-level-tab-stop:36.0pt;
+	mso-level-number-position:left;
+	text-indent:-18.0pt;}
+@list l56
+	{mso-list-id:1792629054;
+	mso-list-type:hybrid;
+	mso-list-template-ids:1607922616 67436561 67436569 67436571 67436559 67436569 67436571 67436559 67436569 67436571;}
+@list l56:level1
+	{mso-level-text:"%1\)";
+	mso-level-tab-stop:36.0pt;
+	mso-level-number-position:left;
+	text-indent:-18.0pt;
+	mso-ansi-font-weight:normal;}
+@list l57
+	{mso-list-id:1795831490;
+	mso-list-type:hybrid;
+	mso-list-template-ids:-371536298 67436545 67436547 67436549 67436545 67436547 67436549 67436545 67436547 67436549;}
+@list l57:level1
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0B7;
+	mso-level-tab-stop:36.0pt;
+	mso-level-number-position:left;
+	text-indent:-18.0pt;
+	font-family:Symbol;}
+@list l58
+	{mso-list-id:1800606434;
+	mso-list-type:hybrid;
+	mso-list-template-ids:1202367232 67436545 67436547 67436549 67436545 67436547 67436549 67436545 67436547 67436549;}
+@list l58:level1
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0B7;
+	mso-level-tab-stop:36.0pt;
+	mso-level-number-position:left;
+	text-indent:-18.0pt;
+	font-family:Symbol;}
+@list l59
+	{mso-list-id:1845781104;
+	mso-list-type:hybrid;
+	mso-list-template-ids:2033237264 67436545 67436547 67436549 67436545 67436547 67436549 67436545 67436547 67436549;}
+@list l59:level1
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0B7;
+	mso-level-tab-stop:36.0pt;
+	mso-level-number-position:left;
+	text-indent:-18.0pt;
+	font-family:Symbol;}
+@list l60
+	{mso-list-id:1869221363;
+	mso-list-type:hybrid;
+	mso-list-template-ids:-817716130 67436545 67436547 67436549 67436545 67436547 67436549 67436545 67436547 67436549;}
+@list l60:level1
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0B7;
+	mso-level-tab-stop:36.0pt;
+	mso-level-number-position:left;
+	text-indent:-18.0pt;
+	font-family:Symbol;}
+@list l61
+	{mso-list-id:1872376822;
+	mso-list-type:hybrid;
+	mso-list-template-ids:1761641190 67436545 67436547 67436549 67436545 67436547 67436549 67436545 67436547 67436549;}
+@list l61:level1
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0B7;
+	mso-level-tab-stop:36.0pt;
+	mso-level-number-position:left;
+	text-indent:-18.0pt;
+	font-family:Symbol;}
+@list l62
+	{mso-list-id:1888952574;
+	mso-list-type:hybrid;
+	mso-list-template-ids:458097858 67436559 67436547 67436549 67436545 67436547 67436549 67436545 67436547 67436549;}
+@list l62:level1
+	{mso-level-tab-stop:36.0pt;
+	mso-level-number-position:left;
+	text-indent:-18.0pt;}
+@list l63
+	{mso-list-id:1898280515;
+	mso-list-type:hybrid;
+	mso-list-template-ids:1384528112 -1061149474 -1481602134 1985747628 -1084346330 -1794883470 -1046587842 -399972738 -269550270 1333188536;}
+@list l63:level1
+	{mso-level-tab-stop:36.0pt;
+	mso-level-number-position:left;
+	text-indent:-18.0pt;}
+@list l64
+	{mso-list-id:1958248288;
+	mso-list-type:hybrid;
+	mso-list-template-ids:-1485775182 67436545 67436547 67436549 67436545 67436547 67436549 67436545 67436547 67436549;}
+@list l64:level1
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0B7;
+	mso-level-tab-stop:36.0pt;
+	mso-level-number-position:left;
+	text-indent:-18.0pt;
+	font-family:Symbol;}
+@list l65
+	{mso-list-id:2001734093;
+	mso-list-type:hybrid;
+	mso-list-template-ids:940976222 67436545 67436547 67436545 67436545 67436547 67436549 67436545 67436547 67436549;}
+@list l65:level1
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0B7;
+	mso-level-tab-stop:36.0pt;
+	mso-level-number-position:left;
+	text-indent:-18.0pt;
+	font-family:Symbol;}
+@list l65:level2
+	{mso-level-number-format:bullet;
+	mso-level-text:o;
+	mso-level-tab-stop:72.0pt;
+	mso-level-number-position:left;
+	text-indent:-18.0pt;
+	font-family:"Courier New";
+	mso-bidi-font-family:"Times New Roman";}
+@list l65:level3
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0B7;
+	mso-level-tab-stop:108.0pt;
+	mso-level-number-position:left;
+	text-indent:-18.0pt;
+	font-family:Symbol;}
+@list l66
+	{mso-list-id:2016496242;
+	mso-list-template-ids:1257268272;}
+@list l66:level1
+	{mso-level-tab-stop:18.0pt;
+	mso-level-number-position:left;
+	margin-left:18.0pt;
+	text-indent:-18.0pt;}
+@list l66:level2
+	{mso-level-text:"%1\.%2\.";
+	mso-level-tab-stop:39.6pt;
+	mso-level-number-position:left;
+	margin-left:39.6pt;
+	text-indent:-21.6pt;}
+@list l66:level3
+	{mso-level-text:"%1\.%2\.%3\.";
+	mso-level-tab-stop:72.0pt;
+	mso-level-number-position:left;
+	margin-left:61.2pt;
+	text-indent:-25.2pt;}
+@list l66:level4
+	{mso-level-text:"%1\.%2\.%3\.%4\.";
+	mso-level-tab-stop:90.0pt;
+	mso-level-number-position:left;
+	margin-left:86.4pt;
+	text-indent:-32.4pt;}
+@list l66:level5
+	{mso-level-text:"%1\.%2\.%3\.%4\.%5\.";
+	mso-level-tab-stop:126.0pt;
+	mso-level-number-position:left;
+	margin-left:111.6pt;
+	text-indent:-39.6pt;}
+@list l66:level6
+	{mso-level-text:"%1\.%2\.%3\.%4\.%5\.%6\.";
+	mso-level-tab-stop:144.0pt;
+	mso-level-number-position:left;
+	margin-left:136.8pt;
+	text-indent:-46.8pt;}
+@list l66:level7
+	{mso-level-text:"%1\.%2\.%3\.%4\.%5\.%6\.%7\.";
+	mso-level-tab-stop:180.0pt;
+	mso-level-number-position:left;
+	margin-left:162.0pt;
+	text-indent:-54.0pt;}
+@list l66:level8
+	{mso-level-text:"%1\.%2\.%3\.%4\.%5\.%6\.%7\.%8\.";
+	mso-level-tab-stop:198.0pt;
+	mso-level-number-position:left;
+	margin-left:187.2pt;
+	text-indent:-61.2pt;}
+@list l66:level9
+	{mso-level-text:"%1\.%2\.%3\.%4\.%5\.%6\.%7\.%8\.%9\.";
+	mso-level-tab-stop:234.0pt;
+	mso-level-number-position:left;
+	margin-left:216.0pt;
+	text-indent:-72.0pt;}
+@list l67
+	{mso-list-id:2084528394;
+	mso-list-type:hybrid;
+	mso-list-template-ids:458097858 67436545 67436547 67436549 67436545 67436547 67436549 67436545 67436547 67436549;}
+@list l67:level1
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0B7;
+	mso-level-tab-stop:36.0pt;
+	mso-level-number-position:left;
+	text-indent:-18.0pt;
+	font-family:Symbol;}
+ol
+	{margin-bottom:0cm;}
+ul
+	{margin-bottom:0cm;}
+-->
+</style>
+<!--[if gte mso 9]><xml>
+ <o:shapedefaults v:ext="edit" spidmax="2050"/>
+</xml><![endif]--><!--[if gte mso 9]><xml>
+ <o:shapelayout v:ext="edit">
+  <o:idmap v:ext="edit" data="1"/>
+ </o:shapelayout></xml><![endif]-->
+</head>
+
+<body lang=CS link=blue vlink=purple style='tab-interval:35.4pt'>
+
+<div class=Section1>
+
+<p class=MsoNormal><span style='font-size:10.0pt;mso-bidi-font-size:12.0pt'><a
+href="http://cryptography.hyperlink.cz/">zpět na osobní stránky</a><o:p></o:p></span></p>
+
+<p class=MsoNormal><b><span style='font-size:10.0pt;mso-bidi-font-size:12.0pt'>&nbsp;<o:p></o:p></span></b></p>
+
+<p class=MsoNormal><b><span style='font-size:10.0pt;mso-bidi-font-size:12.0pt'>Stránka
+věnovaná kolizím hašovacích funkcí ( v přípravě....)<o:p></o:p></span></b></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;mso-bidi-font-size:8.5pt'>Vlastimil
+Klíma<o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;mso-bidi-font-size:8.5pt'>&nbsp;<o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;mso-bidi-font-size:8.5pt'>poslední
+aktualizace stránky 3.5. 2006<o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;mso-bidi-font-size:8.5pt'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></p>
+
+<p class=MsoNormal><b><span style='font-size:10.0pt;mso-bidi-font-size:8.5pt'>Vlastimil
+Klima: Tunnels in Hash Functions: MD5 Collisions Within a Minute </span></b><span
+style='font-size:10.0pt;mso-bidi-font-size:8.5pt'>(extended abstract), </span><span
+style='font-size:10.0pt;mso-bidi-font-size:12.0pt'>IACR ePrint archive <a
+href="http://eprint.iacr.org/2006/105.pdf" target="_blank">Report 2006/105</a></span><span
+style='font-size:10.0pt;mso-bidi-font-size:8.5pt'>, 18. 3. 2006, lokální pdf: <a
+href="http://cryptography.hyperlink.cz/2006/tunnels.pdf" target="_blank">English
+</a>,<a href="http://cryptography.hyperlink.cz/2006/tunely.pdf" target="_blank">Czech
+</a>, <a href="http://cryptography.hyperlink.cz/2006/program.zip">zdrojový kód</a>
+verze 0 (neoptimalizovaný), <a
+href="http://cryptography.hyperlink.cz/2006/web_version_1.zip">zdrojový kód
+verze 1</a> - <b>nejrychlejší program a metoda hledání kolizí MD5 na světě</b> <o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;mso-bidi-font-size:8.5pt'><br>
+</span><b><span style='font-size:10.0pt;mso-bidi-font-size:12.0pt'>Dej mi tři
+soubory a já ti vrátím jiné tři se stejnou MD5 haší... </span></b><span
+style='font-size:10.0pt;mso-bidi-font-size:12.0pt'>Program <a
+href="http://cryptography.hyperlink.cz/2006/selfextract.zip" target="_blank">pack3</a>
+napsal Ondrej Mikle. Je založen na kolizním programu <a
+href="http://cryptography.hyperlink.cz/2006/web_version_1.zip" target="_blank">MD5
+collision program</a> Vlastimila Klímy. Použití: pack3 file1 file2 file3 file4
+file5 file6 vytvoří dva samorozbalovací archivy package1.exe a package2.exe.
+Oba budou mít sejnou MD5 haš, přičemž package1.exe extrahuje soubory 1-3 a
+package2.exe soubory 4-6.<b> <a
+href="http://cryptography.hyperlink.cz/2006/trick.txt">Více informací</a><o:p></o:p></b></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;mso-bidi-font-size:8.5pt'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></p>
+
+<p class=MsoNormal style='mso-layout-grid-align:none;text-autospace:none'><span
+style='font-size:10.0pt;mso-bidi-font-size:11.0pt'>Daniel Joščák: Hledání
+kolizí v hašovacích funkcích, <a
+href="http://cryptography.hyperlink.cz/2006/diplomka.pdf">diplomová práce</a>,
+MFFUK, Praha, 21.4.2006. Abstrakt: Hlavním obsahem této práce je hledání kolizí
+v hašovací funkci MD5. Představíme náš nový algoritmus založený na metodě
+kolizí podle Wangové a kol. V průběhu psaní této práce Stevens a Klíma
+publikovali dva nové algoritmy. Uvádíme popis všech tří algoritmů a jejich
+výpočetní složitost.</span><span style='font-size:10.0pt;mso-bidi-font-size:
+12.0pt'> </span><span style='font-size:10.0pt;mso-bidi-font-size:11.0pt'><o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;mso-bidi-font-size:8.5pt'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;mso-bidi-font-size:8.5pt'>Marc
+Stevens, &quot;Fast Collision Attack on MD5&quot;, 17 March 2006, </span><span
+style='font-size:10.0pt;mso-bidi-font-size:12.0pt'>IACR ePrint archive <a
+href="http://eprint.iacr.org/2006/104.pdf" target="_blank">Report 2006/104</a></span><span
+style='font-size:10.0pt;mso-bidi-font-size:8.5pt'>, <a
+href="http://www.win.tue.nl/hashclash/" target="_blank">pdf and source code </a>.
+<o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;mso-bidi-font-size:8.5pt'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;mso-bidi-font-size:8.5pt'>První
+porovnání algoritmů</span><span style='font-size:10.0pt;mso-bidi-font-size:
+12.0pt'> Klímy a Stevense je <a href="http://crypto-world.info/info/result.pdf"
+target="_blank">zde</a>. <o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;mso-bidi-font-size:12.0pt'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;mso-bidi-font-size:12.0pt'>Pavel
+Dufek: Modifikace programu Klímy verze 1, modifikovaný program umožňuje zvolit
+inicializační hodnotu (jako parametr programu), a vytváří nové textové a
+binární výstupy. Zdrojový a spustitelný kód jsou <a
+href="http://cryptography.hyperlink.cz/2006/program_v1_pd.zip">zde</a>. <o:p></o:p></span></p>
+
+<p class=MsoNormal><b><span style='font-size:10.0pt;mso-bidi-font-size:12.0pt'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></b></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;mso-bidi-font-size:12.0pt'>J.
+Black, M. Cochran, T. Highland: &quot;A Study of the MD5 Attacks: Insights and
+Improvements&quot;, March 3, 2006, <a
+href="http://www.cs.colorado.edu/~jrblack/papers/md5e-full.pdf">pdf</a>, <a
+href="http://www.cs.colorado.edu/~jrblack/md5toolkit.tar.gz">toolkit</a>.<b> </b></span><span
+style='font-size:10.0pt'><o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;mso-bidi-font-size:8.5pt'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;mso-bidi-font-size:8.5pt'>Jun
+Yajima and Takeshi Shimoyama: Wang’s sufficient conditions of MD5 are not
+sufficient, Cryptology ePrint Archive: Report 2005/263, 10 Aug 2005, <a
+href="http://eprint.iacr.org/2005/263.pdf" target="_blank">http://eprint.iacr.org/2005/263.pdf
+</a>. <br>
+<br>
+Yu Sasaki and Yusuke Naito and Noboru Kunihiro and Kazuo Ohta: Improved
+Collision Attack on MD5, Cryptology ePrint Archive: Report 2005/400, 7 Nov
+2005, <a href="http://eprint.iacr.org/2005/400.pdf" target="_blank">http://eprint.iacr.org/2005/400.pdf
+</a>. <br>
+<br>
+Liang J. and Lai X.: Improved Collision Attack on Hash Function MD5, Cryptology
+ePrint Archive: Report 425/2005, 23 Nov 2005, <a
+href="http://eprint.iacr.org/2005/425.pdf" target="_blank">http://eprint.iacr.org/2005/425.pdf
+</a>.<o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;mso-bidi-font-size:8.5pt'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></p>
+
+<p class=MsoNormal><b><span style='font-size:10.0pt;mso-bidi-font-size:8.5pt'>8.5.2005<o:p></o:p></span></b></p>
+
+<p class=MsoNormal><b><span style='font-size:10.0pt;mso-bidi-font-size:12.0pt'>Prezentace
+mnohonásobných modifikací zprávy<o:p></o:p></span></b></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;mso-bidi-font-size:12.0pt'>Vlastimil
+Klima:<span style="mso-spacerun: yes">  </span>Finding MD5 Collisions on a
+Notebook PC Using Multi-message Modifications, 3rd Int. Conference Security and
+Protection of Information 2005, Brno, Czech Republic, May 3 - 5, 2005, <a
+href="http://cryptography.hyperlink.cz/2005/Vlastimil_Klima_SPI_2005.ppt">prezentace(ppt)</a>.</span><span
+style='font-size:10.0pt'> </span><span style='font-size:10.0pt;mso-bidi-font-size:
+12.0pt;mso-fareast-font-family:"Arial Unicode MS";display:none;mso-hide:all'><o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;mso-bidi-font-size:12.0pt'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></p>
+
+<p class=MsoNormal><b><span style='font-size:10.0pt'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></b></p>
+
+<p class=MsoNormal><b><span style='font-size:10.0pt'>31.3.2005<o:p></o:p></span></b></p>
+
+<p class=MsoNormal><b><span style='font-size:10.0pt;mso-bidi-font-size:12.0pt'>Nalézání
+kolizí MD5 na notebooku pomocí mnohonásobných modifikací zprávy</span></b><b><span
+style='font-size:10.0pt'><o:p></o:p></span></b></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt'>Ve stejnojmenném článku jsem
+uveřejnil metodu nalézání kolizí z 5.3.2005 a návrh dalších metod. Vlastimil
+Klíma: </span><span style='font-size:10.0pt;mso-bidi-font-size:12.0pt'><a
+href="http://cryptography.hyperlink.cz/md5/Vlastimil_Klima_MD5_kolize.pdf">Nalézání
+kolizí MD5 na notebooku pomocí mnohonásobných modifikací zprávy</a>, 31.3.
+2005, verze 1<o:p></o:p></span></p>
+
+<p class=MsoNormal style='text-align:justify'><span style='font-size:10.0pt;
+mso-bidi-font-size:12.0pt'>Abstrakt: V tomto stručném příspěvku shrnujeme
+výsledky našeho tříměsíčního výzkumu kolizí hašovací funkce MD5. Inspirováni
+prací Wangové a kol. [1] jsme vyvinuli metody nalézání kolizí, které pracují
+pro libovolný inicializační vektor a jsou rychlejší než metody v [1, 8]. To
+umožňuje nalézt kolizi MD5 na standardním notebooku asi za 8 hodin </span><span
+lang=EN-US style='font-size:10.0pt;mso-bidi-font-size:12.0pt;mso-ansi-language:
+EN-US'>[7]</span><span style='font-size:10.0pt;mso-bidi-font-size:12.0pt'>.
+Nezávisle na [1, 8] jsme objevili a navrhli několik metod mnohonásobné
+modifikace zpráv, které jsou efektivnější než v </span><span lang=EN-US
+style='font-size:10.0pt;mso-bidi-font-size:12.0pt;mso-ansi-language:EN-US'>[1,
+8],</span><span lang=EN-US style='font-size:10.0pt;mso-bidi-font-size:12.0pt'> </span><span
+style='font-size:10.0pt;mso-bidi-font-size:12.0pt'>a ukazujeme jejich podstatu.<o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;mso-bidi-font-size:12.0pt'>Anglická
+verze: Vlastimil Klima:<span style="mso-spacerun: yes">  </span>Finding MD5
+Collisions on a Notebook PC Using Multi-message Modifications, March 31, 2005,
+IACR ePrint archive, <a href="http://eprint.iacr.org/2005/102">Report 2005/102</a>.<o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;mso-bidi-font-size:12.0pt'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></p>
+
+<p class=MsoNormal><b><span style='font-size:10.0pt;mso-bidi-font-size:12.0pt'>19.3.2005<o:p></o:p></span></b></p>
+
+<p class=MsoNormal><b style='mso-bidi-font-weight:normal'><span
+style='font-size:10.0pt;mso-bidi-font-size:12.0pt'>Hašovací funkce, principy,
+příklady a kolize</span></b><b style='mso-bidi-font-weight:normal'><span
+style='font-size:10.0pt'><o:p></o:p></span></b></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt'>Vlastimil Klíma: </span><span
+style='font-size:10.0pt;mso-bidi-font-size:12.0pt'>Hašovací funkce, principy,
+příklady a kolize, přednáška na semináři <a href="http://www.cryptofest.cz/">Cryptofest</a><span
+style='mso-bidi-font-weight:bold'>, </span>19.3. 2005, on line <a
+href="http://cryptography.hyperlink.cz/2005/cryptofest_2005.htm">zde</a>. </span><span
+style='font-size:10.0pt'><o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;mso-bidi-font-size:12.0pt'>Abstrakt:
+Tento velmi rozsáhlý příspěvek je určen těm, kdo nemají podrobné znalosti o
+hašovacích funkcích, ale přitom se jich nějakým způsobem týká jejich
+bezpečnost. Budeme se zabývat principy konstrukce, bezpečností a novinkami v
+oblasti hašovacích funkcí. </span><span style='font-size:10.0pt;mso-bidi-font-size:
+8.5pt'><o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;mso-bidi-font-size:8.5pt'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></p>
+
+<p class=MsoNormal><b><span style='font-size:10.0pt;mso-bidi-font-size:12.0pt'>9.
+3. 2005<o:p></o:p></span></b></p>
+
+<p class=MsoNormal><b><span style='font-size:10.0pt;mso-bidi-font-size:12.0pt'>Nalézání
+kolizí MD5 - původní čínská metoda zveřejněna<o:p></o:p></span></b></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt'>Konečně po šesti měsících
+mlčení byl uveřejněn příspěvek prof. Wangové a kol. o čínském triku. <o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;mso-bidi-font-size:12.0pt'>Xiaoyun
+Wang and Hongbo Yu: <b>How to Break MD5 and Other Hash Functions</b> (<a
+href="http://www.infosec.sdu.edu.cn/paper/md5-attack.pdf">PDF</a>). <o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;mso-bidi-font-size:12.0pt'>Podstatou
+jsou dvě hlavní myšlenky. První je diferenční schéma. Druhou je tzv. metoda
+modifikace zpráv. Tato metoda má mnoho variant a v diferenčním schématu se
+použije mnohokrát. Zveřejněny byly pouze příklady. U diferenčního schématu
+(kolidující zprávy se liší v šesti 32bitových slovech o definovaný aritmetický
+rozdíl) sice známe jeho popis, ale není jasné, jak právě toto schéma bylo
+vybráno. Diferenčních schémat tohoto typu může být celá řada. Jinými slovy, ani
+tato práce ještě neodhaluje všechno z čínského zákulisí. Faktem je, že do
+konferenčního příspěvku se nemůže vejít všechno, a že toto je výsledkem výzkumu
+prof. Wangové od roku 1996. Doufejme, že v dalších pracech odhalí více. Mnohé
+slibuje oznámený útok na SHA-1, který vychází ze stejné metody, a kde dosáhli
+složitosti 2</span><span lang=EN-US style='font-size:10.0pt;mso-bidi-font-size:
+12.0pt;mso-ansi-language:EN-US'>^</span><span style='font-size:10.0pt;
+mso-bidi-font-size:12.0pt'>69 místo 2</span><span lang=EN-US style='font-size:
+10.0pt;mso-bidi-font-size:12.0pt;mso-ansi-language:EN-US'>^</span><span
+style='font-size:10.0pt;mso-bidi-font-size:12.0pt'>80. <o:p></o:p></span></p>
+
+<p class=MsoNormal><b><span style='font-size:10.0pt'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></b></p>
+
+<p class=MsoNormal><b><span style='font-size:10.0pt'>8. 3. 2005<o:p></o:p></span></b></p>
+
+<p class=MsoNormal><b><span style='font-size:10.0pt'>Populární článek pro <a
+href="http://www.root.cz/">www.root.cz</a> <o:p></o:p></span></b></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;mso-bidi-font-size:12.0pt'>Nalézání
+kolizí MD5 - hračka pro notebook <a
+href="http://www.root.cz/clanky/nalezani-kolizi-md5-hracka-pro-notebook/">zde</a>.
+</span><b><span style='font-size:10.0pt'><o:p></o:p></span></b></p>
+
+<p class=MsoNormal><b><span style='font-size:10.0pt'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></b></p>
+
+<p class=MsoNormal><b><span style='font-size:10.0pt'>5.3. 2005<o:p></o:p></span></b></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt'>V článku </span><b><span
+style='font-size:10.0pt;mso-bidi-font-size:12.0pt'><a
+href="http://cryptography.hyperlink.cz/md5/MD5_kolize.pdf">Nalézání kolizí MD5
+- hračka pro notebook</a> </span></b><span style='font-size:10.0pt;mso-bidi-font-size:
+12.0pt'>jsem oznámil schopnost generovat kolize pro MD5 na notebooku za cca 8
+hodin: <o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;mso-bidi-font-size:12.0pt'>Vlastimil
+Klima: <b>Finding MD5 Collisions – a Toy For a Notebook</b>, 5th March, 2005,
+IACR ePrint archive, Report 2005/075, <a
+href="http://cryptography.hyperlink.cz/MD5_collisions.html" target="_blank">homepage</a>,
+pdf: <a href="http://cryptography.hyperlink.cz/md5/MD5_collisions.pdf"
+target="_blank">English</a>, <a
+href="http://cryptography.hyperlink.cz/md5/MD5_kolize.pdf" target="_blank">Czech</a>.</span><span
+style='font-size:10.0pt'><o:p></o:p></span></p>
+
+<p class=MsoNormal><b><span style='font-size:10.0pt'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></b></p>
+
+<p class=MsoNormal><b><span style='font-size:10.0pt'>8. 12. 2004<o:p></o:p></span></b></p>
+
+<p class=MsoNormal><b><span style='font-size:10.0pt;mso-bidi-font-size:8.5pt'>Praktická
+demonstrace využití čínského útoku:</span></b><b><span style='font-size:10.0pt'><o:p></o:p></span></b></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt'>K demonstraci využití
+čínského útoku jsem vyzval na přednášce 15.11. 2004 uvedené níže. </span><span
+style='font-size:10.0pt;mso-bidi-font-size:12.0pt'>V diskusi byly předloženy
+asi čtyři nebo pět nápadů. Ondra svůj nápad během několika následujících dní
+převedl do fungující praktické ukázky do příspěvku konferenčního typu.
+Blahopřeji! </span><b><span style='font-size:10.0pt'>Ondrej Mikle, student MFF
+UK, ukázal, že lze využít i jednu publikovanou kolizi MD5 ke konstrukci
+reálných útoků (2. 12. 2004). </span></b><span style='font-size:10.0pt'>Výsledek?
+Velmi stručně ten nejzajímavější. Zvolte si jakékoliv dva různé soubory (třeba
+smlouvy). Pomocí postupu z článku docílíte toho, že jeden uživatel dostane
+první z nich, druhý uživatel druhý z nich, a přitom si oba dva na základě
+vzájemné telefonické kontroly digitálních otisků (MD5) budou myslet, že mají
+tentýž soubor. Něco tady není v pořádku, že? Podrobnosti jsou na<b> <a
+href="http://cryptography.hyperlink.cz/2004/collisions.htm">domovské stránce projektu</a></b>.
+</span><span style='font-size:10.0pt;mso-bidi-font-size:12.0pt'>Nezávisle na
+něm o 4 dny později publikoval <a href="http://www.doxpara.com/md5_someday.pdf">jiný
+koncept využití jediné kolize MD5</a> i Dan Kaminsky (6.12. 2004).<o:p></o:p></span></p>
+
+<p class=MsoNormal><b><span style='font-size:10.0pt'>&nbsp;<o:p></o:p></span></b></p>
+
+<p class=MsoNormal><b><span style='font-size:10.0pt'>22. 11. 2004<o:p></o:p></span></b></p>
+
+<p class=MsoNormal><b><span style='font-size:10.0pt'>Seminář BIS<o:p></o:p></span></b></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt'>Vlastimil Klíma: Hašovací
+funkce, MD5 a čínský útok, <a href="http://bis.modry.cz/">Seminář</a>
+Bezpečnost Informačních Systémů v praxi (http://bis.modry.cz/), MFF UK Praha,
+22. 11. 2004, <a
+href="http://cryptography.hyperlink.cz/2004/Hasovaci_funkce_a_cinsky_utok_MFFUK_2004.ppt">prezentace
+v powerpointu</a> (<a
+href="http://cryptography.hyperlink.cz/2004/Hasovaci_funkce_a_cinsky_utok_MFFUK_2004.pdf">prezentace
+v pdf</a>), text bez bez Kelsey-Schneierova doplňku, viz </span><span
+style='font-size:10.0pt;mso-bidi-font-size:8.5pt;color:red'><a
+href="http://cryptography.hyperlink.cz/2004/cinsky_utok_a_hashe.pdf">pdf</a>. </span><span
+style='font-size:10.0pt;mso-bidi-font-size:8.5pt'>Oproti konferenci DCD je zde
+minimum informací navíc, jen prezentace s obrázky.<span style='color:red'><o:p></o:p></span></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;mso-bidi-font-size:8.5pt'>&nbsp;<o:p></o:p></span></p>
+
+<p class=MsoNormal><b><span style='font-size:10.0pt;mso-bidi-font-size:8.5pt'>12.
+11. 2004<o:p></o:p></span></b></p>
+
+<p class=MsoNormal><b><span style='font-size:10.0pt;mso-bidi-font-size:8.5pt'>O
+čínském útoku a hašovacích funkcích podrobněji na DCD:<o:p></o:p></span></b></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;mso-bidi-font-size:12.0pt'>Protože
+o kolize hašovacích funkcí byl na www.root.cz velký zájem (10500 čtenářů),
+napsal jsem při příležitosti přednášení tohoto tématu na konferenci DCD text: <o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;mso-bidi-font-size:12.0pt'>Nedůvěřujte
+kryptologům, IT &amp;Security Conference, DCD Publishing<span style='color:
+black'>, Hotel Diplomat, Praha, 10. - 11. 11. 2004, </span>25 stran (480 kByte <b><a
+href="http://cryptography.hyperlink.cz/2004/cinsky_utok_a_hashe.pdf"><span
+style='mso-bidi-font-size:8.5pt'>pdf</span></a></b>), který tu kauzu trochu víc
+vysvětluje a obnáší trochu víc informací. Dokument přetiskuje i Crypto-world
+jako <b><a href="http://crypto-world.info/casop6/crypto11s_04.pdf"><span
+style='mso-bidi-font-size:8.5pt'>speciál</span></a></b>. <o:p></o:p></span></p>
+
+<p class=MsoNormal><b><span style='font-size:10.0pt;mso-bidi-font-size:8.5pt'>&nbsp;<o:p></o:p></span></b></p>
+
+<p class=MsoNormal><b><span style='font-size:10.0pt;mso-bidi-font-size:12.0pt'>25.
+8. 2004<o:p></o:p></span></b></p>
+
+<p class=MsoNormal><b><span style='font-size:10.0pt;mso-bidi-font-size:12.0pt'>Článek
+na <a href="http://www.root.cz/">www.root.cz</a>, který tuhle stránku
+zapříčinil<o:p></o:p></span></b></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt'>Vlastimil Klíma: </span><span
+style='font-size:10.0pt;mso-bidi-font-size:12.0pt'>Hašovací funkce MD5 a další
+prolomeny!, <a
+href="http://www.root.cz/clanky/hasovaci-funkce-md5-a-dalsi-prolomeny/">zde</a>
+<b><o:p></o:p></b></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;mso-bidi-font-size:12.0pt'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></p>
+
+<p class=MsoNormal><b><span style='font-size:10.0pt;mso-bidi-font-size:8.5pt'>Literatura
+a linky<o:p></o:p></span></b></p>
+
+<p class=MsoNormal><b><span style='font-size:10.0pt;mso-bidi-font-size:8.5pt'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></b></p>
+
+<p class=MsoNormal><b><span style='font-size:10.0pt;mso-bidi-font-size:12.0pt'>Další
+linky:<o:p></o:p></span></b></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;mso-bidi-font-size:12.0pt'><a
+href="http://planeta.terra.com.br/informatica/paulobarreto/hflounge.html">stránka
+Paula Barreta</a> , <b>jedna z mála aktualizovaných a hodnotných stránek o hašovacích
+funkcích<o:p></o:p></b></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;mso-bidi-font-size:12.0pt'><a
+href="http://en.wikipedia.org/wiki/Cryptographic_hash_function">o hašovacích
+funcích a kolizích na wikipedii</a> <o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;mso-bidi-font-size:12.0pt'><a
+href="http://www.unixwiz.net/techtips/iguide-crypto-hashes.html">ilustrovaný
+úvod do hašovacích funkcí</a> <o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;mso-bidi-font-size:12.0pt'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;mso-bidi-font-size:12.0pt'>[ARCHIV]
+Archiv autora obsahující články o kryptologii a bezpečnosti, <a
+href="http://cryptography.hyperlink.cz/">http://cryptography.hyperlink.cz/</a><o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;mso-bidi-font-size:12.0pt'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;mso-bidi-font-size:12.0pt'>[BC04a]
+Biham, Eli, Chen, Rafi: Near Collisions of SHA-0, CRYPTO 2004<o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;mso-bidi-font-size:12.0pt'><a
+href="http://www.cs.technion.ac.il/users/wwwb/cgi-bin/tr-get.cgi/2004/CS/CS-2004-09.ps.gz">http://www.cs.technion.ac.il/users/wwwb/cgi-bin/tr-get.cgi/2004/CS/CS-2004-09.ps.gz</a><o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;mso-bidi-font-size:12.0pt'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;mso-bidi-font-size:12.0pt'>[BC04b]
+Eli Biham, Rafi Chen: New results on SHA-0 and SHA-1, CRYPTO 2004 Rump Session<o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;mso-bidi-font-size:12.0pt'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;mso-bidi-font-size:12.0pt'>[BoBo93]
+B. den Boer and A. Bosselaers. Collisions for the compression function of MD5.
+In Advances in Cryptology, Eurocrypt ‘93, pages 293-304, Springer-Verlag, 1994.<o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;mso-bidi-font-size:10.5pt'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;mso-bidi-font-size:10.5pt'>[D96a]
+H. Dobbertin, Cryptanalysis of MD4, Fast Software Encryption 1996, LNCS, Vol.
+1039, Springer-Verlag, 1996</span><span style='font-size:10.0pt;mso-bidi-font-size:
+12.0pt'>, pp. 53 - 69</span><span style='font-size:10.0pt;mso-bidi-font-size:
+10.5pt'><o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;mso-bidi-font-size:12.0pt'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;mso-bidi-font-size:12.0pt'>[DK2004]
+Dan Kaminsky:<i> </i><span style="mso-spacerun: yes"> </span>MD5 To Be
+Considered Harmful Someday, <i style='mso-bidi-font-style:normal'>Cryptology
+ePrint Archive</i>, Report 2004/357, <a href="http://eprint.iacr.org/2004/357/">http://eprint.iacr.org/2004/357</a>,
+6 December 2004<span class=MsoHyperlink><o:p></o:p></span></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;mso-bidi-font-size:12.0pt'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;mso-bidi-font-size:12.0pt'>[DO96eu]
+H. Dobbertin. Cryptanalysis of MD5 Compress. Presented at the rump session of
+Eurocrypt ‘96, May 14, 1996.<o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;mso-bidi-font-size:12.0pt'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;mso-bidi-font-size:12.0pt'>[DO96cb]
+H. Dobbertin. The Status of MD5 after a Recent Attack. CryptoBytes, 2(2): 1-6,
+1996.<o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;mso-bidi-font-size:10.5pt'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;mso-bidi-font-size:10.5pt'>[HAVAL]
+Y. Zheng, J. Pieprzyk, J. Seberry, HAVAL - A One-way Hashing Algorithm with
+Variable Length of Output, Auscrypt 92<o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;mso-bidi-font-size:12.0pt'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;mso-bidi-font-size:12.0pt'>[HMAC]
+FIPS PUB 198, </span><span style='font-size:10.0pt;mso-bidi-font-size:18.5pt'>The
+Keyed-Hash Message Authentication Code (HMAC), NIST, </span><span
+style='font-size:10.0pt;mso-bidi-font-size:10.5pt'>US Department of Commerce,
+Washington D. C.,</span><span style='font-size:10.0pt;mso-bidi-font-size:12.0pt'>
+March 6, 2002, <a href="http://csrc.nist.gov/CryptoToolkit/tkhash.html">http://csrc.nist.gov/CryptoToolkit/tkhash.html</a>,
+resp. RFC 2104, <a href="http://www.rfc-editor.org/">http://www.rfc-editor.org/</a><o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;mso-bidi-font-size:12.0pt'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;mso-bidi-font-size:12.0pt'>[HPR04]
+Philip Hawkes, Michael Paddon, Gregory G. Rose: Musings on the Wang et al. MD5
+Collision, <i style='mso-bidi-font-style:normal'>Cryptology ePrint Archive</i>,
+Report 2004/264, 13 October 2004, <a href="http://eprint.iacr.org/2004/264.pdf"><span
+class=InternetLink><span lang=EN-US style='mso-hansi-font-family:"Times New Roman";
+mso-bidi-font-family:"Times New Roman"'>http://eprint.iacr.org/2004/264.pdf</span></span></a><o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;mso-bidi-font-size:12.0pt'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;mso-bidi-font-size:12.0pt'>[Joux04a]
+Antoine Joux: Collisions in SHA-0, CRYPTO 2004 Rump Session<o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;mso-bidi-font-size:12.0pt'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;mso-bidi-font-size:12.0pt'>[Joux04b]
+A. Joux: Multicollisions in iterated hash functions. Application to cascaded<o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;mso-bidi-font-size:12.0pt'>constructions.
+Proceedings of Crypto 2004, LNCS 3152, pages 306-316.<o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;mso-bidi-font-size:12.0pt'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;mso-bidi-font-size:12.0pt'>[KS2004]
+John Kelsey, Bruce Schneier: Second Preimages on n-bit Hash Functions for Much
+Less than 2^n Work, <a href="http://eprint.iacr.org/2004/304/">http://eprint.iacr.org/2004/304/</a>,
+November 15, 2004<o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;mso-bidi-font-size:12.0pt'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;mso-bidi-font-size:12.0pt'>[LWW05a]
+Arjen Lenstra, Xiaoyun Wang and Benne de Weger: Colliding X.509 Certificates, <i>Cryptology
+ePrint Archive</i>, Report 2005/067, <a href="http://eprint.iacr.org/2005/067"><span
+class=InternetLink><span lang=EN-US style='mso-hansi-font-family:"Times New Roman";
+mso-bidi-font-family:"Times New Roman"'>http://eprint.iacr.org/2005/067</span></span></a><o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;mso-bidi-font-size:12.0pt'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;mso-bidi-font-size:12.0pt'>[LWW05b]
+Arjen Lenstra, Xiaoyun Wang and Benne de Weger: Colliding X.509 Certificates
+based on SHA1-collisions, <a
+href="http://www.win.tue.nl/~bdeweger/CollidingCertificates/index.html">http://www.win.tue.nl/~bdeweger/CollidingCertificates/index.html</a><o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;mso-bidi-font-size:12.0pt'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;mso-bidi-font-size:12.0pt'>[MD245]
+MD2, MD4, MD5 - RFC 1319, 1320, 1321, http://www.rfc-editor.org/<o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;mso-bidi-font-size:12.0pt'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;mso-bidi-font-size:12.0pt'>[NIST05b]
+NIST Brief Comments on Recent Cryptanalytic Attacks on SHA-1<o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;mso-bidi-font-size:12.0pt'><a
+href="http://csrc.nist.gov/news-highlights/NIST-Brief-Comments-on-SHA1-attack.pdf">http://csrc.nist.gov/news-highlights/NIST-Brief-Comments-on-SHA1-attack.pdf</a><o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;mso-bidi-font-size:12.0pt'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;mso-bidi-font-size:12.0pt'>[NIST05a]
+NIST Brief Comments on Recent Cryptanalytic Attacks on Secure Hashing Functions
+and the Continued Security Provided by SHA-1, <span style='mso-bidi-font-style:
+italic'><a href="http://csrc.ncsl.nist.gov/hash_standards_comments.pdf">http://csrc.ncsl.nist.gov/hash_standards_comments.pdf</a>,</span><o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;mso-bidi-font-size:12.0pt'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;mso-bidi-font-size:12.0pt'>[OOW94]
+P. van Oorschot and M. Wiener. Parallel collision search with application to
+hash functions and discrete logarithms. In Proceedings of 2nd ACM Conference on
+Computer<o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;mso-bidi-font-size:12.0pt'>and
+Communication Security, pages 210-218, ACM Press, 1994.<span
+class=MsoHyperlink><o:p></o:p></span></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;mso-bidi-font-size:12.0pt'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;mso-bidi-font-size:12.0pt'>[OM2004]
+Ondrej Mikle: <span style='mso-bidi-font-style:italic'>Practical </span>Attacks
+on Digital Signatures Using MD5 Message Digest, <i>Cryptology ePrint Archive</i>,
+Report 2004/356, <a href="http://eprint.iacr.org/2004/356/">http://eprint.iacr.org/2004/356</a>,
+2nd December 2004, <a
+href="http://cryptography.hyperlink.cz/2004/collisions.htm">http://cryptography.hyperlink.cz/2004/collisions.htm</a><o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;mso-bidi-font-size:12.0pt'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;mso-bidi-font-size:12.0pt'>[PKCS2]
+<i>PKCS#5 v2.0: Password-Based Cryptography Standard</i>, RSA Labs, March 25,
+1999<o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;mso-bidi-font-size:10.5pt'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;mso-bidi-font-size:10.5pt'>[RIPEMD-160]
+H. Dobbertin, A. Bosselaers, B. Preneel, &quot;RIPEMD-160: A Strengthened
+Version of RIPEMD,&quot; Fast Software Encryption, LNCS 1039, D.Gollmann, Ed.,
+Springer-Verlag, 1996, pp. 71-82<o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;mso-bidi-font-size:12.0pt'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;mso-bidi-font-size:10.5pt'>[SHA-0]
+FIPS 180 </span><span style='font-size:10.0pt;mso-bidi-font-size:12.0pt'>(superseded
+by FIPS 180-1 and FIPS 180-2)</span><span style='font-size:10.0pt;mso-bidi-font-size:
+10.5pt'>, Secure hash standard </span><span style='font-size:10.0pt;mso-bidi-font-size:
+12.0pt'>(SHS)</span><span style='font-size:10.0pt;mso-bidi-font-size:10.5pt'>,
+NIST, US Department of Commerce, Washington D. C., May 1993<o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;mso-bidi-font-size:10.5pt'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;mso-bidi-font-size:10.5pt'>[SHA-1]
+FIPS 180-1 </span><span style='font-size:10.0pt;mso-bidi-font-size:12.0pt'>(superseded
+by FIPS 180-2)</span><span style='font-size:10.0pt;mso-bidi-font-size:10.5pt'>,
+Secure hash standard </span><span style='font-size:10.0pt;mso-bidi-font-size:
+12.0pt'>(SHS)</span><span style='font-size:10.0pt;mso-bidi-font-size:10.5pt'>,
+NIST, US Department of Commerce, Washington D. C., April 1995<o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;mso-bidi-font-size:12.0pt'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;mso-bidi-font-size:12.0pt'>[SHA-2]
+FIPS 180-2, Secure Hash Standard (SHS), </span><span style='font-size:10.0pt;
+mso-bidi-font-size:10.5pt'>NIST, US Department of Commerce, Washington D. C., </span><span
+style='font-size:10.0pt;mso-bidi-font-size:12.0pt'>August 2002 (change notice:
+February 2004), <a
+href="http://csrc.nist.gov/publications/fips/fips180-2/fips180-2withchangenotice.pdf">http://csrc.nist.gov/publications/fips/fips180-2/fips180-2withchangenotice.pdf</a>,
+platný standard, obsahuje definice SHA-1, SHA-224, SHA-256, SHA-384 a SHA-512<o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;mso-bidi-font-size:12.0pt'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;mso-bidi-font-size:12.0pt'>[VK2005a]
+Vlastimil Klima: Finding MD5 Collisions – a Toy For a Notebook, <i>Cryptology
+ePrint Archive</i>, Report 2005/075, March 5, 2005, <a
+href="http://eprint.iacr.org/2005/075"><span class=InternetLink><span
+lang=EN-US style='mso-hansi-font-family:"Times New Roman";mso-bidi-font-family:
+"Times New Roman"'>http://eprint.iacr.org/2005/075</span></span></a>, v češtině
+&quot; Nalézání kolizí MD5 - hračka pro notebook&quot;, <a
+href="http://cryptography.hyperlink.cz/md5/MD5_kolize.pdf" target="_blank">http://cryptography.hyperlink.cz/md5/MD5_kolize.pdf</a>.<o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;mso-bidi-font-size:12.0pt'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;mso-bidi-font-size:12.0pt'>[VK2005b]
+</span><span style='font-size:10.0pt;mso-bidi-font-size:8.5pt'>Vlastimil Klima:
+Finding MD5 Collisions on a Notebook PC Using Multi-message Modifications,
+March 31, 2005, </span><i><span style='font-size:10.0pt;mso-bidi-font-size:
+12.0pt'>Cryptology ePrint Archive</span></i><span style='font-size:10.0pt;
+mso-bidi-font-size:12.0pt'>, Report 2005/112, <a
+href="http://eprint.iacr.org/2005/102"><span class=InternetLink><span
+lang=EN-US style='mso-hansi-font-family:"Times New Roman";mso-bidi-font-family:
+"Times New Roman"'>http://eprint.iacr.org/2005/102</span></span></a>, v češtině
+&quot; Nalézání kolizí MD5 na notebooku pomocí mnohonásobných modifikací zprávy&quot;,
+<a href="http://cryptography.hyperlink.cz/md5/MD5_kolize.pdf" target="_blank"><span
+style="mso-spacerun:
+yes"> </span>http://cryptography.hyperlink.cz/md5/Vlastimil_Klima_MD5_kolize.pdf<span
+style='color:windowtext;text-decoration:none;text-underline:none'> </span></a>.<o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;mso-bidi-font-size:12.0pt'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;mso-bidi-font-size:12.0pt'>[VK2005c]
+</span><span style='font-size:10.0pt'>Vlastimil Klíma: </span><span
+style='font-size:10.0pt;mso-bidi-font-size:12.0pt'>Hašovací funkce, principy,
+příklady a kolize, přednáška na semináři Cryptofest, <a
+href="http://www.cryptofest.cz/">http://www.cryptofest.cz/</a>, Praha, 19.3.
+2005, on line na <a
+href="http://cryptography.hyperlink.cz/2005/cryptofest_2005.htm"><span
+style="mso-spacerun:
+yes"> </span>http://cryptography.hyperlink.cz/2005/cryptofest_2005.htm</a>.<o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;mso-bidi-font-size:12.0pt'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;mso-bidi-font-size:12.0pt'>[WFLY04]
+X. Wang, D. Feng, X. Lai, H. Yu, &quot;Collisions for Hash Functions MD4, MD5,
+HAVAL-128 and RIPEMD&quot;, rump session, CRYPTO 2004, <i>Cryptology ePrint
+Archive</i>, Report 2004/199, <a href="http://eprint.iacr.org/2004/199">http://eprint.iacr.org/2004/199</a><o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;mso-bidi-font-size:12.0pt'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;mso-bidi-font-size:12.0pt'>[WY2005]
+Xiaoyun Wang and Hongbo Yu: How to Break MD5 and Other Hash Functions, <a
+href="http://www.infosec.sdu.edu.cn/paper/md5-attack.pdf">http://www.infosec.sdu.edu.cn/paper/md5-attack.pdf</a>.<o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;mso-bidi-font-size:12.0pt'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;mso-bidi-font-size:12.0pt'>[WYY05]
+Wang<span style="mso-spacerun: yes">  </span>X., Yin L., Yu H.: Collision
+Search Attacks on SHA1, February 13, 2005, <a
+href="http://theory.lcs.mit.edu/~yiqun/shanote.pdf">http://theory.lcs.mit.edu/~yiqun/shanote.pdf</a><o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;mso-bidi-font-size:12.0pt'>&nbsp;<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:10.0pt;mso-bidi-font-size:
+12.0pt;mso-ansi-language:EN-US'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></p>
+
+<p class=MsoNormal><b><span lang=EN-US style='font-size:10.0pt;mso-bidi-font-size:
+12.0pt;mso-ansi-language:EN-US'>Další elektronicky dostupné dokumenty a
+populární články </span></b><b><span style='font-size:10.0pt;mso-bidi-font-size:
+12.0pt'>v češtině</span></b><b><span lang=EN-US style='font-size:10.0pt;
+mso-bidi-font-size:12.0pt;mso-ansi-language:EN-US'> :<o:p></o:p></span></b></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;mso-bidi-font-size:12.0pt'>&nbsp;<o:p></o:p></span></p>
+
+<p class=MsoNormal><b><span style='font-size:10.0pt;mso-bidi-font-size:12.0pt'>Přednášky
+na MFF UK (zejména první a třetí):</span></b><span style='font-size:10.0pt;
+mso-bidi-font-size:12.0pt'> <br>
+V. Klíma: Základy moderní kryptologie - Symetrická kryptografie III. (operační
+mody blokových šifer a <b>hašovací funkce</b>), MFF UK, prosloveno v rámci
+přednášek oboru &quot;Matematické metody informační bezpečnosti&quot;, <a
+href="http://adela.karlin.mff.cuni.cz/~tuma/nciphers.html">http://adela.karlin.mff.cuni.cz/~tuma/nciphers.html</a>.</span><span
+style='font-size:10.0pt;mso-bidi-font-size:12.0pt;mso-fareast-font-family:"Arial Unicode MS"'><o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;mso-bidi-font-size:9.5pt;
+color:black'>&nbsp;<o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;mso-bidi-font-size:9.5pt;
+color:black'>V. Klíma: Základy moderní kryptologie - Symetrická kryptografie
+II. (symetrická kryptografie, proudové a blokové šifry, DES, EAS), MFF UK,
+prosloveno v rámci přednášek oboru &quot;Matematické metody informační
+bezpečnosti&quot;</span><span style='font-size:10.0pt;mso-bidi-font-size:12.0pt'>,
+<a href="http://adela.karlin.mff.cuni.cz/~tuma/nciphers.html">http://adela.karlin.mff.cuni.cz/~tuma/nciphers.html</a>.</span><span
+style='font-size:10.0pt;mso-bidi-font-size:12.0pt;mso-fareast-font-family:"Arial Unicode MS"'><o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;mso-bidi-font-size:9.5pt;
+color:black'>&nbsp;<o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;mso-bidi-font-size:9.5pt;
+color:black'>V. Klíma: Základy moderní kryptologie - Symetrická kryptografie I.
+(nové myšlenky kryptografie, bezpečnostní cíle, kryptoanalýza, typy
+kryptografických systémů, kryptologie), MFF UK, prosloveno v rámci přednášek
+oboru &quot;Matematické metody informační bezpečnosti&quot;</span><span
+style='font-size:10.0pt;mso-bidi-font-size:12.0pt'>, <a
+href="http://adela.karlin.mff.cuni.cz/~tuma/nciphers.html">http://adela.karlin.mff.cuni.cz/~tuma/nciphers.html</a>.</span><span
+style='font-size:10.0pt;mso-bidi-font-size:9.5pt;color:black'><o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;mso-bidi-font-size:9.5pt;
+color:black'>&nbsp;<o:p></o:p></span></p>
+
+<p class=MsoNormal><b><span style='font-size:10.0pt;mso-bidi-font-size:9.5pt;
+color:black'>Hašovací kód HMAC:</span></b><span style='font-size:10.0pt;
+mso-bidi-font-size:9.5pt;color:black'> <br>
+V. Klíma, T. Rosa: Kryptologie pro praxi (8) – funkce HMAC, Sdělovací technika,
+2/2004, str. 17, <a
+href="http://cryptography.hyperlink.cz/2004/st_2004_02_17_17.pdf"><span
+style='mso-bidi-font-size:12.0pt'>http://cryptography.hyperlink.cz/2004/st_2004_02_17_17.pdf</span></a>.<o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;mso-bidi-font-size:9.5pt;
+color:black'>&nbsp;<o:p></o:p></span></p>
+
+<p class=MsoNormal><b><span style='font-size:10.0pt;mso-bidi-font-size:9.5pt;
+color:black'>Úvod k hašovacím funkcím a popis perspektivní SHA-1 (to bylo....):
+<br>
+</span></b><span style='font-size:10.0pt;mso-bidi-font-size:9.5pt;color:black'>V.Klíma:
+Počítačová bezpečnost (Hašovací funkce a kódy): Výživná haše, Chip, březen
+1999, str. 40 - 43, <a
+href="http://cryptography.hyperlink.cz/1999/chip-1999-03-40-43.pdf"><span
+style='mso-bidi-font-size:12.0pt'>http://cryptography.hyperlink.cz/1999/chip-1999-03-40-43.pdf</span></a>.<o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;mso-bidi-font-size:9.5pt;
+color:black'>&nbsp;<o:p></o:p></span></p>
+
+<p class=MsoNormal><b><span style='font-size:10.0pt;mso-bidi-font-size:9.5pt;
+color:black'>Hašovací funkce MD, RIPEMD a HMAC, kompresní funkce a kolize
+hašovacích funkcí:</span></b><span style='font-size:10.0pt;mso-bidi-font-size:
+9.5pt;color:black'> <br>
+V.Klíma: Počítačová bezpečnost (Hašovací funkce a kódy): Jak se melou data,
+Chip, duben 1999, str. 44 - 46, <a
+href="http://cryptography.hyperlink.cz/1999/chip-1999-04-44-46.pdf"><span
+style='mso-bidi-font-size:12.0pt'>http://cryptography.hyperlink.cz/1999/chip-1999-04-44-46.pdf</span></a>.<o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;mso-bidi-font-size:9.5pt;
+color:black'>&nbsp;<o:p></o:p></span></p>
+
+<p class=MsoNormal><b><span style='font-size:10.0pt;mso-bidi-font-size:9.5pt;
+color:black'>Nové hašovací funkce SHA-256, SHA-384 a SHA-512:</span></b><span
+style='font-size:10.0pt;mso-bidi-font-size:9.5pt;color:black'> <br>
+V.Klíma: Jednoznačné otisky dat, Chip, srpen 2001, str. 138 - 139, <a
+href="http://cryptography.hyperlink.cz/2001/chip-2001-08-138-139.pdf"><span
+style='mso-bidi-font-size:12.0pt'>http://cryptography.hyperlink.cz/2001/chip-2001-08-138-139.pdf</span></a>.<o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;mso-bidi-font-size:12.0pt'>&nbsp;<o:p></o:p></span></p>
+
+<p class=MsoNormal><b><span style='font-size:10.0pt;mso-bidi-font-size:8.5pt'>Ilustrovaný
+úvod do hašovacích funkcí</span></b><span style='font-size:10.0pt;mso-bidi-font-size:
+8.5pt'>, velmi pěkné - <a
+href="http://www.unixwiz.net/techtips/iguide-crypto-hashes.html"><span
+style='mso-bidi-font-size:12.0pt'>http://www.unixwiz.net/techtips/iguide-crypto-hashes.html</span></a><o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;mso-bidi-font-size:8.5pt'>&nbsp;<o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;mso-bidi-font-size:12.0pt'>Linky
+od kolegy <a href="http://crypto.hyperlink.cz/">Rosy</a>: <o:p></o:p></span></p>
+
+<p class=MsoNormal><b><span style='font-size:10.0pt;mso-bidi-font-size:12.0pt'>O
+hledání kolizí MD5 hrubou silou (aneb proč se mj. už MD5 neměla řadu let
+používat):<o:p></o:p></span></b></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;mso-bidi-font-size:12.0pt'>T.
+Rosa: <a
+href="ftp://ftp.decros.cz/pub/Archiv/Publications/2001/chip-2001-08-131-133.pdf">Podpis
+k narozeninám</a>, Chip, srpen 2001, str. 131 – 133.<o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;mso-bidi-font-size:12.0pt'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></p>
+
+<p class=MsoNormal><b><span style='font-size:10.0pt;mso-bidi-font-size:12.0pt'>Projekt
+MD5CRK:<o:p></o:p></span></b></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;mso-bidi-font-size:12.0pt'>Domovská
+stránka: <a href="http://www.md5crk.com/">http://www.md5crk.com/</a><o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;mso-bidi-font-size:12.0pt'>Cílem
+bylo najít kolizi MD5 hrubou silou a přesvědčit tak architekty, aby od ní
+konečně ustoupili. Po uveřejnění příspěvku Wangové byl projekt zastaven.<o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;mso-bidi-font-size:12.0pt'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></p>
+
+<p class=MsoNormal><b><span style='font-size:10.0pt;mso-bidi-font-size:12.0pt'>Související
+obecné články o podpisových schématech:<o:p></o:p></span></b></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;mso-bidi-font-size:12.0pt'>T.
+Rosa: <a
+href="ftp://ftp.decros.cz/pub/Archiv/Publications/2000/chip-2000-12-172-176.pdf">Podpis
+pro pokročilé (2)</a>, Chip, prosinec 2000, str. 172 – 176.<o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;mso-bidi-font-size:12.0pt'>T.
+Rosa: <a
+href="ftp://ftp.decros.cz/pub/Archiv/Publications/2000/chip-2000-11-digipodpis.pdf">Podpis
+pro pokročilé (1)</a>, Chip, listopad 2000, str. 174-178.<o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;mso-bidi-font-size:12.0pt'>T.
+Rosa: <a
+href="ftp://ftp.decros.cz/pub/Archiv/Publications/2001/chip-2001-01-134-137.pdf">Vybrané
+problémy podpisových schémat</a>, Chip, leden 2001, str. 134 – 137.</span><span
+style='font-size:10.0pt;mso-bidi-font-size:8.5pt'><o:p></o:p></span></p>
+
+</div>
+
+</body>
+
+</html>

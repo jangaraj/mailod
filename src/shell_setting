@@ -1,3 +1,0 @@
-#!/bin/bash
-#nastavenie pre shared library libdbi
-export LD_LIBRARY_PATH=/home/vlk/bin/lib:$LD_LIBRARY_PATH

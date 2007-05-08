@@ -133,18 +133,8 @@ int write_email(email *new_email)
 		logging(DEBUG,"Error, generate uniq name of email file\n");
 		return 1;
 	}
-	//unique filename template: time.pid.hostname
-	//t - 10 chars
-	//getpid - 5 chars
-	//hostname MAXHOSTNAMELEN chars
-	//otvorenie suboru
-	//TODO zamykanie suboru - musi byt? link()
-	
 	//backup umask setting
 	umask_bak = umask(0);
-	//set umask
-	//umask(S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IRUSR);
-	//umask(S_IRUSR | S_IWUSR );
 	if((fw = open(new_email->filepath,O_WRONLY|O_CREAT|O_EXCL, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH))==-1) {
 		logging(DEBUG,"Error opening email file in user's homedir\n");
 		return 1;

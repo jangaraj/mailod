@@ -49,40 +49,39 @@ int main(void)
 		exit (1);
 	}
 	start_log(conf_struct);
-	logging(DEBUG, "Nacital som uspesne konfiguraciu a zapol logovanie\n");
-	logging(DEBUG, "USER ID je %d\n",getuid());
+	logging(DEBUG, "Mailod successful started\n");
 	close(1);								//closing stdout for daemoize
 	if ((sockfd = socket(AF_INET, SOCK_STREAM, 0)) == -1) {
-		perror("socket");
-		exit(1);
+		logging(DEBUG,"Error, socket\n");
+		exit (1);
 	}
 	if (setsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR, &yes, sizeof(int)) == -1) {
-		perror("setsockopt");
-		exit(1);
+		logging(DEBUG,"Error, setsockopt\n");
+		exit (1);
 	}
 	my_addr.sin_family = AF_INET;		 	//host byte order
 	my_addr.sin_port = htons(conf_struct->port);	 	//short, network byte order
 	my_addr.sin_addr.s_addr = INADDR_ANY; 	//automatically fill with my IP
 	memset(&(my_addr.sin_zero), '\0', 8); 	//zero the rest of the struct
 	if (bind(sockfd, (struct sockaddr *)&my_addr, sizeof(struct sockaddr)) == -1) {
-		perror("bind");
-		exit(1);
+		logging(DEBUG,"Error, bind\n");
+		exit (1);
 	}
 	if (listen(sockfd, conf_struct->backlog) == -1) {
-		perror("listen");
-		exit(1);
+		logging(DEBUG,"Error, listen");
+		exit (1);
 	}
 	sa.sa_handler = sigchld_handler; 		//reap all dead processes
 	sigemptyset(&sa.sa_mask);
 	sa.sa_flags = SA_RESTART;
 	if (sigaction(SIGCHLD, &sa, NULL) == -1) {
-		perror("sigaction");
-		exit(1);
+		logging(DEBUG,"Error, sigaction");
+		exit (1);
 	}
 	while(1) {  							//main accept() loop
 		sin_size = sizeof(struct sockaddr_in);
 		if ((new_fd = accept(sockfd, (struct sockaddr *)&their_addr, &sin_size)) == -1) {
-			perror("accept");
+			logging(DEBUG,"accept");
 			continue;
 		}
 		logging(DEBUG,"got connection from %s\n",inet_ntoa(their_addr.sin_addr));
@@ -116,6 +115,7 @@ int main(void)
 				else {
 					logging(DEBUG, "Linkujem podla ident emailu\n");
 					do {
+						new_email->done = 1;
 						if(link_email(new_email, ident_email)!=0) {
 							logging(DEBUG, "Error, linking email\n");
 							if(new_email->done == EMLINK) { 
@@ -131,7 +131,7 @@ int main(void)
 								break;
 							}
 						}
-					} while (new_email->done == EMLINK || new_email->done == EINVAL);  //if fail on max number hardlinks - next loop
+					} while (new_email->done == EMLINK || new_email->done == EINVAL );  //if fail on max number hardlinks - next loop
 
 					free((void *) ident_email);
 				}	

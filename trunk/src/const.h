@@ -4,7 +4,7 @@
  */
 
 #define PROG "mailod"							//name of program - for logging
-#define VERS "0.0.93"							//version of program
+#define VERS "0.1.3"							//version of program
 #define BUFFER_SIZE 1024						//size of reading( writing email buffer
 #define DIVIDER_HEAD_BODY "\n\n"				//divider email head and email body
 #define CONFIG_FILE "/etc/postfix/mailod.conf"	//name of config file
@@ -23,7 +23,6 @@
 #define INFO	 1
 #define RUN	 0
 #define PARSE_TO "\nTo: "						//parse string to determinate local user
-#define PARSE_MAILDIR "X-Mailod-dir"			//special email header - email saved in maildir/<value> of this <para>
 #define MAILDIR "/.maildir"						//name of maildir - depend on setting postfix
 #define CUR "cur"								//folder of readed emails
 #define NEW "/new"								//folder if new emails

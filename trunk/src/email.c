@@ -102,6 +102,30 @@ email *readmail(int input)
 	if((strstr(reading_email_to,"<"))!=NULL) {
 		reading_email_to++;
 	}
+	//hide private line in header
+	length_position = strlen(XORIGINAL);
+	if((position=(strstr(reading_email_head,XORIGINAL)))!=NULL) {
+		while(*(position+length_position) != '\n') {
+			*(position+length_position) = '-';
+			position++;
+		}
+	}
+	position = NULL;
+	length_position = strlen(DELIVERED);
+	if((position=(strstr(reading_email_head,DELIVERED)))!=NULL) {
+		while(*(position+length_position) != '\n') {
+			*(position+length_position) = '-';
+			position++;
+		}
+	}
+	position = NULL;
+	length_position = strlen(TO);
+	if((position=(strstr(reading_email_head,TO)))!=NULL) {
+		while(*(position+length_position) != '\n') {
+			*(position+length_position) = '-';
+			position++;
+		}
+	}
 	free((void *) reading_email_all);
 	read_email->head = reading_email_head;
 	read_email->body = reading_email_body;
@@ -125,9 +149,6 @@ int write_email(email *new_email)
 	int fw, i;
 	struct stat filestat;
 	mode_t umask_bak;
-//	acl_t acl;					/* ACL information */
-//	acl_entry_t entry_p;		/* ACL entry */	
-//	acl_permset_t permset;		/* Permissions */
 
 	if((new_email->filepath = make_filepath(new_email)) == NULL) {
 		logging(DEBUG,"Error, generate uniq name of email file\n");
@@ -164,36 +185,7 @@ int write_email(email *new_email)
 	//restore umask
 	umask(umask_bak);
 	new_email->inode = filestat.st_ino;
-	//setting acl
-/*	acl = acl_get_file(new_email->filepath,ACL_TYPE_ACCESS);
-	if(!acl) {
-		logging(DEBUG,"In file %s not found acl's\n");
-	}
-	if(acl_create_entry(&acl,&entry_p) == -1) {
-		logging(DEBUG,"Error, adding acl entry: %s\n",strerror(errno));
-	}
-	if(acl_get_permset(entry_p, &permset) == -1) {
-		logging(DEBUG,"Error, getting permset of acl: %s\n",strerror(errno));
-	}
-	if(acl_add_perm(permset, ACL_READ) == -1) {
-		logging(DEBUG,"Error, adding permset of acl: %s\n",strerror(errno));
-	}
-	if(acl_set_tag_type(entry_p, ACL_USER) == -1) {
-		logging(DEBUG,"Error, setting type of acl: %s\n",strerror(errno));
-	}
-	if(acl_set_qualifier(entry_p, &new_email->to_uid) == -1) {
-		logging(DEBUG,"Error, seting qualifier of acl: %s\n",strerror(errno));
-	}
-	if(acl_set_permset(entry_p, permset) == -1) {
-		logging(DEBUG,"Error, seting permset of acl: %s\n",strerror(errno));	
-	}
-	if (!acl_valid(acl)) {
-		logging(DEBUG,"Error, not valid acl\n");
-	}
-	if(acl_set_file(new_email->filepath,ACL_TYPE_ACCESS,acl) == -1) {
-		logging(DEBUG,"Error, set new acl for file %s\n",new_email->filepath);
-//		if(errno == EINVAL) new_email->done = 2;
-	} */
+
 	return 0;
 }
 

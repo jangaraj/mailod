@@ -29,3 +29,6 @@
 #define NEW "/new"								//folder if new emails
 #define INBOX "/.maildir/new/"					//for stat in write_email
 #define UID_DAEMON_USER	207						//uid for daemon user - depend on rights of maildir directory
+#define XORIGINAL "X-Original-To: "				//hidden line in header
+#define DELIVERED "Delivered-TO: "				//hidden line in header
+#define TO	"To: "								//hidden line in header

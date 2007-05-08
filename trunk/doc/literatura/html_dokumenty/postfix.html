@@ -1,0 +1,2877 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+  <HEAD>
+  <TITLE>Služby mailového servera</TITLE>
+    
+    <META NAME="Author" CONTENT="VIX">
+    <META http-equiv="Content-type" CONTENT="text/html; charset=iso-8859-2">
+    <META NAME="Generator" CONTENT="VIM">
+    <META NAME="Signature" CONTENT="Burning-Eye">
+    <LINK REL="Stylesheet" TYPE="text/css" HREF="prirucka.css">
+  </HEAD>
+  
+  <BODY BGCOLOR="#f0f0d0" TEXT="black" LINK="#0000f0" ALINK="#f00000"
+  VLINK="#000080">
+  <P ALIGN="right" style="font-weight: bold">Príručka systémového administrátora, <b>1.8.10</b></P>
+
+
+  
+  <A NAME="top"></A>
+  <H1 ALIGN="center">6. Služby mailového servera<img src="updatedx.gif" alt="[UPDATE]" border="0"></H1>
+  <P ALIGN="right"><SMALL>Posledná zmena: 29/1/2006</SMALL></P>
+<UL>
+<LI TYPE="disc"> <A HREF="#top">6. Služby mailového servera<img src="updatedx.gif" alt="[UPDATE]" border="0"></A> 
+ <UL>
+ <LI TYPE="disc"> <A HREF="#mail_source">6.1 Cesta mailu od odosielateľa k príjemcovi</A> 
+  <LI TYPE="disc"> <A HREF="#smtp_server">6.2 SMTP server "Postfix"</A>
+  <UL>
+  <LI TYPE="disc"> <A HREF="#smtp_basics">6.2.0 Základy SMTP protokolu</A> 
+   <LI TYPE="disc"> <A HREF="#postfix_intro">6.2.1 Filozofia servera "<code>Postfix</code>"</A>
+   <LI TYPE="disc"> <A HREF="#postfix_daemons">6.2.2 Obslužné démony</A>
+   <LI TYPE="disc"> <A HREF="#postfix_files">6.2.3 Adresáre a súbory</A>
+   <LI TYPE="disc"> <A HREF="#postfix_scripts">6.2.4 Obsluha Postfixu</A>
+   <UL>
+   <LI TYPE="disc"> <A HREF="#postfix_scripts_2">6.2.4.1 Štartovacie skripty</A> 
+    <LI TYPE="disc"> <A HREF="#postfix_databases">6.2.4.2 Vytváranie databáz pre Postfix</A>
+    </UL>
+    <LI TYPE="disc"> <A HREF="#postfix_config">6.2.5 Konfigurácia</A>
+   <UL>
+   <LI TYPE="disc"> <A HREF="#postfix_main">6.2.5.1 Syntax konfiguračného súboru "<code>/etc/postfix/main.cf</code>"</A> 
+    <LI TYPE="disc"> <A HREF="#postfix_main_checklist">6.2.5.2 Postup pri nastavovaní</A>
+    <UL>
+    <LI TYPE="disc"> <A HREF="#postfix_main_names">6.2.5.2.1 Základné nastavenia Vášho mailového servera</A> 
+     <LI TYPE="disc"> <A HREF="#postfix_main_domains">6.2.5.2.2 Ktoré domény rozpoznáva Váš mailový server?</A>
+     <LI TYPE="disc"> <A HREF="#postfix_main_transport_maps">6.2.5.2.3 Pre aké domény je Váš mailový server prostredníkom a preposiela ich na ďalšie mailové servery (napr. vo vnútornej sieti)?</A>
+     <LI TYPE="disc"> <A HREF="#postfix_main_smtp_relay">6.2.5.2.4 Ako odosiela Váš mailový server poštu? Smeruje ju na mailový server Vášho poskytovateľa, alebo ju odosiela sám?</A>
+     <LI TYPE="disc"> <A HREF="#postfix_main_smtp_clients">6.2.5.2.5 Aké počítače sa môžu pripájať na Váš mailový server a využívať službu SMTP?</A>
+     <LI TYPE="disc"> <A HREF="#postfix_aliases">6.2.5.2.6 Aliasy a virtuálne adresy (domény)</A>
+     <LI TYPE="disc"> <A HREF="#postfix_canonical">6.2.5.2.7 "Pekné adresy" v tvare Meno.Priezvisko</A>
+     <LI TYPE="disc"> <A HREF="#postfix_main_restrictions">6.2.5.2.8 Chcete nastaviť obmedzenia na príjem a posielanie pošty? Tieto Vám pomôžu
+      zbaviť sa časti SPAMu.</A>
+     <LI TYPE="disc"> <A HREF="#postfix_main_size_limits">6.2.5.2.9 Obmedzenia spracovania mailov (veľkosti, časy)</A>
+     <LI TYPE="disc"> <A HREF="#postfix_main_mda">6.2.5.2.10 Ako sa doručujú maily do používateľských schránok? (Umiestnenie, formát
+      a program, ktorý mail spracuje môžu byť rôzne.</A>
+     <LI TYPE="disc"> <A HREF="#postfix_main_virus_spam">6.2.5.2.11 Vyžadujete antivírovú a antispamovú kontrolu?</A>
+     <LI TYPE="disc"> <A HREF="#postfix_main_other">6.2.5.2.12 Ostatné direktívy v konfiguračnom súbore</A>
+     </UL>
+     <LI TYPE="disc"> <A HREF="#postfix_complete_example">6.2.5.3 Kompletný príklad konfiguračného súboru</A>
+    <LI TYPE="disc"> <A HREF="#postfix_queue">6.2.5.4 Nedoručené maily a riešenie problémov</A>
+    <LI TYPE="disc"> <A HREF="#postfix_body_checks">6.2.5.5 Jednoduchá "ochrana proti vírusom"</A>
+    <LI TYPE="disc"> <A HREF="#postfix_master">6.2.5.6 Konfiguračný súbor démonov</A>
+    <UL>
+    <LI TYPE="disc"> <A HREF="#postfix_chroot">6.2.5.6.1 Chroot pre "<code>postfix</code>"</A> 
+     </UL>
+     </UL>
+     </UL>
+     <LI TYPE="disc"> <A HREF="#spam_definition">6.3 SPAM - nevyžiadaná pošta</A>
+  <UL>
+  <LI TYPE="disc"> <A HREF="#spam_getting">6.3.1 Ako sa SPAM dostane do mailboxu?</A> 
+   <LI TYPE="disc"> <A HREF="#spam_detect">6.3.2 Detekcia a filtrovanie SPAMov</A>
+   <LI TYPE="disc"> <A HREF="#spamassassin_install">6.3.3 Inštalácia programu SpamAssassin</A>
+   <LI TYPE="disc"> <A HREF="#spamassassin_procmail">6.3.4 Prepojenie programu SpamAssassin s programom na doručovanie pošty</A>
+   <UL>
+   <LI TYPE="disc"> <A HREF="#spamassassin_procmail_example">6.3.4.1 SpamAssassin a Procmail</A> 
+    <LI TYPE="disc"> <A HREF="#spamassassin_maildrop_example">6.3.4.2 SpamAssassin a Maildrop</A>
+    </UL>
+    <LI TYPE="disc"> <A HREF="#spamassassin_optimize">6.3.5 Optimalizácia výkonu programu SpamAssassin</A>
+   <LI TYPE="disc"> <A HREF="#spamassassin_tweaking">6.3.6 Ladenie programu SpamAssassin</A>
+   <UL>
+   <LI TYPE="disc"> <A HREF="#spamassassin_tweaking_config">6.3.6.2 Konfiguračný súbor programu SpamAssassin</A> 
+    <LI TYPE="disc"> <A HREF="#spamassassin_tweaking_learning">6.3.6.3 Učenie sa na vzorkách</A>
+    </UL>
+    </UL>
+    <LI TYPE="disc"> <A HREF="#pop3imap">6.4 Služby na výber mailov (POP3, IMAP)</A>
+  <UL>
+  <LI TYPE="disc"> <A HREF="#pop3imap_tcpwrapped">6.4.1 Obmedzenie prístupu k službám POP3 a IMAP</A> 
+   <LI TYPE="disc"> <A HREF="#stunnel">6.4.2 Tunelovanie &amp; šifrovanie: stunnel</A>
+   <UL>
+   <LI TYPE="disc"> <A HREF="#stunnel_config">6.4.2.1 Konfigurácia</A> 
+    <UL>
+    <LI TYPE="disc"> <A HREF="#stunnel_config_standalone">6.4.2.1.1 Samostatne spúšťaný démon</A> 
+     <LI TYPE="disc"> <A HREF="#stunnel_conf_inetd">6.4.2.1.2 Spúšťanie "<code>stunnel</code>" z "<code>inetd</code>"</A>
+     </UL>
+     <LI TYPE="disc"> <A HREF="#stunnel_certificate">6.4.2.2 Vytvorenie certifikátu</A>
+    <LI TYPE="disc"> <A HREF="#stunnel_client_config">6.4.2.3 Konfigurácia klienta</A>
+    </UL>
+    <LI TYPE="disc"> <A HREF="#stunnel_combined">6.4.3 Kombinovaný prístup</A>
+   </UL>
+   </UL>
+   </UL>
+
+
+<a name="mail_source"></a>
+<h2>6.1 Cesta mailu od odosielateľa k príjemcovi</h2>
+
+<p align="justify">
+Keď sa mail vydá na svoju časovo ohraničenú púť, začína ako textový súbor,
+ktorý napíše odosielateľ vo svojom mailovom klientovi (<a
+    href="http://www.microsoft.com">Microsoft Outlook Express</a>, <a
+    href="http://www.microsoft.com">Microsoft Outlook</a>, <a
+    href="http://www.mozilla.org">Mozilla</a>, <a
+    href="http://www.ximian.com/products/evolution/">Evolution</a>, <a
+    href="http://www.mozilla.org/products/thunderbird/">Thunderbird</a>, <a
+    href="http://www.mutt.org">Mutt</a>, <a
+    href="http://www.washington.edu/pine/">Pine</a> a mnohé ďalšie). Povedzme,
+že mail, o ktorom hovoríme, je určený pre príjemcu
+"<code>pokus@example.com</code>". Mailový klient sa pripojí na mailový
+server odosielateľa pomocou protokolu SMTP (v nastavení klienta bude niečo ako "SMTP
+server" alebo "odchádzajúci server") a odovzdá mu mail. Keď ho SMTP server
+prevezme, úloha mailového klienta je skončená, aspoň pokiaľ ide o odoslanie
+pošty.
+
+<p align="justify">
+Mailový server odosielateľa spracuje mailovú správu: skontroluje IP adresu
+odosielateľa, aby sa presvedčil, že tento odosielateľ má právo využívať SMTP
+server na odosielanie pošty do Internetu (túto kontrolu môže vykonávať už
+počas prijímania mailu), skontroluje veľkosť, prípadne vykoná testovanie
+obsahu mailu na prítomnosť vírusov, nevyžiadanej reklamy a pod., a na základe
+adresy príjemcu zistí, akému poštovému serveru mail doručí. Tu môžu nastať tri
+prípady:</p>
+<ol>
+    <li> mail je určený príjemcovi priamo na tom istom serveri alebo príjemcovi,
+    ktorého doménu obsluhuje mailový server odosielateľa. Mail sa nebude preposielať do
+    Internetu, ale spracuje sa lokálne a uloží do mailboxu.
+    <li> mailový server odosielateľa zistí z DNS "MX" záznam pre adresu príjemcu (bez
+    mena používateľa a zavináča, teda "example.com") - "MX" záznam určuje meno
+    servera, ktorý prijíma poštu pre danú doménu. Ak "MX" záznam neexistuje,
+    pokúsi sa získať "A" záznam pre adresu príjemcu.
+    Skontaktuje sa s týmto serverom a odovzdá mu mail. 
+    <li> mailový server odosielateľa nedokáže zistiť, komu má doručiť mail (nenastal žiaden
+    z vyššie uvedených prípadov) a podľa toho, aká chyba nastala, sa pokúsi
+    o doručenie neskôr (dočasná chyba, napr. nedostatok voľného miesta na
+    disku alebo chyba pri kontaktovaní DNS servera), alebo vráti mail odosielateľovi
+    (permanentná chyba, napr. cieľový mailový server nepozná príjemcu alebo má
+    prekročenú kvótu).
+</ol>
+
+<pre>
++-------------------+  smtp   +--------------------------+
+| klientský program | ------&gt; | SMTP server odosielateľa | 
++-------------------+         +--------------------------+
+                                           |
+                                           |smtp
+                                           v
+                              +---------------------------+
+                              | ( SMTP servery na ceste ) |
+                              +---------------------------+
+                                           |
+                                           |smtp
+                       pop3                v
++-------------------+  imap   +---------------------------+
+| klientský program | &lt;-----  |   SMTP server prijemcu    |
++-------------------+         +---------------------------+
+</pre>
+
+<p align="justify">
+Po tom, ako sa mail dostane na mailový server príjemcu, nastáva posledná fáza
+prenosu pošty, a tou je výber pošty pomocou protokolov POP3 alebo IMAP.
+(Existuje aj možnosť priameho čítania mailu na serveri, to však využíva
+pomerne málo používateľov, pretože potrebuju shellovský prístup na server. Typické
+využitie je napr. na školských serveroch, nie však vo firmách ani
+u poskytovateľov Internetu).
+
+<A NAME="smtp_server"></A>
+<H2>6.2 SMTP server "Postfix"</H2>
+
+<P ALIGN="justify">
+Prvou zo služieb mailového servera, ktoré si opíšeme, bude SMTP (Simple Mail
+Transfer Protocol), čiže služba zasielania pošty. SMTP zabezpečuje doručenie
+mailu od okamihu, ako ho získa od klientského programu. Vo všeobecnosti možno
+povedať, že maily sú uchovávané v dočasných súboroch na disku, až kým ich SMTP
+server nezačne spracovávať. SMTP server sa pokúsi doručiť mail pripojením na
+ďalší (najčastejšie cieľový) mail server a ak sa mu to podarí, je všetko
+v poriadku. V opačnom prípade sa odosielateľovi mail vráti spolu s chybovým
+hlásením (najčastejšie kvôli neexistujúcemu adresátovi).
+</P>
+
+<a name="smtp_basics"></a>
+<H3>6.2.0 Základy SMTP protokolu</H3>
+<P ALIGN="justify">
+Pred tým, ako klient začne posielať mail povedzme na adresu "vix at vazka.sk",
+zistí si adresu mailového servera pre túto doménu:</P>
+
+<pre class="example">
+% host -t mx vazka.sk
+vazka.sk mail is handled by 10 twin.vazka.sk.
+</pre>
+
+<p align="justify">
+Teraz poznáme mailový server domény "vazka.sk". Na ten sa budeme pripájať.
+Nasleduje príklad celej SMTP relácie, neskôr si ju rozoberieme po jednotlivých
+príkazoch.</p>
+
+<p class="pozor" align="justify">
+<b>Upozornenie!</b> Keďže sa dnes veľmi množia SPAMy, nahradím v príklade
+v reálnych adresách všetky zavináče textom "at" a bodky v doménových menách "dot".
+</p>
+
+<pre class="example">
+[vix@hudson ~/web-data/sysadmin]$ telnet twin.vazka.sk 25
+Trying 195.20.166.130...
+Connected to twin.vazka.sk (195.20.166.130).
+Escape character is '^]'.
+220 twin.vazka.sk ESMTP Postfix (1.1.11)
+helo bgs.sk
+250 twin.vazka.sk
+mail from: noris at bgs dot sk
+250 Ok
+rcpt to: vix at vazka dot sk
+250 Ok
+data
+354 End data with &lt;CR&gt;&lt;LF&gt;.&lt;CR&gt;&lt;LF&gt;
+From: noris at bgs dot sk
+To: vix at vazka dot sk
+Subject: testovacia SMTP relacia
+ 
+Hello world!
+.
+250 Ok: queued as D6F621FB89
+quit
+221 Bye
+Connection closed by foreign host.
+</pre>
+
+<p align="justify">
+A teraz postupne, po jednotlivých krokoch.
+Klient sa pripojí na mailový server danej domény na port 25. To isté vieme
+simulovať klasickým príkazom <code><b>"telnet"</b></code>:</p>
+
+<pre class="example">
+[vix@hudson ~/web-data/sysadmin]$ telnet twin.vazka.sk 25
+Trying 195.20.166.130...
+Connected to twin.vazka.sk (195.20.166.130).
+Escape character is '^]'.
+</pre>
+
+<p align="justify">
+Mailový server povolil klientovi TCP spojenie...</p>
+
+<pre class="example">
+220 twin.vazka.sk ESMTP Postfix (1.1.11)
+</pre>
+
+<p align="justify">
+... a predstavil sa. (Všetky hlásenia SMTP servera sú označené chybovým kódom
+(v tomto prípade "220"), ktorý je na začiatku riadku. Tento kód je zaujímavý
+najmä pre skutočné mailové programy, pretože je štandardizovaný a nemenný, kým
+hlásenia rôznych mailových serverov sú samozrejme odlišné.) Teraz sa predstaví
+klient pomocou príkazu "HELO". Server odpovedá, že je všetko Ok.</p>
+
+<pre class="example">
+<b>helo bgs.sk</b>
+250 twin.vazka.sk
+</pre>
+
+<p align="justify">
+Klient zadá odosielateľa mailu príkazom "MAIL FROM". Server odpovedá, že je všetko
+Ok.</p>
+
+<pre class="example">
+<b>mail from: noris at bgs dot sk</b>
+250 Ok
+</pre>
+
+<p align="justify">
+Klient zadá príjemcu mailu príkazom "RCPT TO:". Server odpovedá, že je všetko Ok.</p>
+
+<pre class="example">
+<b>rcpt to: vix at vazka dot sk</b>
+250 Ok
+</pre>
+
+<p align="justify">
+Zadávame príkaz "DATA". Server prijal príkaz a vyzve klienta na zadanie samotného
+mailu - hlavičiek a tela. Mail sa ukončí zadaním znaku "." na samostatnom
+riadku.</p>
+
+<pre class="example">
+<b>data</b>
+354 End data with &lt;CR&gt;&lt;LF&gt;.&lt;CR&gt;&lt;LF&gt;
+
+From: noris at bgs dot sk
+To: vix at vazka dot sk
+Subject: testovacia SMTP relacia
+ 
+Hello world!
+.
+</pre>
+
+<p align="justify">
+Mail bol prijatý do frontu správ.</p>
+
+<pre class="example">
+250 Ok: queued as D6F621FB89
+</pre>
+
+<p align="justify">
+Klient ukončí reláciu so serverom:
+
+<pre class="example">
+quit
+</pre>
+
+<p align="justify">
+Server pozdraví a zatvorí spojenie.</p>
+
+<pre class="example">
+221 Bye
+Connection closed by foreign host.
+</pre>
+
+<P ALIGN="justify">
+Keďže sa snažíme o čo najlepšie zabezpečenie servera, opíšeme si nastavenie
+SMTP servera, ktorý je pokladaný za veľmi bezpečný. Navyše je aj dobre a ľahko
+konfigurovateľný a s jeho činnosťou som nadmieru spokojný už niekoľko rokov.
+Jeho meno je - "<code><a href="http://www.postfix.org/">Postfix</a></code>".
+
+<A NAME="postfix_intro"></A>
+<H3>6.2.1 Filozofia servera "<code>Postfix</code>"</H3>
+
+  <P ALIGN="justify">
+  Základnými princípmi mailového servera "<code>Postfix</code>" sú:
+  jednoduchosť, modulárnosť a bezpečnosť. Na rozdiel od niektorých iných systémov
+  (typický priklad: "<code>sendmail</code>"), ktoré fungujú ako jeden proces
+  obsluhúci požiadavky na posielanie i prijímanie mailov, sa skladá
+  z niekoľkých modulov, pričom každý robí jednu, presne špecifikovanú
+  činnosť. Pri takomto prístupe je zabezpečená prehľadnosť zdrojového kódu
+  jednotlivých procesov a aj zvýšená bezpečnosť, pretože chyba v jednom
+  module nemusí ovplyvniť ostatné, kým pri jednom monolitickom programe
+  môže fatálne následky spôsobiť jediná chyba. Nevýhodou monolitického
+  riešenia je aj to, že celý program beží s právami jedného používateľa
+  (root), hoci niektoré jeho časti to vôbec nevyžadujú.
+
+  <A NAME="postfix_daemons"></A>
+  <H3>6.2.2 Obslužné démony</H3>
+
+  <P ALIGN="justify">
+  "<code>Postfix</code>" je implementovaný ako jeden hlavný server (proces
+  "<code>master</code>"), ktorý spúšťa obslužné démony vykonávajúce špecifické
+  operácie podľa potreby. Tento prístup pripomína "<code><A
+  HREF="services.html#inetdvsstandalone">inetd</A></code>" a konfiguračný
+  súbor servera "<code>master</code>" nie náhodou tak trochu pripomína aj
+  "<code>inetd.conf</code>" :)
+
+  <P ALIGN="justify">
+  Jednotlivé služby sa spúšťajú ako samostatné procesy a zabezpečujú napr.
+  posielanie a prijímanie mailov z Internetu, doručovanie lokálnych mailov
+  atď. Počet procesov, ktoré daný typ požiadavky obsluhujú, je určený
+  konfiguráciou.
+
+  <p align="justify">
+  Stručný popis funkcie niektorých démonov (vyčerpávajúce informácie nájdete
+  v manuálových stránkach):</p>
+  
+  <ul>
+      <li> <b>smtpd:</b> počúva na porte a prijíma SMTP požiadavky. Všetky prijaté
+      správy sú presmerované na démona "cleanup"
+      <li> <b>pickup:</b> čaká na lokálne napísané maily a presmeruje
+      ich obsah na démona "cleanup"
+      <li> <b>cleanup:</b> spracúva prijatý mail (pridáva chýbajúce hlavičky a pod.),
+      vkladá ho do frontu prijatých
+      mailov a informuje démona "qmgr" o jeho príchode
+      <li> <b>qmgr:</b> čaká na prijaté maily a zabezpečuje ich doručenie. Spôsob
+      doručenia určí démon "trivial-rewrite"
+      <li> <b>trivial-rewrite:</b> prepisuje adresu do štandardizovanej formy. Démon
+      pripája meno domény k lokálnym mailom bez jej uvedenia a pod. Okrem toho
+      určuje, čo sa stane s mailom, ako a kam sa bude doručovať na základe
+      adresy
+      <li> <b>local:</b> doručuje mail do lokálnych schránok na serveri
+      <li> <b>smtp:</b> smtp klient Postfixu. Doručuje maily z mailového frontu, ktoré
+      sú určené pre iné mailové servery.
+  </ul>
+
+  <A NAME="postfix_files"></A>
+  <H3>6.2.3 Adresáre a súbory</H3>
+
+  <P ALIGN="justify">
+  Pri typickej inštalácii "<code>postfixu</code>" sa používajú tieto adresáre
+  a súbory (niektoré možno zmeniť v konfigurácii):
+
+  <UL>
+  <LI> <code>/etc/postfix</code>: adresár s konfiguračnými súbormi
+  <LI> <code>/etc/postfix/master.cf</code>: hlavný konfiguračný súbor služieb, nastavenia
+  jednotlivých služieb (napr. aj to, či bude daná služba bežať vo vyhradenom
+  adresári - <a href="#postfix_chroot">chroot</a>)
+  <LI> <code>/etc/postfix/main.cf</code>: hlavný konfiguračný súbor "<code>postfixu</code>"
+  s nastaveniami doručovania a odosielania pošty
+  <LI> <code>/etc/aliases</code>: súbor s mailovými aliasmi používateľov platnými pre
+  lokálny počítač
+  <LI> <code>/etc/postfix/*</code>: všetky ostatné súbory v tomto adresári sú tabuľky
+  "<code>postfixu</code>" v textovom a databázovom tvare (db, dbm)
+  <LI> <code>/var/spool/postfix/</code>: hlavný adresár s dátovými štruktúrami
+  "<code>postfixu</code>" počas jeho prevádzky. Sú tu uložené všetky práve
+  doručované, prijímané a nedoručiteľné maily. Tento adresár slúži ako
+  základný adresár pre jednotlivé služby - tie využívajú jeho podadresáre.
+  </UL>
+
+  <A NAME="postfix_scripts"></A>
+  <H3>6.2.4 Obsluha Postfixu</H3>
+
+  <P ALIGN="justify">
+  S Postfixom môžete vykonávať tieto bežné operácie:</P>
+  <UL>
+  <LI> Spustenie démona: "<b><code>/etc/init.d/postfix start</code></b>"
+  <LI> Zastavenie démona: "<b><code>/etc/init.d/postfix stop</code></b>"
+  <LI> Reštartovanie démona: "<b><code>/etc/init.d/postfix restart</code></b>"
+  <LI> Opätovné nahratie konfigurácie démona (po zmenách v konfigurácii):
+  "<b><code>/etc/init.d/postfix reload</code></b>"
+  <LI> Kontrola konfiguračných súborov: "<b><code>postfix check</code></b>"
+  <LI> (Pokus o) doručenie všetkých čakajúcich neodoslaných mailov (napríklad
+  po odstránení nejakej chyby na vašom serveri/sieti): "<b><code>postfix
+  flush</code></b>"
+  <LI> Aktualizácia aliasovej databázy ("<code>/etc/aliases</code>",
+  "<code>/etc/postfix/aliases.*</code>"): "<b><code>newaliases</code></b>"
+  <LI> Aktualizácia inej databázy ("<code>/etc/postfix/*</code>",
+  "<code>/etc/postfix/*.db</code>"): "<b><code>cd /etc/postfix ; postmap meno_suboru</code></b>"
+  <li> Výpis stavu mailového frontu: "<code><b>mailq</b></code>"
+  </UL>
+
+  <a name="postfix_scripts_2"></a>
+  <h4>6.2.4.1 Štartovacie skripty</h4>
+  <P ALIGN="justify">
+  Doteraz ste boli zvyknutí na "init" skripty nachádzajúce sa v adresári
+  "<code>/etc/init.d</code>", pomocou ktorých ste spúšťali a zastavovali jednotlivé démony.
+  "<code>postfix</code>" má takýto skript tiež, v skutočnosti však spúšťa program
+  "<code>postfix</code>", ktorý sám o sebe podporuje parametre "start", "stop", "reload"
+  a ďalšie. Na svoje si teda prídu aj tí, ktorí nepoužívajú štartovacie
+  skripty, napríklad používatelia distribúcie Slackware.
+
+  <P ALIGN="justify">
+  Štartovací skript "<code>/etc/init.d/postfix</code>" okrem samotného
+  spúšťania/zastavovania procesu "<code>master</code>" vykonáva aj ďalšie tzv.
+  "údržbárske" operácie, napríklad pri štarte "<code>postfixu</code>" sa aktualizujú
+  databázy vytvárané z konfiguračných súborov (typicky "<code>/etc/postfix/*.db</code>").
+
+  <a name="postfix_databases"></a>
+  <h4>6.2.4.2 Vytváranie databáz pre Postfix</h4>
+
+  <P ALIGN="justify">
+  Niektoré nastavenia Postfixu nenájdete v konfiguračnom súbore ale
+  v "databázach". Aby bolo jasné, tieto "databázy" v skutočnosti vznikajú
+  tiež z textových súborov, sú však uložené v binárnej forme, oddelene od
+  hlavného konfiguráku a ich formát je pre človeka nečitateľný. Postfix však
+  k údajom v týchto súboroch vie pristupovať rýchlejšie ako k textovým
+  súborom. V ďalšom texte si úvodzovky odpustím a aj keď tieto súbory nie sú
+  relačnými databázami, budem tieto súbory nazývať jednoducho databázy.
+
+  <P ALIGN="justify">
+  Databázy sa vytvárajú z textových súborov (tieto konfigurujete Vy) pomocou
+  príkazov:</P>
+  <ul>
+      <li> <code><b>newaliases</b></code> (špeciálne pre databázu aliasov)
+      <li> <code><b>postmap textovy_subor</b></code> (pre všetky ostatné databázy)
+  </ul>
+  
+  <P ALIGN="justify">
+  Vytvorená databáza má rovnaké meno ako originálny textový súbor a príponu
+  ".db" (ak ide o databázu typu "hash") resp. ".pag" a ".dir" (ak ide o databázu typu
+  "dbm").
+
+  <P ALIGN="justify">
+  Databázy <b>musíte vytvoriť</b> (vygenerovať) <b>po každej zmene</b> originálnych
+  textových súborov. Po vygenerovaní databázy treba aktualizovať konfiguráciu
+  Postfixu príkazom "<code><b>postfix reload</b></code>". (Môžete tiež pár
+  minút počkať, Postfix by si mal konfiguráciu aktualizovať sám.)
+
+  <p class="poznamka">
+  <b>Poznámka:</b> ak v konfigurácii Postfixu spomeniete databázové súbory,
+  musia tieto databázy existovať už pred spustením Postfixu. V opačnom prípade
+  pri prvom prístupe k nim dôjde k chybe a proces, ktorý s nimi potrebuje
+  pracovať, ukončí svoju činnosť s chybovým hlásením ("<code>bad command
+      startup -- throttling</code>"
+  - zaznamená sa do logu). Takéto chyby sa bez sledovania logov nesmierne
+    ťažko hľadajú, pretože po spustení Postfixu všetko vyzerá dobre - až do
+    prvého pokusu o prijatie alebo odoslanie mailu.
+  </p>
+  
+  <p class="poznamka">
+  <b>Poznámka:</b> v najjednoduchšej konfigurácii (a často aj pri tých náročnejších)
+  si vystačíte s databázou aliasov. Na druhej strane, v prípade, že budete
+  chcieť odmietať prijímanie mailov z určitých adries a pod., databázam sa
+  nevyhnete.
+
+  <A NAME="postfix_config"></A>
+  <H3>6.2.5 Konfigurácia</H3>
+
+  <P ALIGN="justify">
+  Server "<code>Postfix</code>" sa konfiguruje veľmi ľahko a v svižnom tempe.
+  Pokiaľ nepotrebujete nejaké špecialitky, v zásade stačí zmeniť niekoľko
+  parametrov a "<code>Postfix</code>" je pripravený. V tom spočíva hlavná
+  výhoda oproti "<code>sendmailu</code>", kde síce tiež postačí nájsť zopár
+  parametrov, ale budú sa Vám hľadať dosť ťažko.
+
+  <A NAME="postfix_main"></A>
+  <H4>6.2.5.1 Syntax konfiguračného súboru "<code>/etc/postfix/main.cf</code>"</H4>
+
+  <P ALIGN="justify">
+  Hlavný konfiguračný súbor s nastavením "<code>Postfixu</code>" obsahuje množstvo
+  direktív, z ktorých najdôležitejšie sú prednastavené autorom balíčka.
+  Jednotlivé direktívy su ľahko čitateľné pre správcu systému. Nasledujúce
+  príklady pochádzajú z mojej inštalácie "<code>postfixu</code>" a obsahujú veľa zmien
+  oproti pôvodným nastaveniam. Ak budete chcieť experimentovať, v adresári
+  s dokumentáciou ("<code>/usr/doc/postfix/samples</code>", resp.
+  "<code>/usr/doc/postfix/examples</code>" nájdete mnoho príkladov, z ktorých
+  som čerpal aj ja. Súbory sú komentované a ak sa vám z nich niečo zapáči,
+  môžete nastavenie použiť v hlavnom konfiguračnom súbore.
+
+  <P ALIGN="justify">
+  Pri písaní direktív majte na pamäti:</P>
+  <OL>
+  <LI> direktíva má tvar "<code>parameter = hodnota</code>".
+  <li> ak je hodnotou zoznam, položky sa oddeľujú čiarkou alebo medzerou.
+  <LI> riadky začínajúce medzerami znamenajú, že sú pokračovaním
+  predchádzajúceho riadku. Takto môžete prehľadne zapísať dlhé riadky, typicky
+  s viacerými položkami zoznamu.
+  <LI> hodnoty niektorých direktív môžu obsahovať referenciu na iné premenné pomocou
+  <code>$premenná</code> - v takom prípade sa namiesto $premenná použije jej
+  hodnota.
+  <LI> hodnotou premennej môže byť meno súboru (absolútna cesta) v tvare
+  "<code>parameter = /cesta/k/suboru</code>", v ktorom sa nachádzajú
+  požadované údaje (na každom riadku jeden). To sa hodí napríklad vtedy, ak
+  chcete niektoré údaje pre "<code>postfix</code>" generovať napríklad pomocou
+  iných programov.
+  <LI> hodnotou premennej môže byť databáza (absolútna cesta) v tvare
+  "<code>parameter = typdb:/cesta/k/databaze</code>", v ktorej sa nachádzajú
+  požadované údaje (na každom riadku kľúč a hodnota oddelené medzerami alebo
+  tabulátormi. Ak sa nájde kľúč, vráti sa hodnota). Typ databázy je najčastejšie "hash" alebo "dbm". Táto databáza
+  je uchovaná v textovej aj binárnej forme, Postfix používa binárnu formu.
+  <LI> hodnotou premennej môže byť súbor s regulárnymi výrazmi (absolútna
+  cesta) v tvare "<code>parameter = typrv:/cesta/k/suboru</code>", v ktorom sa
+  nachádzajú požadované údaje (na každom riadku výraz a výsledok oddelené
+  medzerami alebo tabulátormi. Ak sa nájde kľúč, vráti sa výsledok). Postfix
+  podporuje typy "regexp" a "pcre" (Perl compatible regular expressions
+  - Perlovské regulárne výrazy). Pre "pcre" potrebujete nainštalovať aj
+  balíček "<code>postfix-pcre</code>"
+  </OL>
+
+
+  <a name="postfix_main_checklist"></a>
+  <h4>6.2.5.2 Postup pri nastavovaní</h4>
+
+  <p align="justify">
+  Najprv si musíte zodpovedať na nasledujúce otázky:</p>
+
+  <a name="postfix_main_names"></a>
+  <h5>6.2.5.2.1 Základné nastavenia Vášho mailového servera</h5>
+
+  <p align="justify">
+  Nasledujúce nastavenia sú bezpodmienečne nutné pre beh Postfixu. Určujú
+  najmä adresy, meno servera, meno domény a podobné vecičky.
+  Venujte im, prosím, zvýšenú pozornosť. Sú to veci jednoduché, ale aj pri tých
+  sa dá urobiť kritická chyba (t.j. Postfix nebude fungovať ako má).</p>
+
+  <dl>
+      <dt> <b>myhostname</b> = server.example.com</dt>
+      <dd> určuje plné meno servera. Štandardne sa použije meno servera
+      získané z Vášho operačného systému (príkaz
+      <code><b>hostname</b></code>)</dd>
+      <dt> <b>mydomain</b> = example.com</dt>
+      <dd> určuje doménové meno servera. Štandardne je to hodnota premennej
+      <b>$myhostname</b> bez prvej zložky (mena serveru)</dd>
+      <dt> <b>myorigin</b> = $myhostname</dt>
+      <dd> určuje meno servera v odchádzajúcej pošte z tohto servera. Toto
+      meno sa pripája za meno používateľa, ak nebola v adrese odosielateľa
+      špecifikovaná doména. Štandardne je to hodnota premennej <b>$myhostname</b>.</dd>
+      <dt> <b>inet_interfaces</b> = all</dt>
+      <dd> zoznam <i>adries</i> (nie eth0 a pod!) sieťových rozhraní, na
+      ktorých sa prijíma pošta. Štandardne: na všetkých.</dd>
+      <dt> <b>append_at_myorigin</b> = yes</dt>
+      <dd> nahradenie adresy typu "user" adresou "user@$mydomain". Toto upraví
+      adresy odosielateľov v mailoch odchádzajúcich z Vášho mailového servera
+      tak, aby sa na ne dalo odpovedať. Toto by však mali robiť mailové
+      programy, ktoré bežia na serveri (napr. ak posielate poštu priamo zo
+      servera).</dd>
+      <dt> <b>append_dot_mydomain</b> = yes</dt>
+      <dd> nahradenie adresy typu "user@server" adresou
+      "user@server.$mydomain". Toto by malo prepísať adresy odosielateľov
+      v mailoch prechádzajúcich z Vášho intranetu do Internetu tak, aby sa na
+      ne dalo odpovedať. Pridávanie domény by sa však malo robiť iba
+      v nevyhnutných prípadoch, každý mailový klient v sieti má mať v adresách
+      doménu už nastavenú!</dd>
+      <dt> <b>masquerade_domains</b> = $mydomain</dt>
+      <dd> zoznam domén, z ktorých má byť pri posielaní mailov cez Váš server
+      odstránená subdoménová časť z hlavičiek (napr. ak je <b>mydomain</b> =
+      "sub.example.com", vznikne "example.com"). Ak použijete tento parameter,
+      musíte samozrejme zabezpečiť príjem/preposlanie mailov aj pre
+      používateľov, ktorým ste takto skrátili adresy.</dd>
+      
+ </dl>
+
+ <a name="postfix_main_domains"></a>
+ <h5>6.2.5.2.2 Ktoré domény rozpoznáva Váš mailový server?</h5>
+
+ <p align="justify">
+ Nasledujúce nastavenia určujú domény, ktoré Postfix bude rozpoznávať pri
+ prijímaní a relayovaní pošty.</p>
+ 
+ <dl>
+     <dt> <b>mydestination</b> = $myhostname, $mydomain, mail.$mydomain, localhost</dt>
+     <dd> doménové adresy, ktoré Postfix považuje za lokálne a pre ktoré
+     prijíma poštu. Ak nesprávne nastavíte túto premennú, Váš mailový server
+     nebude prijímať poštu.</dd>
+     <dt> <b>relay_domains</b> = $mydestination</dt>
+     <dd> doménové adresy, pre ktoré Postfix umožňuje relay (príjem pošty na
+     ďalšie spracovanie, okrem príjmu na lokálny server napr. preposielanie
+     pošty určenej serveru, pre ktorý je Postfix záložným serverom a pod.).
+     Štandardná hodnota tejto premennej je rovnaká ako
+     <b>mydestination</b>.</dd>
+     <dd> Pravidlá relayu v Postfixe:
+     <ol>
+         <li> Postfix povoľuje relay pre klientov, ktorých IP adresa vyhovuje <b>$mynetworks</b>
+         <li> Postfix povoľuje relay pre domény z premennej <b>$relay_domains</b>
+         <li> Postfix povoľuje posielať maily pre všetkých ostatných klientov
+         NA adresy uvedené v $relay_domains a ich subdomény
+         <li> Postfix prijíma maily pre adresy, ktoré vyhovujú premennej <b>$inet_interfaces</b>
+         <li> Postfix prijíma maily pre adresy v <b>$mydestination</b>
+         <li> Postfix prijíma maily pre adresy uvedené v <b>$virtual_maps</b>
+     </ol>
+
+     <p align="justify">Inými slovami: relay je povolený iba v prípade, že je
+     <i>odosielateľ alebo príjemca lokálnym používateľom</i> (definuje
+     premenná <b>$mynetworks</b>).</p>
+
+     <b>Poznámka:</b> ak máte problém s prijímanim pošty pre Vašu doménu,
+     pravdepodobne máte nesprávne nastavenú premennú <b>relay_domains</b> alebo
+     <b>mydestination</b>.</dd>
+ </dl>
+
+ <a name="postfix_main_transport_maps"></a>
+ <h5>6.2.5.2.3 Pre aké domény je Váš mailový server prostredníkom a preposiela ich na ďalšie mailové servery (napr. vo vnútornej sieti)?</h5>
+      
+      <dl>
+          <dt> <b>transport_maps</b> = hash:/etc/postfix/transport</dt>
+          <dd> určenie databázy s popisom transportných máp
+      </dl>
+      
+<pre class="example">
+/etc/postfix/main.cf:
+mydestination = mail.example2.com, mail.example3.com
+relay_domains = example2.com, example3.com
+
+/etc/postfix/transport:
+example2.com      smtp:[10.0.0.1]
+.example3.com     smtp:[192.168.0.1]
+
+postmap /etc/postfix/transport
+postfix reload
+</pre>
+
+      <p align="justify">
+      Tento príklad bude smerovať všetku poštu pre <b>doménu</b>
+      "<code>example2.com</code>" na ďalší mailový server s adresou "10.0.0.1"
+      (hranaté zátvorky zabránia zisťovaniu MX záznamov a musia byť použité,
+      ak uvádzate IP adresu.) a všetku poštu pre <b>doménu a subdomény</b>
+      "<code>example3.com</code>" na ďalší mailový server s adresou
+      "192.168.0.1". Uvedené domény <b>musia</b> byť zahrnuté v premennej
+      <b>relay_domains</b> a zároveň nesmú byť v <b>mydestination</b> - ak by
+      tam boli, bude ich zachytávať Postfix a <b>nebude ich preposielať
+          na uvedené servery napriek nastaveniu transportnej mapy</b>.</p>
+
+      <p align="justify">
+      Po vytvorení mapy nezabudnite vytvoriť jej databázovú formu
+      ("<code><b>postmap /etc/postfix/transport</b></code>") a reloadnúť
+      Postfix.</p>
+
+      <a name="postfix_main_smtp_relay"></a>
+      <h5>6.2.5.2.4 Ako odosiela Váš mailový server poštu? Smeruje ju na mailový server Vášho poskytovateľa, alebo ju odosiela sám?</h5>
+
+      <p align="justify">
+      V niektorých situáciách (a sieťach) je vhodné alebo potrebné, aby
+      Postfix pri odosielaní mailov do Internetu komunikoval iba s jediným
+      mailovým sevrerom - nadradeným serverom - napr. poskytovateľa Internetu.
+      Výhodou je, že možno upraviť nastavenia firewallu, pretože odchádzajúce
+      SMTP spojenie pôjde iba na jeden server, a tiež nie je potrebné
+      prevádzkovať na Vašom serveri DNS (stačí mať IP adresu nadradeného
+      servera). Nevýhodou je samozrejme "úzke hrdlo" komunikácie - ak zlyhá
+      spojenie s nadradeným serverom, alebo ak je mimo prevádzky,
+      o odosielaní mailov sa Vám môže len snívať.</p>
+
+  <dl>
+      <dt> <b>relayhost</b> = upstream.example.com</dt>
+      <dd> adresa servera, ktorému Postfix odovzdáva všetku odchádzajúcu
+      poštu, ktorú nevie doručiť pomocou mapy "transport". Typicky môže ísť
+      o mailový server poskytovateľa Vášho pripojenia k Internetu. Ak tento
+      parameter chýba alebo je jeho hodnota prázdna (default), Postfix
+      doručuje odchádzajúcu poštu sám.</dd>
+  </dl>
+
+  <a name="postfix_main_smtp_clients"></a>
+  <h5>6.2.5.2.5 Aké počítače sa môžu pripájať na Váš mailový server a využívať službu SMTP?</h5>
+
+  <dl>
+      <dt> <b>mynetworks</b> = 10.0.0.0/24, 127.0.0.0/8</dt>
+      <dd> adresy klientských počítačov, ktoré môžu pomocou Postfixu odosielať
+      poštu (pomocou SMTP). Ak nesprávne nastavíte túto premennú, Postfix
+      neumožní klientom posielať poštu (odmietne pripojenie).
+  </dl>
+
+  <a name="postfix_aliases"></a>
+  <h5>6.2.5.2.6 Aliasy a virtuálne adresy (domény)</h5>
+
+  <p align="justify">
+  Aliasy su virtuálne mailové adresy na Vašom mailovom serveri. Pomocou
+  aliasovej mapy Postfix prijme poštu pre neexistujúceho používateľa a doručí
+  ju tomu používateľovi, pre ktorého je vytvorený tento alias. Aliasy sú
+  najčastejšie uložené v súbore "<code>/etc/aliases</code>". Ak si tento súbor
+  pozriete, všimnite si, že v každej inštalácii Linuxu už existuje niekoľko
+  aliasov. Ide vo všeobecnosti o presmerovanie pošty pre systémových
+  používateľov na adresu administrátora systému.</p>
+
+  <dl>
+      <dt> <b>alias_maps</b> = hash:/etc/aliases</dt>
+      <dt> <b>alias_maps</b> = dbm:/etc/aliases</dt>
+      <dd> určuje umiestnenie databázy aliasov. Databáza typu "hash" má
+      príponu ".db", databáza typu "dbm" má príponu ".pag" a ".dir"</dd>
+
+      <dt> <b>alias_database</b> = hash:/etc/aliases</dt>
+      <dt> <b>alias_database</b> = dbm:/etc/aliases</dt>
+      <dd> určuje umiestnenie databázy aliasov, ktorá sa vytvorí po spustení
+      programu "<code><b>newaliases</b></code>". Tento parameter je síce
+      uvedený oddelene od predchádzajúceho, pretože môže mať aj inú hodnotu
+      (niektoré typy databáz - nie "hash" ani "dbm" nemusia byť pod kontrolou
+      Postfixu). Databáza typu "hash" má príponu ".db", databáza typu "dbm" má
+      príponu ".pag" a ".dir"</dd>
+  </dl>
+
+  <p align="justify">
+  Konfiguračný súbor postfixu "<code>/etc/aliases</code>" obsahuje mailové
+  aliasy platné pre váš server. Umožňuje vám vytvoriť si ľubovoľný počet
+  "falošných" adries, ktoré budú doručované fyzickému
+  používateľovi/používateľom. Napríklad si môžete vytvoriť alias "webmaster",
+  pričom používateľ "webmaster" nebude existovať. Každý alias sa nachádza na
+  samostatnom riadku a za dvojbodkou nasleduje používateľ alebo zoznam
+  používateľov (oddelených čiarkou), komu sa má pošta doručovať.</P>
+
+  
+  <pre class="example">
+/etc/aliases:
+MAILER-DAEMON:  postmaster
+postmaster:     root
+abuse: root
+
+root: vix,karol
+webmaster: vix
+pokus: pokus@example.com
+
+<b>newaliases</b>
+</pre>
+
+  <P ALIGN="justify">
+  V predchádzajúcej ukážke som definoval alias "MAILER-DAEMON", ktorého pošta
+  sa doručuje používateľovi "postmaster", ktorého pošta sa doručuje
+  používateľovi "root", ktorého pošta sa však doručuje používateľom "vix"
+  a "karol". (Postfix si zistí konečného príjemcu a pošle to priamo jemu, bez
+  zložitej a nezmyselnej postupnosti, ktorú som načrtol.) <b>Definujeme aj alias
+  "abuse", ktorý sa používa pri komunikácii s administrátorom servera
+  v prípade, že nejaký náš používateľ porušuje sieťovú etiketu</b> (napr. posiela
+  z našej siete SPAM). Nasleduje spomínaný alias "webmaster", ktorého pošta sa
+  doručuje používateľovi "vix". Adresa pre používateľa "pokus" sa posiela
+  automaticky na adresu "pokus@example.com".
+  
+  <P ALIGN="justify">
+  Zdôrazňujem, že v predchádzajúcom príklade používatelia "abuse", "webmaster"
+  a "pokus" nemusia vôbec existovať - a ani by nemali, pretože by sa k svojim
+  mailom na serveri nikdy nedostali. Postfix by ich doručil na adresy uvedené
+  v aliasoch. Naproti tomu používatelia uvedení na pravej strane aliasov
+  ("vix" a "karol") musia existovať!
+  
+  <P ALIGN="justify">
+  Takýmto spôsobom si môžete nechať doručovať správcovské maily (a chybové
+  hlásenia programov zasielané rootovi) na bežnú adresu (takže nemusíte pod
+  rootom používať mailové programy); nemusíte vytvárať kontá typu "webmaster"
+  a môžete automaticky forwardovať maily pre už neexistujúcich používateľov na
+  iné adresy mimo vášho servera.
+  
+  <P ALIGN="justify">
+  V aliasoch môžete definovať aj iné špeciality, napríklad pri doručení mailu
+  na nejaký alias sa môže spustiť program, ktorý "niečo" urobí. Tieto detaily
+  však momentálne nepotrebujeme a tak ich odsunieme do kategórie "osobných
+  zvrhlostí".
+
+  <P ALIGN="justify">
+  Postfix tiež umožňuje prijímať maily pre tzv. "virtuálne domény". Ide
+  o domény, ktoré majú ako MX záznam v DNS uvedený Váš mailový server, ale
+  vyžadujete špeciálne spracovanie mailov pre tieto domény. Napríklad chcete,
+  aby v rámci virtuálnej domény existovali iba niekoľkí používatelia (nemusia
+  byť totožní s používateľmi na mailovom serveri), alebo chcete prijímať maily
+  pre celú doménu a uchovávať ich v jednej schránke (doménový kôš).</P>
+  
+  <dl>
+      <dt> <b>virtual_maps</b> = hash:/etc/postfix/virtual</dt>
+      <dd> určuje umiestnenie databázy so zoznamom virtuálnych domén</dd>
+  </dl>
+
+  <pre class="example">
+/etc/postfix/virtual:
+virtualexample.com              akykolvektext
+@virtualexample.com             somebody@example.com
+ 
+virtualexample2.com             akykolvektext
+someone@virtualexample2.com     someoneelse@example3.com
+
+virtualexample3.com             akykolvektext
+@virtualexample3.com            ja@virtualexample3.com
+
+<b>postmap /etc/postfix/virtual
+postfix reload</b>
+  </pre>
+
+  <p align="justify">
+  V tomto príklade sme zadefinovali tri virtuálne domény:</p>
+
+  <ol>
+      <li> Doména
+  "virtualexample.com" je určená na prijatie mailu pre akéhokoľvek používateľa na
+  "@virtualexample.com" (Postfix nebude vracať poštu pre neexistujúcich
+  používateľov) a všetky tieto maily budú doručené používateľovi
+  "somebody@example.com".
+  
+  <li> Doména "virtualexample2.com" umožňuje výhradne príjem na
+  adresu "someone@virtualexample2.com" a všetky takéto maily preposiela na adresu
+  "someoneelse@example3.com". Presne takto mám urobenú aj svoju doménu
+  "deja-vix.sk".
+
+  <li> Doména "virtualexample3.com" presmeruje všetku poštu pre akéhokoľvek
+  používateľa domény "@virtualexample3.com" na používateľa
+  "ja@virtualexample3.com". Z tejto adresy sa potom dá vyberať ako doménový
+  kôš pomocou protokolov POP3 a IMAP a triediť pre viacerých používateľov
+  napr. pomocou programu "<code><a
+          href="http://catb.org/~esr/fetchmail/">fetchmail</a></code>". </ol>
+  
+  <p class="poznamka"><b>Poznámka:</b> aby fungovali virtuálne
+  domény, musí byť Váš server uvedený ako "MX" záznam pre tieto domény.</p>
+
+  <p align="justify">Niekedy sa vyžaduje, aby Postfix prijímal poštu pre
+  doménu tak, že nezáleží na mene pred zavináčom (napr. "cokolvek@example.com"). Aj toto sa dá urobiť a to takto:
+  </p>
+  <dl>
+      <dt> <b>luser_relay</b> = username</dt>
+      <dt> <b>luser_relay</b> = username@example3.com</dt>
+      <dd> určuje meno používateľa alebo e-mailovú adresu, na ktorú sa
+      doručuje pošta pre neexistujúcich používateľov. To Vám umožní odchytávať
+      poštu napr. pre "cokolvek@example.com" (ak je "example.com" Vaša
+      doména), aj keď neexistuje používateľ ani alias "cokolvek".</dd>
+  </dl>
+
+  <p class="poznamka"><b>Poznámka:</b> aby presmerovanie fungovalo, musíte
+  vypnúť kontrolu adresy príjemcu pomocou parametra <code>local_recipient_maps
+      =</code></p>
+
+  <p class="pozor"><b>Upozornenie:</b> použitie tohto parametra rapídne zvýši
+  výskyt SPAMu v tejto spoločnej schránke.</p>
+  
+  <a name="postfix_canonical"></a>
+  <h5>6.2.5.2.7 "Pekné adresy" v tvare Meno.Priezvisko</h5>
+
+  <p align="justify">
+  Možno ste už videli mailové adresy v tvare "Meno.Priezvisko@example.com". Sú
+  veľmi príťažlivé, však? A určite ste zatúžili, aby aj vaši používatelia
+  mohli používať takéto jednoducho zapamätateľné adresy namiesto adries typu
+  "login@example.com". (Ak máte napr. prihlasovacie mená na serveri vytvorené
+  v tvare "prvé písmeno mena + maximálne 7 znakov priezviska", niekedy
+  vznikajú celkom exotické kombinácie :))</p>
+
+  <p align="justify">
+  Ak teda vaša túžba po pekných mailových adresách prerastie v túžbu po
+  realizácii v Postfixe, tu je postup, ako zabezpečiť prepísanie
+  používateľského mena "vix" na "ivan.noris" (a opačne) a "pokus" na
+  "peter.okus" (a opačne). Adresy sa prepíšu v hlavičkách pri príjme aj
+  odosielaní pošty, ak je doména zapísaná v $myorigin, $mydestination
+  alebo $inet_interfaces.
+</p>
+
+  <dl>
+      <dt> <b>canonical_maps</b> = hash:/etc/postfix/canonical</dt>
+      <dd> určuje umiestnenie databázy so zoznamom kanonických mien a ich
+      transformácií</dd>
+  </dl>
+
+  <pre class="example">
+/etc/postfix/canonical:
+vix         ivan.noris
+pokus       peter.okus
+
+/etc/aliases:
+ivan.noris:     vix
+peter.okus:     pokus
+
+<b>newaliases</b>
+<b>postmap /etc/postfix/canonical
+postfix reload</b>
+</pre>
+
+   <p class="poznamka">
+   <b>Poznámka</b> Aby to celé fungovalo, musia používatelia "vix" a "pokus" existovať
+  a aliasy "ivan.noris" a "peter.okus" musíte definovať v súbore
+  "<code>/etc/aliases</code>". Ak ich v aliasoch nedefinujete, odchádzajúca
+  pošta bude mať síce prepísané hlavičky, ale príjem na tieto adresy nebude
+  fungovať v prípade, že Postfix prijíma poštu len pre <b>lokálnych</b>
+  používateľov (parameter "local_recipient_maps").</p>
+
+  <p class="pozor">
+  <b>Upozornenie</b> Po zavedení mapovania "canonical" spôsobom, ako je tu
+  uvedený, sa budú adresy používateľov prepisovať pri prijímaní aj odosielaní
+  pošty. V tomto prípade to znamená, že používateľ "vix" už nedokáže odoslať
+  e-mail tak, aby obsahoval adresu "vix@example.com"; vždy bude prepísaná na
+  "ivan.noris@example.com". Tomu sa dá zabrániť použitím jednosmerných
+  prepisovacích máp. To bude predmetom ďalších aktualizácií tejto príručky.</p>
+ 
+  <a name="postfix_main_restrictions"></a>
+  <h5>6.2.5.2.8 Chcete nastaviť obmedzenia na príjem a posielanie pošty? Tieto Vám pomôžu
+      zbaviť sa časti SPAMu.</h5>
+
+  <dl>
+      <dt> <b>local_recipient_maps</b> = $alias_maps unix:passwd.byname</dt>
+      <dd> umožní odmietať prijímanie pošty pre používateľov, ktorí neexistujú
+      na Vašom serveri ešte počas prijímania pošty (pošta sa vôbec neprijme,
+      ani dočasne, a tak sa neskôr nebude generovať ďalší mail o nemožnosti
+      doručenia pošty). Táto direktíva určuje tabuľku používateľov
+      (štandardne je to samozrejme súbor "<code>/etc/passwd</code>").
+      <p class="pozor" align="justify">
+      <b>Pozor!</b> Ak použijete tento parameter a služba SMTP používa <A HREF="#postfix_chroot">chroot()</A>
+      nemusí mať prístup k skutočnému súboru "<code>/etc/passwd</code>" - treba
+      ho skopírovať do "<code>/var/spool/postfix/etc/passwd</code>" pri každej
+      zmene! Najelegantnejšie to (na Debiane) urobíte pomocou konfiguračných
+      súborov programov "<code>adduser</code>" ("<code>adduser.local</code>")
+      a "<code>deluser</code>" ("<code>deluser.local</code>").</p>
+</dd>
+
+     <dt> <b>disable_vrfy_command</b> = yes</dt>
+     <dd> zakáže príkaz SMTP protokolu "VRFY" na zisťovanie existencie
+     mailovej schránky. Klient (alebo hackerský/spamerský nástroj) na druhej
+     strane spojenia musí uskutočniť normálny pokus o odoslanie mailu.</dd>
+
+     <dt> <b>allow_untrusted_routing</b> = no</dt>
+     <dd> zakáže smerovanie pošty zadané odosielateľom (odosielateľ môže
+     určiť, cez aký server sa bude posielať pošta). Toto zastavuje niektoré
+     SPAMy.</dd>
+
+     <dt> <b>maps_rbl_domains</b> = relays.ordb.org, dnsbl.njabl.org, sbl-xbl.spamhaus.org</dt>
+     <dd> zoznam použitých RBL služieb. RBL (Real-Time Blackhole List)
+     umožňuje Postfixu (aj iným službám) v <i>reálnom čase</i> zistiť, či je
+     odosielateľ mailu uvedený v zozname známych šíriteľov SPAMu, alebo či
+     je jeho server "open relay" - teda server,
+     cez ktorý môže hocikto posielať poštu hocikam. (Spomeňte si, že na Vašom
+     Postfixe určujete, kto môže posielať poštu cez Váš server, pomocou parametra
+     "<b>mynetworks</b>" a že <i>takmer vždy</i> je to adresa Vašej lokálnej
+     siete.)<br>
+     Na základe RBL možno určité množstvo SPAMu zachytiť ešte
+     pred prijatím mailu.<br>
+     Uvedené nastavenie mi funguje už niekoľko rokov a je na voľné použitie.
+     Existujú aj ďalšie RBL mapy, ale s tými nemám skúsenosti. <a
+         href="http://www.declude.com/junkmail/support/ip4r.htm">Tu nájdete ich zoznam</a>.</dd>
+     
+     <dt> <b>smtpd_client_restrictions</b> = permit_mynetworks,
+     reject_maps_rbl</dt>
+     <dd> obmedzenia na adresy klientských počítačov, ktoré môžu využiť služby
+     Vášho SMTP servera:
+       <dl>
+           <dt> permit_mynetworks</dt>
+           <dd> povolí pripojenie z IP adries určených premennou <b>$mynetworks</b>.
+           Ak uvádzate toto pravidlo, uveďte ho ako prvé!</dd>
+
+           <dt> reject_unknown_client</dt>
+           <dd> zakáže pripojenie v prípade, že klient nemá v DNS reverzný
+           záznam. Toto je síce veľmi vhodné na odmietanie veľkého množstva
+           vírusov (často sa posielajú z počítačov, ktoré nemajú reverzný
+           záznam), ale zároveň spoľahlivo odmietnete aj množstvo regulérnej
+           pošty zo serverov, ktoré nemajú reverzný záznam nastavený alebo
+           ktoré ho nemajú nastavený správne. Používajte opatrne!</dd>
+
+           <dt> check_client_access typdb:databaza</dt>
+           <dt> check_client_access hash:/etc/postfix/client_access</dt>
+           <dd> skontroluje adresu klienta v databáze (súbore) daného typu
+           (najčastejšie "hash" alebo "dbm") a zachová sa podľa pravidiel
+           v nej. Najčastejšie pravidlo je "REJECT", teda odmietnutie pošty.
+           V novších verziách Postfixu môžete pridať aj text, ktorý sa zobrazí
+           odosielateľovi ako dôvod odmietnutia pošty. (Mne to teda na Debiane
+           Woody so štandardným Postfixom ešte nešlo, musel som použiť
+           konvenciu "550 Text") Ďalšie štandardné
+           pravidlo je "OK", teda prijatie pošty.
+<pre class="example">
+/etc/postfix/client_access:
+192.168.67.89    REJECT
+192.168.11.22    550 You are a spammer, go away!
+
+<b>postmap client_access
+postfix reload</b>
+</pre>
+           </dd>
+
+           <dt> reject_maps_rbl</dt>
+           <dd> zablokuje prístup v prípade, že je adresa pozitívne
+           identifikovaná zoznamom RBL.</dd>
+
+           <dt> reject</dt>
+           <dd> zakáže prístup. Používajte na konci zoznamu pravidiel.</dd>
+
+           <dt> permit</dt>
+           <dd> povolí prístup. Používajte na konci zoznamu pravidiel.</dd>
+       </dl>
+     </dd>
+
+     <dt> <b>smtpd_helo_required</b> = yes</dt>
+     <dd> klient musí použiť SMTP príkaz "HELO" (čiastočne zabráni príjmu
+     SPAMu, ale aj normálnych mailov od chybných mailových klientov, ktoré
+     príkaz "HELO" neodosielajú)</dd>
+
+     <dt> <b>smtpd_helo_restrictions</b> = permit_mynetworks, reject_invalid_hostname, reject_maps_rbl</dt>
+     <dd> obmedzenia na syntax SMTP príkazu "HELO". Umožňuje zablokovať
+     prijímanie mailu už počas prvej fázy SMTP spojenia, keď sa klient
+     "predstavuje" Vášmu Postfixu. Tieto obmedzenia umožňujú odstrániť časť
+     SPAMu, ale tiež normálnej pošty, ktorá je zasielaná neštandardným
+     spôsobom.
+     <dl>
+           <dt> permit_mynetworks</dt>
+           <dd> povolí pripojenie z IP adries určených premennou <b>$mynetworks</b>.
+           Ak uvádzate toto pravidlo, uveďte ho ako prvé!</dd>
+
+           <dt> reject_invalid_hostname</dt>
+           <dd> zablokuje pripojenie v prípade, že klient použil nesprávnu syntax príkazu HELO</dd>
+
+           <dt> reject_unknown_hostname</dt>
+           <dd> zablokuje pripojenie v prípade, že počítač uvedený ako
+           parameter príkazu "HELO" nemá v DNS záznam typu "A" alebo "MX". Toto
+           umožňuje veľmi dobre filtrovať SPAM, pretože pošta sa <i>má
+doručovať</i> iba z poštových serverov a tie majú mať jeden
+           z týchto záznamov. Bohužiaľ, existuje množstvo serverov,
+           ktoré majú tento záznam nesprávny. Používajte opatrne.</dd>
+
+           <dt> reject_non_fqdn_hostname</dt>
+           <dd> zablokuje pripojenie v prípade, že počítač uvedený ako
+           parameter príkazu "HELO" nie je uvedený v plnej doménovej forme
+           (iba "host" namiesto "host.example.com")</dd>
+
+           <dt> check_helo_access typdb:databaza</dt>
+           <dt> check_helo_access hash:/etc/postfix/helo_access</dt>
+           <dd> skontroluje adresu uvedenú ako parameter príkazu HELO
+           v databáze (súbore) daného typu (najčastejšie "hash" alebo "dbm")
+           a zachová sa podľa pravidiel v nej.
+           Najčastejšie pravidlo je "REJECT", teda odmietnutie pošty.
+           V novších verziách Postfixu môžete pridať aj text, ktorý sa zobrazí
+           odosielateľovi ako dôvod odmietnutia pošty. (Mne to teda na Debiane
+           Woody so štandardným Postfixom ešte nešlo, musel som použiť
+           konvenciu "550 Text") Ďalšie štandardné
+           pravidlo je "OK", teda prijatie pošty.
+<pre class="example">
+/etc/postfix/helo_access:
+192.168.67.89    REJECT
+192.168.11.22    550 You are a spammer, go away!
+<b>postmap helo_access
+postfix reload</b>
+</pre>
+           </dd>
+           
+           <dt> reject</dt>
+           <dd> zakáže prístup. Používajte na konci zoznamu pravidiel.</dd>
+
+           <dt> permit</dt>
+           <dd> povolí prístup. Používajte na konci zoznamu pravidiel.</dd>
+
+     </dl>
+     </dd>
+
+     <dt> <b>smtpd_sender_restrictions</b> = reject_unknown_sender_domain,
+     reject_maps_rbl, reject_non_fqdn_sender, check_sender_access hash:/etc/postfix/access</dt>
+     <dd> obmedzenia na obsah príkazu SMTP "MAIL FROM". V tomto príkaze uvádza
+     klient adresu odosielateľa pošty. Toto nastavenie môže zastaviť SPAM od
+     známych odosielateľov, pre kompletnejšiu ochranu však potrebujete
+     špecializovaný program, napr. "<a href="#spamassassin_install"><code>SpamAssassin</code></a>".
+     <dl>
+           <dt> permit_mynetworks</dt>
+           <dd> povolí pripojenie z IP adries určených premennou <b>$mynetworks</b>.
+           Ak uvádzate toto pravidlo, uveďte ho ako prvé!</dd>
+
+           <dt> reject_unknown_sender_domain</dt>
+           <dd> zakáže pripojenie v prípade, že doména uvedená v "MAIL FROM" nemá v DNS záznam typu "A" alebo "MX".
+           klient nemá v DNS reverzný záznam.</dd>
+
+           <dt> reject_maps_rbl</dt>
+           <dd> zablokuje prístup v prípade, že je adresa pozitívne
+           identifikovaná zoznamom RBL.</dd>
+
+           <dt>check_sender_access typdb:databaza</dt>
+           <dt> check_sender_access hash:/etc/postfix/access</dt>
+         <dd> skontroluje adresu uvedenú ako parameter príkazu "MAIL FROM"
+           v databáze (súbore) daného typu (najčastejšie "hash" alebo "dbm")
+           a zachová sa podľa pravidiel v nej.
+           Najčastejšie pravidlo je "REJECT", teda odmietnutie pošty.
+           V novších verziách Postfixu môžete pridať aj text, ktorý sa zobrazí
+           odosielateľovi ako dôvod odmietnutia pošty. (Mne to teda na Debiane
+           Woody so štandardným Postfixom ešte nešlo, musel som použiť
+           konvenciu "550 Text") Ďalšie štandardné
+           pravidlo je "OK", teda prijatie pošty.
+<pre class="example">
+/etc/postfix/_access:
+bnn@inmail.sk           550 You are a spammer, go away
+napalma@centrum.sk      550 You are a spammer, go away
+igi_2@centrum.sk        550 You are a spammer, go away
+igi2@szm.sk             550 You are a spammer, go away
+cddb@inmail.sk          550 You are a spammer, go away
+cddata@szm.com          550 You are a spammer, go away
+this.is.spam.tld        550 This domain sends us only spam, go away!
+<b>postmap /etc/postfix/access
+postfix reload</b>
+</pre>
+        </dd>
+        <dt> reject_non_fqdn_sender</dt>
+        <dt> zablokuje prístup v prípade, že mailová adresa odosielateľa
+        v "MAIL FROM" nie je uvedená v plnom doménovom tvare.
+        </dt>
+           <dt> reject</dt>
+           <dd> zakáže prístup. Používajte na konci zoznamu pravidiel.</dd>
+
+           <dt> permit</dt>
+           <dd> povolí prístup. Používajte na konci zoznamu pravidiel.</dd>
+
+    </dl>
+    </dd>
+
+     <dt> <b>smtpd_recipient_restrictions</b> = permit_mynetworks,
+     check_recipient_access pcre:/etc/postfix/recipient_checks,
+        reject_unauth_destination</dt>
+        <dd> obmedzenia na obsah príkazu SMTP "RCPT TO". V tomto príkaze
+        uvádza klient adresu príjemcu pošty.<br>
+        <p align="justify" class="pozor"><b>Pozor!</b> musíte uviesť aspoň jednu z hodnôt "reject",
+        "check_relay_domains" alebo "reject_unauth_destination", inak Postfix
+        nebude prijímať poštu!</p>
+        <dl>
+           <dt> permit_mynetworks</dt>
+           <dd> povolí pripojenie z IP adries určených premennou <b>$mynetworks</b>.
+           Ak uvádzate toto pravidlo, uveďte ho ako prvé!</dd>
+
+            <dt>check_recipient_access typdb:databaza</dt>
+            <dt>check_recipient_access hash:/etc/postfix/recipient_checks</dt>
+            <dd>Toto obmedzenie môžete s výhodou
+            použiť napríklad na limitovanie doručovania pošty z Internetu pre
+            niektorých používateľov. Napríklad systémové kontá umožňujú príjem
+            pošty, ktorá sa presmeruje na adresu správcu systému. Načo má však
+            používateľ "nobody" prijímať poštu z Internetu? Nemusí ju prijímať
+            vôbec!<br>
+            <p align="justify" class="pozor"><b>Pozor!</b> ak použijete môj
+            príklad, nepridávajte do zoznamu všetky systémové kontá alebo
+            aliasy. Napríklad používatelia "postmaster", "hostmaster" alebo
+            "abuse" musia existovať a prijímať poštu aj z Internetu!</p>
+<pre class="example">
+/etc/postfix/recipient_checks:
+/^bin\@.*$/ 550 This user will not receive mail from Internet!
+/^daemon\@.*$/ 550 This user will not receive mail from Internet!
+/^sys\@.*$/ 550 This user will not receive mail from Internet!
+/^games\@.*$/ 550 This user will not receive mail from Internet!
+/^man\@.*$/ 550 This user will not receive mail from Internet!
+/^lp\@.*$/ 550 This user will not receive mail from Internet!
+/^mail\@.*$/ 550 This user will not receive mail from Internet!
+/^news\@.*$/ 550 This user will not receive mail from Internet!
+/^uucp\@.*$/ 550 This user will not receive mail from Internet!
+/^proxy\@.*$/ 550 This user will not receive mail from Internet!
+/^www-data\@.*$/ 550 This user will not receive mail from Internet!
+/^nobody\@.*$/ 550 This user will not receive mail from Internet!
+
+<b>postmap /etc/postfix/recipient_checks
+postfix reload</b>
+</pre>
+          </dd>
+          <dt>permit_mx_backup</dt>
+          <dd> povolí prijať mail pre servery, ktoré uvádzajú Váš mailový
+          server ako mailový server (záznam typu "MX" v DNS). Tento parameter
+          je určený na to, aby mohol Váš Postfix fungovať ako záložný mailový
+          server pre tieto domény.
+          <dt>reject_unauth_destination</dt>
+          <dt>check_relay_domains</dt>
+          <dd> povolí prijať mail:
+          <ul>
+              <li> na adresy určené premennými $inet_interfaces,
+              $mydestination alebo $virtual_maps (toto je doručenie pošty NA
+              mailový server)
+              <li> z adries vyhovujúcich $relay_domains a ich subdomén
+              kamkoľvek (týmto klientom poskytujete službu zasielania pošty
+              cez Váš mailový server smerom von)
+              <li> z ostatných klientov na adresy uvedené v $relay_domains
+              a ich subdomény (z Internetu môžu klienti cez tento mailový
+              server posielať posťu iba smerom dnu)
+          </ul>
+          Uvedenie tohto parametra zároveň odmietne všetku ostatnú poštu.
+          Uvádzajte toto pravidlo ako posledné v zozname
+          "smtpd_recipient_restrictions"!<br>
+          <p class="pozor" align="justify"><b>Pozor!</b>
+          Podľa dokumentácie by ste v novších verziách Postfixu (po 20021202)
+          mali používať "reject_unauth_destination" namiesto
+          "check_relay_domains"!!!</p></dd>
+         </dl>
+    </dd>
+
+  </dl>
+  <a name="postfix_main_size_limits"></a>
+  <h5>6.2.5.2.9 Obmedzenia spracovania mailov (veľkosti, časy)</h5>
+
+<dl>
+    <dt> <b>bounce_size_limit</b> = 50000</dt>
+    <dd> maximálna veľkosť chybového mailu, ktorý sa vracia v prípade chyby.
+    Zmenšením veľkosti zamedzíte prípadnému kolovaniu vírusov medzi Vaším
+    a iným mailovým serverom.</dd>
+    <dt> <b>header_size_limit</b> = 102400</dt>
+    <dd> maximálna veľkosť všetkých hlavičiek mailu</dd>
+    <dt> <b>line_length_limit</b> = 2048</dt>
+    <dd> maximálna dĺžka riadku v maili</dd>
+    <dt> <b>message_size_limit</b> = 4096000</dt>
+    <dd> maximálna veľkosť spracovaného mailu (pri prijímani či odosielaní)
+    v bajtoch</dd>
+    <dd> <b>mailbox_size_limit</b> = 51200000</dd>
+    <dd> maximálna veľkosť poštovej schránky, s ktorou bude Postfix pracovať.
+    V skutočnosti je to maximálna veľkosť akéhokoľvek súboru pri zápise.
+    <p align="justify" class="pozor"><b>Pozor!</b> Tento parameter nesmie byť
+    menší ako hodnota <b>message_size_limit</b>!</p></dd>
+    <dt> <b>queue_minfree</b> = 0</dt>
+    <dd> minimálna veľkosť voľného miesta na disku. Ak klesne pod Vami zadanú
+    hodnotu, Postfix prestane prijímať poštu, aby ešte viac nevyčerpal voľné
+    miesto. To je veľmi vhodné v prípade, že máte malý disk. Hodnota "0" túto kontrolu vypína.</dd>
+    <dt> <b>delay_warning_time</b> = 4</dt>
+    <dd> čas, po ktorom príde odosielateľovi upozornenie o nedoručiteľnosti
+    mailu. Štandardne: 4 hodiny.</dd>
+</dl>
+
+  <a name="postfix_main_mda"></a>
+  <h5>6.2.5.2.10 Ako sa doručujú maily do používateľských schránok? (Umiestnenie, formát
+      a program, ktorý mail spracuje môžu byť rôzne.</h5>
+
+  <dl>
+      <dt> <b>mail_spool_directory</b> = /var/mail</dt>
+      <dd> adresár s "klasickými" mailovými schránkami používateľov (jedna
+      schránka je jeden súbor, pre každého používateľa jeden). Ak uvediete
+      tento parameter, zvyšné dva nepoužívajte!</dd>
+      <dt> <b>home_mailbox</b> = Mailbox</dt>
+      <dd> súbor "Mailbox" v domácom adresári používateľa</dd>
+      <dt> <b>home_mailbox</b> = Maildir/</dt>
+      <dd> adresár "Maildir" v domácom adresári používateľa. Bezpodmienečne
+      treba uviesť znak "/" na konci mena adresára!!! Tento spôsob uchovávania
+      mailov používajú najmä: poštový server "qmail", IMAP/POP server "<a
+          href="http://www.courier-mta.org">Courier IMAP</a>" a iné.</dd>
+      <dt> <b>mailbox_command</b> = /usr/bin/procmail -a $DOMAIN -d $LOGNAME</dt>
+      <dd> doručovanie pošty pomocou programu "<code>procmail</code>"</dd>
+      <dt> <b>mailbox_command</b> = /usr/bin/maildrop -d $USER</dt>
+      <dd> doručovanie pošty pomocou programu "<code>maildrop</code>". Tento
+      program je súčasťou balíka "<a
+          href="http://www.courier-mta.org">Courier"</a> a štandardne používa
+      formát "Maildir" spomenutý v predchádzajúcich parametroch.</dd>
+  </dl>
+
+  <a name="postfix_main_virus_spam"></a>
+  <h5>6.2.5.2.11 Vyžadujete antivírovú a antispamovú kontrolu?</h5>
+  
+  <p align="justify">
+  Pomocou Postfixu môžete implementovať jednoduchý filter obsahu správ, ktorý
+  Vám umožní filtrovať množstvo vírusov alebo SPAMu na základe rovnakého reťazca
+  v mailoch.</p>
+  
+  <p class="poznamka"><b>Poznámka:</b> i keď je táto možnosť
+  veľmi príjemná, Postfix sám o sebe <b>nie je antivírus ani SPAM filter</b>,
+  takže jej možnosti sú obmedzené. Pre skutočné antivírové riešenie budete
+  musieť prepojiť Postfix s niektorým z komerčných antivírusov (neviem zatiaľ
+  o žiadnom spoľahlivom free riešení). Ak potrebujete SPAMový filter, čítajte
+  <a href="#spamassassin_install">ďalej</a>.</p>
+  
+  <dl>
+      <dt> <b>header_checks</b> = pcre:/etc/postfix/body_checks</dt>
+      <dd> súbor s regulárnymi výrazmi (formát Perl), ktoré sa majú kontrolovať v hlavičkách
+      mailov za účelom odmietania mailov. Aby toto fungovalo, musíte mať
+      nainštalovaný aj balíček "<code>postfix-pcre</code>"!</dd>
+      <dt> <b>header_checks</b> = regexp:/etc/postfix/body_checks</dt>
+      <dd> súbor s regulárnymi výrazmi (formát regexp), ktoré sa majú kontrolovať v hlavičkách
+      <dt> <b>body_checks</b> = pcre:/etc/postfix/body_checks</dt>
+      <dd> súbor s regulárnymi výrazmi (formát Perl), ktoré sa majú kontrolovať v telách
+      mailov za účelom odmietania mailov. Aby to fungovalo, musíte mať
+      nainštalovaný aj balíček "<code>postfix-pcre</code>"</dd>
+      <dt> <b>body_checks</b> = regexp:/etc/postfix/body_checks</dt>
+      <dd> súbor s regulárnymi výrazmi (formát regexp), ktoré sa majú kontrolovať v telách
+  </dl>
+
+  <p align="justify">Bližšie informácie spolu s príkladom nájdete <a
+      href="#postfix_body_checks">neskôr</a>.</p>
+
+<p class="poznamka">
+<b>Poznámka:</b> nepreháňajte to s počtom filtrov. Veľké množstvo výrazov
+spôsobí spomalenie doručovania mailov a vyššiu spotrebu pamäte.</p>
+
+  <a name="postfix_main_other"></a>
+  <h5>6.2.5.2.12 Ostatné direktívy v konfiguračnom súbore</h5>
+
+  <p align="justify">
+  V konfiguračnom súbore "<code>/etc/postfix/main.cf</code>" sa samozrejme
+  nachádza alebo môže nachádzať oveľa väčšie množstvo parametrov (kompletný
+  zoznam aktuálnych nastavení spolu s defaultnými hodnotami získate zadaním
+  príkazu "<code><b>/usr/sbin/postconf -v</b></code>"). Pre väčšinu z nich
+  platí: ak neviete, načo daný parameter slúži, <b>nemeňte ho!</b>
+
+  <dl>
+      <dt> <b>queue_directory</b> = /var/spool/postfix</dt>
+      <dd> adresár, v ktorom sa uchovávajú maily čakajúce na spracovanie
+      (queue). Ak bežia démony Postfixu v <a
+          href="#postfix_chroot">chroote</a>, je tento adresár pre ne
+      koreňovým adresárom.</dd>
+
+      <dt> <b>command_directory</b> = /usr/sbin</dt>
+      <dd> umiestnenie programov dodávaných s Postfixom
+      ("<code>post*</code>")</dd>
+
+      <dt> <b>daemon_directory</b> = /usr/lib/postfix</dt>
+      <dt> <b>program_directory</b> = /usr/lib/postfix</dt>
+      <dd> adresár, v ktorých sa nachádzajú démony Postfixu</dd>
+
+      <dt> <b>mail_owner</b> = postfix</dt>
+      <dd> používateľ, pod ktorým beží väčšina procesov súvisiacich
+      s Postfixom a ktorý je vlastníkom čakajúcich mailov. Pri inštalácii
+      vytvorte na tento účel špeciálneho použivateľa; balíčkové distribúcie
+      vytvárajú používateľa "postfix".</dd>
+
+      <dt> <b>default_privs</b> = nobody</dt>
+      <dd> používateľ, ktorého práva sa štandardne použijú pri lokálnom
+      doručovaní mailov.
+      <p class="poznamka"><b>Poznámka:</b> Nepoužívajte
+      používateľa "postfix" ani "root".</p></dd>
+      
+      <dt> <b>smtpd_banner</b> = $myhostname ESMTP</dt>
+      <dt> <b>smtpd_banner</b> = $myhostname ESMTP $mail_name</dt>
+      <dt> <b>smtpd_banner</b> = $myhostname ESMTP $mail_name ($mail_version)</dt>
+      <dt> text, ktorým sa ohlási Postfix, keď sa k nemu pripojí klient. Možno
+      budete chcieť ukryť meno poštového programu a jeho verziu. (Pamätajte,
+      že k bezpečnosti to veľmi neprispeje.)</dt>
+
+      <dt> <b>maximal_queue_lifetime</b> = 5</dt>
+      <dd> maximálny čas, počas ktorého sa Postfix pokúša doručiť mail
+      (štandardná jednotka je deň (d), iné možnosti: hodiny (h), minúty (m),
+      sekundy (s), týždne (w); default: 5 dní)</dd>
+
+      <dt> <b>delay_warning_time</b> = 4</dt>
+      <dd> čas, po ktorom príde odosielateľovi varovanie o nedorušiteľnosti
+      mailu (default: 4 hodiny)</dd>
+
+      <dt> <b>queue_run_delay</b> = 1000s</dt>
+      <dd> interval na vyprázdňovanie mailového frontu (default: 1000 sekúnd)</dd>
+</dl>
+
+  <a name="postfix_complete_example"></a>
+  <h4>6.2.5.3 Kompletný príklad konfiguračného súboru</h4>
+
+<pre class="example">
+queue_directory = /var/spool/postfix
+command_directory = /usr/sbin
+daemon_directory = /usr/lib/postfix
+program_directory = /usr/lib/postfix
+mail_owner = postfix
+default_privs = nobody
+
+#myhostname = host.domain.name
+#myhostname = virtual.domain.name
+
+#mydomain = domain.name
+
+myorigin = $myhostname
+#myorigin = $mydomain
+
+inet_interfaces = all
+#inet_interfaces = $myhostname
+#inet_interfaces = $myhostname, localhost
+
+#mydestination = $myhostname, localhost.$mydomain
+#mydestination = $myhostname, localhost.$mydomain $mydomain
+
+mydestination = $myhostname, localhost.$mydomain,
+	$mydomain,
+	ns.$mydomain,
+	mail.$mydomain, www.$mydomain
+
+local_recipient_maps = $alias_maps unix:passwd.byname
+
+double_bounce_sender = double-bounce
+
+alias_maps  = hash:/etc/aliases
+alias_database = hash:/etc/aliases
+
+#home_mailbox = Mailbox
+#home_mailbox = Maildir/
+ 
+mail_spool_directory = /var/mail
+#mail_spool_directory = /var/spool/mail
+
+mailbox_command = /usr/bin/procmail -a $DOMAIN -d $LOGNAME
+
+#header_checks = pcre:/etc/postfix/filename
+#header_checks = regexp:/etc/postfix/filename
+
+header_checks = pcre:/etc/postfix/body_checks
+body_checks = pcre:/etc/postfix/body_checks
+
+relay_domains = $mydestination
+
+mynetworks = 10.0.0.0/24, 127.0.0.0/8
+
+smtpd_banner = $myhostname ESMTP $mail_name
+#smtpd_banner = $myhostname ESMTP $mail_name ($mail_version)
+#smtpd_banner = $myhostname ESMTP $mail_name ($mail_version) (Linux-Mandrake)
+
+local_destination_concurrency_limit = 2
+default_destination_concurrency_limit = 10
+
+debug_peer_level = 2
+
+debugger_command =
+	 PATH=/usr/bin:/usr/X11R6/bin
+         xxgdb $daemon_directory/$process_name $process_id &amp; sleep 5
+
+default_destination_recipient_limit = 25
+
+initial_destination_concurrency = 2
+
+maximal_backoff_time = 4000
+
+maximal_queue_lifetime = 5
+
+minimal_backoff_time = 1000
+
+queue_run_delay = 1000
+
+disable_vrfy_command = yes
+
+smtpd_etrn_restrictions =
+
+smtpd_recipient_limit = 1000
+
+smtpd_timeout = 300
+
+smtpd_error_sleep_time = 3
+
+smtpd_soft_error_limit = 10
+
+smtpd_hard_error_limit = 100
+
+#smtpd_client_restrictions = permit_mynetworks, reject_unknown_client
+#smtpd_client_restrictions = 
+smtpd_client_restrictions = permit_mynetworks, reject_maps_rbl
+
+smtpd_helo_required = yes
+
+# smtpd_helo_restrictions = 
+# smtpd_helo_restrictions = permit_mynetworks, reject_maps_rbl
+smtpd_helo_restrictions = permit_mynetworks, reject_invalid_hostname
+
+smtpd_sender_restrictions = reject_unknown_sender_domain,reject_maps_rbl,
+    reject_non_fqdn_sender, check_sender_access hash:/etc/postfix/access
+# smtpd_sender_restrictions = reject_unknown_sender_domain, hash:/etc/postfix/access
+# smtpd_sender_restrictions = 
+
+smtpd_recipient_restrictions = permit_mynetworks,
+    check_recipient_access pcre:/etc/postfix/recipient_checks,
+    reject_unauth_destination
+
+allow_untrusted_routing = no
+
+maps_rbl_domains = sbl.spamhaus.org, relays.ordb.org
+
+access_map_reject_code = 550
+
+invalid_hostname_reject_code = 501
+
+maps_rbl_reject_code = 550
+
+reject_code = 550
+
+relay_domains_reject_code = 550
+
+unknown_address_reject_code = 450
+
+unknown_client_reject_code = 450
+
+unknown_hostname_reject_code = 450
+
+bounce_size_limit = 50000
+
+command_time_limit = 1000
+
+default_process_limit = 20
+
+deliver_lock_attempts = 5
+
+deliver_lock_delay = 1
+
+duplicate_filter_limit = 1000
+
+fork_attempts = 5
+
+fork_delay = 1
+
+header_size_limit = 102400
+
+line_length_limit = 2048
+
+message_size_limit = 4096000
+
+mailbox_size_limit = 51200000
+
+qmgr_message_active_limit = 1000
+
+qmgr_message_recipient_limit = 1000
+
+queue_minfree = 0
+
+stale_lock_time = 500
+
+transport_retry_time = 60
+
+delay_warning_time = 4
+
+allow_percent_hack = yes
+
+append_at_myorigin = yes
+
+#append_dot_mydomain = no
+append_dot_mydomain = yes
+
+empty_address_recipient = MAILER-DAEMON
+
+masquerade_domains = $mydomain
+
+masquerade_exceptions =
+
+swap_bangpath = yes
+
+trigger_timeout = 10
+</pre>
+  
+  <A NAME="postfix_queue"></A>
+  <H4>6.2.5.4 Nedoručené maily a riešenie problémov</H4>
+
+  <P ALIGN="justify">
+  V prípade, že chcete zistiť, či na serveri "nevisia" vo fronte nejaké
+  (zatiaľ) nedoručené alebo nedoručiteľné maily, môžete použiť program
+  "<code><b>mailq</b></code>", ktorý zobrazí zoznam týchto mailov spolu
+  s identifikačnými reťazcami (napr. "D6F621FB89". Maily, ktoré sa Postfix práve
+  snaží doručiť, sú označené znakom "*".
+
+  <P ALIGN="justify">
+  V prípade, že sa Postfixu nepodarí doručiť mail a nejde o permanentnú chybu,
+  pokúsi sa o doručenie opäť o nejaký čas. Tento čas môžete nastaviť
+  parametrami "<b>delay_warning_time</b>", "<b>maximal_queue_lifetime</b>" a niekoľkými
+  ďalšími, menej používanými. V prípade, že ste odstránili nejakú chybu
+  a/alebo sa chcete pokúsiť o opätovné doručenie "visiacich" mailov ručne,
+  použite príkaz:</P>
+
+  <pre class="example"><b>
+  postfix flush
+  </b></pre>
+
+  <P ALIGN="justify">
+  Ak sa rozhodnete odstrániť niektorý nedoručiteľný mail zo záznamov Postfixu
+  skôr, ako to urobí sám po nastavenom čase, môžete použiť program:</P>
+
+  <pre class="example"><b>
+  postsuper -d cislo_ziskane_vypisom_mailq
+  </b></pre>
+
+  <P ALIGN="justify">
+  prípadne</P>
+
+  <pre class="example"><b>
+  postsuper -d -
+  </b></pre>
+
+  <P ALIGN="justify">
+  a zadávať identifikačné reťazce na samostatné riadky (CTRL+D pre koniec).
+  V nevyhnutnom prípade môžete použiť aj</P>
+
+  <pre class="example"><b>
+  postsuper -d ALL
+  </b></pre>
+
+  <P ALIGN="justify">
+  na vymazanie VŠETKÝCH nedoručených mailov vo fronte. Tento príkaz používajte
+  <i>veľmi</i> opatrne!!!
+
+  <P ALIGN="justify">
+  V prípade akýchkoľvek podozrení a problémov kontrolujte systémové logy.
+  Postfix loguje do súborov "<code>/var/log/mail.log</code>" (prípadne do
+  logov v adresári "<code>/var/log/mail</code>") a vie byť dostatočne ukecený,
+  aby vám pomohol nájsť problém.
+
+  <A NAME="postfix_body_checks"></A>
+  <H4>6.2.5.5 Jednoduchá "ochrana proti vírusom"</H4>
+
+  <P ALIGN="justify">
+  Pred nejakým časom som sa na Vazke rozhodol zabrániť masívnemu šíreniu
+  vírusov/červov skrytých v attachmentoch, ktoré sa v nemenovaných mailových
+  klientoch spúšťajú automaticky, alebo po otvorení attachmentu dôverčivým
+  používateľom. Nie všetky počítače totiž mali nainštalovaný antivírový
+  program a okrem toho som si chcel vyskúšať v "<code>postfixe</code>" niečo
+  nové. Podarilo sa - môj jednoduchý filter na attachmenty začal fungovať
+  okamžite - žiaden mail s attachmentmi s príponami ".pif", ".exe", ".lnk"
+  a pod. sa už cez "<code>postfix</code>" nedal poslať (ani z jednej strany).
+  Pre korektnosť uvádzam, že regulárne výrazy pre filter som objavil (po dlhom
+  hľadaní) na vyhľadávači <A HREF="http://www.google.com">Google</A>.
+
+  <P ALIGN="justify">
+  Riešenie je natoľko jednoduché, že ho teraz ponúkam vám. Nie je to
+  stopercentne účinný antivírus, to v nijakom prípade. Ale na červy a vírusy
+  šíriace sa mailom, ktoré sa objavili počas posledného roka to stačí. Ak
+  niekto bude namietať, že sa takýmto filtrom obmedzujú používatelia servera,
+  nech si vymyslí iné riešenie. Ja tvrdím, že nikto nepotrebuje posielať
+  spúšťateľné súbory mailom. Jedinou výnimkou by mohli byť samorozbaľovacie
+  archívy, tie sa však dajú premenovať. Skrátka, je to na vás.
+
+  <P ALIGN="justify">
+  Všetko, čo potrebujete, sú direktívy:</P>
+
+  <pre class="example">
+  header_checks = pcre:/etc/postfix/header_checks
+  body_checks = pcre:/etc/postfix/body_checks
+  </pre>
+
+  "<b>header_checks</b>" určuje výraz, ktorý sa má hľadať v hlavičke
+  mailu, "<b>body_checks</b>" určuje výraz, ktorý sa má hľadať v tele
+  mailu (túto direktívu podporujú len verzie "<code>postfixu</code>" 20000528
+  a vyššie, teda aj verzie 1.x a 2.x).
+  
+  <P ALIGN="justify">
+  Súbor "<code>/etc/postfix/body_checks</code>" obsahuje regulárne výrazy
+  (jeden na kažom riadku) v tvare:</P>
+
+  <pre>/regularny vyraz/ REJECT text</pre>
+
+  <P ALIGN="justify">
+  Text "text" sa vloží do chybového mailu, ktorý sa bude vracať
+  odosielateľovi. Prehľadávanie výrazov sa končí, ak sa nájde vyhovujúci výraz
+  alebo na konci súboru.
+
+  <P ALIGN="justify">
+  <b>Príklad:</b> ak by ste potrebovali odfiltrovať maily, ktoré obsahujú
+  text: "Re: Your password" v hlavičke, potrebovali by ste regulárny výraz,
+  ktorý by ste pridali do súboru "<code>/etc/postfix/header_checks</code>".
+
+  <pre class="example">
+  /^Subject:\s+Re: Your password/ REJECT Sorry, text in subject typical for Internet worm
+  </pre>
+
+  
+  <P ALIGN="justify">
+  Pre naše potreby sú súbory "<code>/etc/postfix/header_checks</code>"
+  a "<code>/etc/postfix/body_checks</code>" rovnaké (skopírujte obsah,
+  vytvorte si symlink alebo v oboch direktívach použite ten istý súbor
+  "<code>/etc/postfix/body_checks</code>") a obsahujú tieto výrazy (skopírujte
+  text <b>presne</b>, ide o tri dlhšie riadky alebo si ich <A
+    HREF="export/body_checks.txt">uložte ako súbor</A>):</P>
+
+  <pre class="example">
+/^begin \d\d\d .*\.(vbe|vbs|exe|com|jb|bat|pif|scr|lnk|cmd)/ REJECT Message content rejected; we do not accept executable attachments.
+/^Content-(Disposition|Type)\:.*name="?.*\.(vbe|vbs|exe|com|jb|bat|pif|scr|lnk|cmd)"?/ REJECT Message content rejected; we do not accept executable attachments.
+/^\s*(file)?name="?.*\.(vbe|vbs|exe|com|jb|bat|pif|scr|lnk|cmd)"?/ REJECT Message content rejected; we do not accept executable attachments.
+/^Subject:.*your account/ REJECT Message content rejected; message has subject typical for viruses!
+/The message cannot be represented in 7-bit ASCII encoding and has been sent as a binary attachment./ REJECT Message content rejected; found text typical for viruses.
+/The message contains Unicode characters and has been sent as a binary attachment./ REJECT Message content rejected; found text typical for viruses.
+/Mail transaction failed. Partial message is available./ REJECT Message content rejected; found text typical for viruses.
+  </pre>
+
+  <P ALIGN="justify">
+  Aj bez znalostí regulárnych výrazov si viete doplniť ďalšie potrebné prípony
+  alebo upraviť text, ktorý sa vloží do chybového mailu zasielaného
+  odosielateľovi potenciálne zavíreného mailu.
+  
+  <P ALIGN="justify">
+  Teraz reloadnite konfiguráciu Postfixu:</P>
+  
+  <pre class="example"><b>/etc/init.d/postfix reload</b></pre>
+
+  <P ALIGN="justify">
+  a skúste si poslať mail s attachmentom s príponou, ktorá sa nachádza
+  v našich regulérnych výrazoch. Pre kontrolu si samozrejme skúste
+  poslať aj mail s neškodným attachmentom!
+
+  <A NAME="postfix_master"></A>
+  <H4>6.2.5.6 Konfiguračný súbor démonov</H4>
+
+  <P ALIGN="justify">
+  Program "postfix" je riešený ako súbor modulov, ktoré medzi sebou navzájom
+  komunikujú a zasielajú si správy. Všetky moduly bežia s právami používateľa
+  "<code>postfix</code>", čo výrazne zvyšuje bezpečnosť celého systému. Iba
+  hlavný proces "<code>master</code>" sa spúšťa pod rootom a ovláda ostatné
+  procesy. Sám však nepočúva na nijakom porte a teda nie je dostupný zo siete.
+
+  <P ALIGN="justify">
+  Proces "<code>master</code>" spúšťa ostatné procesy podľa potreby.
+  Konfigurácia sa nachádza v súbore "<code>/etc/postfix/master.cf</code>" a je
+  prednastavená tak, že ak nechcete, nemusíte meniť vôbec nič. Tento
+  konfiguračný súbor však umožňuje pre procesy "<code>postfixu</code>"
+  nastaviť napríklad spúšťanie vo vyhradených adresároch (<A
+  HREF="#postfix_chroot">chroot</A>), čo ešte viac zvyšuje bezpečnosť systému.
+
+  <P ALIGN="justify">
+  Ukážka konfiguračného súboru "<code>/etc/postfix/master.cf</code>":</P>
+
+  <pre class="example">
+# ==========================================================================
+# service type  private unpriv  chroot  wakeup  maxproc command + args
+#               (yes)   (yes)   (yes)   (never) (50)
+# ==========================================================================
+smtp      inet  n       -       n       -       -       smtpd
+pickup    fifo  n       n       n       60      1       pickup
+cleanup   unix  -       -       n       -       0       cleanup
+qmgr      fifo  n       -       n       300     1       qmgr
+#qmgr     fifo  n       -       n       300     1       nqmgr
+rewrite   unix  -       -       n       -       -       trivial-rewrite
+bounce    unix  -       -       n       -       0       bounce
+defer     unix  -       -       n       -       0       bounce
+flush     unix  -       -       n       1000?   0       flush
+smtp      unix  -       -       n       -       -       smtp
+showq     unix  n       -       n       -       -       showq
+error     unix  -       -       n       -       -       error
+local     unix  -       n       n       -       -       local
+virtual   unix  -       n       n       -       -       virtual
+lmtp      unix  -       -       n       -       -       lmtp
+cyrus     unix  -       n       n       -       -       pipe
+    flags=R user=cyrus argv=/cyrus/bin/deliver -e -m ${extension} ${user}
+uucp      unix  -       n       n       -       -       pipe
+    flags=F user=uucp argv=uux -r -n -z -a$sender - $nexthop!rmail ($recipient)
+ifmail    unix  -       n       n       -       -       pipe
+    flags=F user=ftn argv=/usr/lib/ifmail/ifmail -r $nexthop ($recipient)
+bsmtp     unix  -       n       n       -       -       pipe
+    flags=F. user=foo argv=/usr/local/sbin/bsmtp -f $sender $nexthop $recipient
+</pre>
+
+  <P ALIGN="justify">
+  Súbor obsahuje množstvo komentárov, takže ja budem len veľmi stručný. Význam
+  pre nás dôležitých stĺpcov v tabuľke:
+
+  <UL>
+  <LI> <b>service</b>: meno služby. Pokiaľ nebudete zavádzať nejaké
+  špeciality, nepotrebujete to.
+  <LI> <b>transport type</b>: "inet" pre internetové (sieťové) sokety, "unix"
+  pre "unix" sokety, "fifo" pre pomenované rúry
+  <LI> <b>unprivileged</b>: určuje, či služba beží s právami roota alebo
+  používateľa "postfix" (premenná "$mail_owner")
+  <LI> <b>chroot</b>: určuje, či služba beží uzavretá vo vyhradenom adresári
+  (chroot), ktorý určuje premenná "$queue_directory". Všetky postfixové služby
+  okrem "pipe" a "local" môžu bežať v chroote.
+  </UL>
+
+  
+  <A NAME="postfix_chroot"></A>
+  <H5>6.2.5.6.1 Chroot pre "<code>postfix</code>"</H5>
+  
+  <P ALIGN="justify">
+  Na zvýšenie bezpečnosti pomocou vyhradených adresárov stačí prepísať
+  "n" na "-" v stĺpci "chroot" pre všetky služby okrem "local" a tých, ktoré
+  obsahujú v stĺpci "command" príkaz "<code>pipe</code>" a reštartovať
+  "<code>postfix</code>". Hneď skúste poslať niekoľko mailov z vášho servera
+  na váš server, z vášho servera na iný server a potom z iného servera na váš
+  server. Ak nastal nejaký problém ("<code>postfix</code>" do systémových logov vynadá
+  a prestane doručovať poštu), skontrolujte, či ste niekde neurobili chybu.
+  
+  <P ALIGN="justify" class="pozor">
+  <b>Pozor!</b> Ak je v konfiguračnom súbore
+  "<code>/etc/postfix/main.cf</code>" definovaná premenná
+  "<code>local_recipient_maps = $alias_maps unix:passwd.byname</code>",
+  "<code>postfix</code>" nemusí vedieť doručovať poštu lokálnym používateľom,
+  pretože súbor "<code>/etc/passwd</code>" sa nachádza mimo vyhradeného
+  adresára, ktorý používajú jednotlivé služby. Na túto skutočnosť
+  "<code>postfix</code>" niekoľkonásobne a neobyčajne poeticky nadáva do
+  logov. Riešenie je jednoduché: buď pre túto službu vypnite príznak "chroot",
+  alebo pri každej zmene "<code>/etc/passwd</code>" (pridanie, zrušenie
+  používateľa) musíte tento súbor skopírovať do adresára
+  "<code>/var/spool/postfix/etc</code>".
+
+  <A NAME="spam_definition"></A>
+  <H2>6.3 SPAM - nevyžiadaná pošta</H2>
+
+  <P ALIGN="justify">
+  Pravdepodobne každý z vás sa už stretol s nevyžiadanou poštou vo svojej
+  schránke. Najväčšie množstvo tejto pošty je v angličtine alebo japončine
+  (ktorú Mozilla seriózne zobrazuje :), ale v mojom mailboxe som objavil už aj
+  nevyžiadané slovenské maily s čiste komerčným cieľom. Takéto maily sa
+  označujú ako SPAM alebo UCE (Unsolicited Commercial Email - Nevyžiadaná
+  obchodná elektronická pošta). V ďalšom texte si dovolím používať zaužívaný
+  pojem "SPAM", aj keď sa tým možno previním slovenskému jazykovému zákonu.
+  Jednoducho to je krátke slovo - a hotovo!
+
+  <P ALIGN="justify">
+  Každému, kto dostáva pravidelne SPAM, vŕtajú v hlave dve zásadné
+  otázky:</P>
+
+  <OL>
+  <LI> <b>ako sa mi SPAM dostal do mailboxu?</b>
+  <LI> <b>ako sa môžem brániť proti SPAMu?</b>
+  </OL>
+
+  <A NAME="spam_getting"></A>
+  <H3>6.3.1 Ako sa SPAM dostane do mailboxu?</H3>
+
+  <P ALIGN="justify">
+  SPAM sa do vašej schránky dostane najčastejšie preto, že ste niekde na
+  Internete uviedli svoju e-mailovú adresu. Mohlo sa to stať pri registrácii
+  na nejakej stránke - niektoré si vás automaticky zaradia do rôznych
+  zoznamov, o ktorých neviete, či nebudú poskytnuté tretím stranám. Každá
+  stránka, na ktorej sa registrujete, by mala obsahovať informáciu o tom, ako
+  bude naložené s údajmi, ktoré poskytnete - ak takýto údaj chýba, rozhodne
+  nepoužívajte pri registrácii svoju oficiálnu mailovú adresu a vytvorte si na
+  tento účel jedno alebo niekoľko kont na freemailových serveroch.
+
+  <P ALIGN="justify">
+  Ja osobne sa snažím nikde neregistrovať, a ak už, tak sa riadim týmito
+  pravidlami, a predsa sa mi v schránke objavujú SPAMy doručené aj na
+  oficiálne/pracovné adresy. Nedávno som zistil, že to pravdepodobne spôsobil
+  niektorý z Internetových červov, ktoré posielajú náhodné maily náhodným
+  príjemcom - takýmto spôsobom sa môže ocitnúť adresa kohokoľvek z vás na
+  akomkoľvek mieste na Zemi. Dokonca je vhodné, aby ste svoju adresu, ak ju
+  vystavujete niekde na WWW stránkach, zapísali tak, aby nebola jednoducho
+  identifikovateľná pre robotov, ktorí budú web prehľadávať. Napríklad moja
+  adresa na konci každej z týchto stránok je uvedená ako "<code>vix (at)
+  vazka.sk</code>". Existujú aj iné varianty, určite sa s nimi na Internete
+  stretnete.
+
+  <P ALIGN="justify">
+  Ďalším spôsobom na získanie adries, ktoré sa potom potenciálne môžu použiť
+  na šírenie SPAMu sú reťazové maily typu "Chorý chlapec v Ugande dostane za
+  každý email, ktorý forwardnete svojim priateľom 50 centov...", prípadne
+  "Bill Gates sľúbil tým, čo pošlú tento mail na 8000 adries 1 milión dolárov"
+  a tak ďalej až do omrzenia. <b>Absolútna väčšina</b> týchto mailov sú
+  absolútne hlúposti, ktoré sú nereálne a využívajú iba "sociálne
+  inžinierstvo" - jednoducho ho pošlete ďalej, lebo "čo ak je to náhodou
+  pravda?" Nie, nie je to pravda. Neexistuje spôsob, ako môže poskytovateľ
+  Internetu v USA zistiť, že ste posielali mail v rámci Slovenska, a už vôbec
+  nie komu a koľkokrát. Preto vás pekne prosím, aby ste skôr, ako zareagujete
+  na reťazový mail, ráčili <b>vždy</b> skontrolovať stránku <A
+  HREF="http://www.hoax.cz">www.hoax.cz</A>, kde sa dočítate o takmer všetkých
+  reťazových mailoch, ktoré zaťažujú Internet.
+
+  <p class="poznamka">
+  <b>Poznámka trochu na okraj</b>: ak dostanete reťazový mail, ktorý vám oznamuje, že
+  máte vírus a nabáda vás, aby ste uskutočnili nejakú akciu na vašom počítači,
+  <b>najprv porozmýšľajte</b> a potom <b>skontrolujte stránky renomovaných
+  antivírusových dodávateľov</b>, ktorí oznamujú aj falošné poplachy (fámy)
+  šíriace sa v mailoch. Na Slovensku môžete vyskúšať minimálne <A
+    HREF="http://www.eset.sk">www.eset.sk (antivírus NOD)</A>, <A
+    HREF="http://www.avg.cz/">www.avg.cz (antivírus AVG)</A> prípadne <A
+    HREF="http://www.symantec.com">www.symantec.com (Norton Antivirus)</A></P>
+
+  <P ALIGN="justify">
+  <U>Odporúčania:</U>
+
+  <OL>
+  <LI> nepoužívajte pri registrácii na stránkach svoju normálnu (napr. firemnú) e-mailovú
+  adresu - vytvorte si jednu práve na takéto účely a raz za čas ju
+  skontrolujte a vyprázdnite
+  <LI> dôkladne si prečítajte, ako bude prevádzkovateľ danej stránky nakladať
+  s vašimi údajmi - menovite e-mailovou adresou
+  <LI> pred odoslaním registrácie sa presvedčte, že nie je vybraná voľba typu
+  "<I>chcem dostávať pravidelné e-maily o ...</I>" - takáto voľba býva často
+  <b>štandardne predvolená!</b>
+  <LI> nešírte zjavné reťazové maily (kontrolujte na <A
+  HREF="http://www.hoax.cz">www.hoax.cz</A>)
+  <LI> neverte všetkému, čo čítate o vírusoch vo vašej pošte (kontrolujte na
+  stránkach antivírusových dodávateľov)
+  </OL>
+
+  <A NAME="spam_detect"></A>
+  <H3>6.3.2 Detekcia a filtrovanie SPAMov</H3>
+
+  <P ALIGN="justify">
+  Všetko spomenuté metódy, ako sa brániť pred SPAMom nemusia pomôcť
+  stopercentne a podľa Murphyho zákonov ani nepomôžu. Ide totiž skôr
+  o prevenciu a my potrebujeme riešiť už existujúci problém. Riešenie je
+  "jednoduché" - program na detekciu a prípadné filtrovanie SPAMov.
+
+  <P ALIGN="justify">
+  Na prvý pohľad sa môže zdať, že vytvoriť takýto program je veľmi ťažké. Ak
+  sa však bližšie pozriete na typické SPAMy, opakujú sa v nich rovnaké vety,
+  slová, výrazy... (napr. "WIN $1.000.000 NOW!" a podobne). Programy na detekciu
+  SPAMu vedia takéto (a mnohé iné!) výrazy vyhľadať a na základe nich mail
+  buď označia za SPAM alebo nie...
+
+  <P ALIGN="justify">
+  <b>Stop!</b>
+
+  <P ALIGN="justify">
+  Zdá sa vám to jednoduché? Naozaj, SPAM nie je AŽ zasa také ťažké detekovať,
+  ale čo ak program na detekciu SPAMu označí za SPAM aj celkom normálnu poštu,
+  ktorá náhodou obsahuje reťazce typické pre SPAM?
+
+  <P ALIGN="justify">
+  Progam, o ktorom budeme hovoriť - <A
+    HREF="http://spamassassin.org"><code>SpamAssassin</code></A> používa na označovanie
+  mailov techniku priraďovania bodov. Každá podozrivá hlavička alebo každý
+  podozrivý výraz v maili spôsobia zvýšenie celkového skóre. Naopak, texty
+  typické pre normálnu komunikáciu skóre znižujú.
+
+  <P ALIGN="justify">
+  Niektoré typické testy na SPAM sú:</P>
+
+  <UL>
+    <LI> detekcia falošných hlavičiek (falošný odosielateľ, falošná identifikácia
+  mailového klienta)
+
+  <LI> "náhodne" vyzerajúca adresa odosielateľa (napr. "<code>th6u7bft589rt@yahoo.com</code>")
+
+  <LI> fráza súvisiaca s častou nevyžiadanou poštou (napr. "XXX", "$$$", "click
+  here", "Viagra" a podobne)
+
+  <LI> CELÉ RIADKY NAPÍSANÉ VEĽKÝMI PÍSMENAMI
+
+  <LI> maily obsahujúce iba HTML
+  </UL>
+  
+  <P ALIGN="justify">
+  a mnohé iné!
+
+  <P ALIGN="justify">
+  Program je schopný využiť aj niektoré ďalšie techniky na detekciu SPAMu, napr.:</P>
+  
+  <UL>
+    <LI> overovanie IP adresy odosielateľa v zozname tzv. "otvorených relay
+    serverov" (serverov, ktoré umožňujú posielať mail komukoľvek a kamkoľvek,
+    nielen pre domény, ktoré obsluhujú).
+    <LI> overovanie IP adresy odosielateľa v zozname "dial-upových
+    používateľov". V pozadí tohto testu je myšlienka, že ak používate dial-up,
+    máte používať mailové server svojho providera a nie posielať maily zo
+    svojej dynamickej adresy.
+    <LI> overovanie e-mailovej adresy odosielateľa v databáze overených
+    odosielateľov SPAMu.
+  </UL> 
+  
+  <P ALIGN="justify">
+  (Na tieto špecialitky budete potrebovať prídavné perlovské moduly.)
+
+  <P ALIGN="justify">
+  V konfigurácii programu je nastavený prahový limit a keď e-mail
+  tento limit prekročí, je automaticky označený za SPAM.
+  <code>SpamAssassin</code> sa počas svojho života aj učí - ak pravidelne
+  dostávate maily od konkrétneho odosielateľa s nízkym skóre, označí si ho
+  v databáze a pre každý ďalší mail od tohto odosielateľa odpočítava nejakú
+  hodnotu od výsledného skóre. Opačne to funguje pre SPAM.
+  
+  <P ALIGN="justify"> Funkciu "samoučenia sa" môžete využiť aj manuálne, ak
+  máte zbierku SPAMov, ktoré ste dostali ešte pred používaním programu alebo
+  ktoré <code>SpamAssassin</code> nezachytil. a chcete na nej
+  <code>SpamAssassin</code> natrénovať. V takom prípade si pozrite
+  dokumentáciu k "<code><b>sa-learn</b></code>" (príkazom "<code>man</code>"
+  alebo "<code>perldoc</code>")
+
+  <P ALIGN="justify">
+  V prípade programu <code>SpamAssassin</code> sa nevykonáva nijaká
+  deštruktívna akcia. Do mailu sa pridá špeciálna hlavička
+  "<code>X-Spam-Status</code>" s hodnotou "no", ak ide o bežný mail, alebo
+  "yes", ak ide o SPAM. Na základe hlavičky "<code>X-Spam-Status: yes</code>"
+  môžete teda maily neskôr triediť alebo vymazávať.
+
+  <P ALIGN="justify">
+  Okrem toho vkladá <code>SpamAssassin</code> do každého SPAMu aj informácie
+  o tom, prečo ho označil za SPAM, čo vám môže pomôcť pri jednoduchšej
+  identifikácii podobných mailov. V novšej verzii (2.50) sa tieto informácie
+  vkladajú ako samostatná príloha, takže sa nepoškodí vzhľad pôvodného
+  mailu, ako to bolo v starších verziách. Ak si to želáte, môže
+  "<code>SpamAssassin</code>" označovať SPAM aj pomocou subjectu "<code><b>****SPAM****</b></code>" (táto možnosť sa dá vypnúť a dokonca
+  v novších verziách je štandardne vypnutá) a normálne sa doručia.
+
+  <P ALIGN="justify">
+  Maily identifikované ako SPAM môžete teda mazať alebo presúvať ručne,
+  filtrovať ich na úrovni mail servera, alebo pomocou nastavenia filtrovania
+  vo Vašom e-mailovom klientovi (Mozilla Mail, Evolution, Eudora, ...).
+  Najelegantnejšie je použitie SpamAssassin-a priamo vo Vašom programe na
+  doručovanie pošty na serveri ("<code>procmail</code>",
+  "<code>maildrop</code>", ...) na základe hodnoty hlavičky
+  "<code>X-Spam-Status: yes</code>".
+
+  <P ALIGN="justify">
+  Moje praktické skúsenosti (používame <code>SpamAssassin</code> v práci
+  zhruba od mája 2002) ukázali, že detekčné schopnosti programu sú skutočne
+  veľmi dobré, <code>SpamAssassin</code> detekoval takmer každý SPAM v mojom
+  mailboxe, pričom falošné poplachy (normálny mail označený ako SPAM)
+  spôsobuje iba v niekoľkých percentách prípadov. Pri desiatkach až stovkách
+  mailov denne v mojich mailboxoch je to zhruba 1 mail týždenne - vždy od toho
+  istého odosielateľa, ktorý používa divný webmail s podozrivo dlhými
+  (nezalamovanými) riadkami a pravidelne píše maily bez uvedenia subjectu.
+
+  <P ALIGN="justify"><b>Program "<code>SpamAssassin</code>":</b>
+
+  <UL>
+    <LI> <b>detekuje a označuje SPAM s veľkou percentuálnou úspešnosťou (viac
+    ako 90%)</b>
+    <LI> <b>nevykonáva s mailami nijaké akcie okrem označovania (nemaže,
+  nepresúva)</b>
+    <LI> <b>funguje ako filter, musíte ho teda volať z programu, ktorý fyzicky
+      doručuje poštu do Vášho mailboxu ("<code>procmail</code>",
+      "<code>maildrop</code>", ...)</b>
+</UL>
+
+  <A NAME="spamassassin_install"></A>
+  <H3>6.3.3 Inštalácia programu SpamAssassin</H3>
+
+  <P ALIGN="justify">
+  Postup pre inštaláciu samotného programu a všetkých modulov jazyka Perl,
+  ktoré pre svoju činnosť potrebuje alebo odporúča, nájdete priamo
+  v dokumentácii (súbor "<code>INSTALL</code>", aj časť "Additional Modules").
+  Ak chcete, môžete si stiahnuť aj balíček, či už z <A
+    HREF="http://spamassassin.org">domácej stránky projektu</A> alebo
+z archívov distribúcie <A HREF="http://www.debian.org">Debian</A> (<code><b>apt-get
+        install spamassassin</b></code>) - na Debiane to vyrieši aj všetky
+závislosti. V prípade manuálnej inštalácie nejde vďaka
+  závislostiam na perlovských moduloch (sťahujte ich pomocou návodu uvedeného
+  v súbore "<code>INSTALL</code>" alebo ručne z archívu <A
+    HREF="http://www.cpan.org/">www.cpan.org</A>) o triviálnu inštaláciu, ale
+  pomocou manuálu a veľkej dávky trpezlivosti sa Vám to určite podarí.
+
+  <P ALIGN="justify">
+  <b>Krátky návod ako inštalovať perlovské moduly (napr. pre
+  "<code>SpamAssassin</code>"):</b>
+
+  <OL>
+    <LI> prečítajte si v súbore "<code>INSTALL</code>" zoznam modulov, ktoré
+    budete potrebovať. Niektoré sú súčasťou štandardnej distribúcie Perlu (v
+    súbore "<code>INSTALL</code>" Vás na to upozornia poznámky)
+    <LI> skontrolujte, ktoré z požadovaných modulov už máte nainštalované, napr.
+    príkazom na zobrazenie ich dokumentácie (príkaz "perldoc" nesmiete spúšťať
+    ako root, nepôjde to):
+
+    <pre class="example"><b>
+    perldoc File::Spec
+    perldoc HTML::Parser
+    ...
+    </b></pre>
+
+    
+    <LI> moduly, ktoré nemáte nainštalované, stiahnite zo stránky <A
+      HREF="http://www.cpan.org/">www.cpan.org</A> napr. do adresára
+    "<code>/var/tmp</code>". Rozbaľte moduly a prečítajte si súbor
+    "<code>README</code>" resp. "<code>INSTALL</code>", aby ste zistili, aké
+    na akých ďalších moduloch závisia. Stiahnite aj tieto moduly. 
+    <LI> inštaláciu modulov (začnite tými, ktoré nezávisia na ďalších moduloch)
+    uskutočníte príkazmi ("xxx" predstavuje adresár s rozbaleným modulom):
+    <pre class="example"><b>
+    cd /var/tmp/xxx
+    perl Makefile.PL
+    make
+    make test
+    make install
+</b></pre>
+("<b><code>make install</code></b>" musíte vykonať ako root).
+    <LI> ak sa inštalácia nepodarila (zobrazia sa chyby o tom, že požadované
+    moduly neboli nájdené), skontrolujte ešte raz, ktoré moduly ste už
+    nainštalovali a doinštalujte potrebné moduly!
+    <LI> celkom na záver vojdite do adresára s rozbaleným archívom programu
+    "<code>SpamAssassin</code>" a zopakujte hore uvedené kroky (sú uvedené aj v súbore
+    "<code>INSTALL</code>")
+
+    <pre class="example"><b>
+    cd /var/tmp/Mail-SpamAssassin-2.50
+    perl Makefile.PL
+    make
+    make test
+    make install
+</b></pre>
+    <LI> po úspešnej inštalácii môžete vymazať adresáre s rozbalenými a už
+    nainštalovanými modulmi. Adresár so samotným programom
+    <code>"SpamAssassin</code>" si zatiaľ ponechajte!
+  </OL>
+
+  <P ALIGN="justify">
+  Predpokladajme, že <code>SpamAssassin</code> máte nainštalovaný (napr.
+  v adresári "<code>/usr/local/bin</code>"). Nasleduje veľmi dôležitý krok:
+  otestovanie funkčnosti! Presne ako odporúčajú autori
+  v "<code>INSTALL</code>", <I>zadajte v adresári so zdrojovými textami
+programu</I> (ak ste inštalovali balíček na Debiane, v adresári
+  "<code>/usr/share/doc/spamassassin</code>", kde zároveň rozbaľte zbalené súbory
+  "<code>sample-nonspam.txt.gz</code>" a "<code>sample-spam.txt.gz</code>"):</P>
+
+  <pre class="example"><b>
+  spamassassin -t &lt; sample-nonspam.txt &gt; nonspam.out
+  spamassassin -t &lt; sample-spam.txt &gt; spam.out
+  </b></pre>
+
+  <P ALIGN="justify">
+  Súbory "<code>sample-nonspam.txt</code>" a "<code>sample-spam.txt</code>"
+  obsahujú skutočné e-mailové správy, z ktorých prvá nie je a druhá je SPAM.
+  Môžete si ich najprv vypísať, aby ste mi uverili. Dôležité je, že sú to
+  pokusné e-maily, na ktorých otestujeme, či <code>SpamAssassin</code> funguje
+  tak, ako by mal, t.j. či nepadá, nevypisuje chyby a pod.
+
+  <P ALIGN="justify">
+  Pomocou textového editora alebo programov "<code>less</code>" či
+  "<code>more</code>" si vypíšte novovytvorené súbory
+  "<code>nonspam.out</code>" a "<code>spam.out</code>".
+  "<code>nonspam.out</code>" by sa mal javiť ako normálny mail (s hlavičkami),
+  súbor "<code>spam.out</code>" by mal v subjecte obsahovať text
+  "<code>****SPAM****</code>" a identifikáciu SPAMu. Oba príkazy nesmú
+  zobraziť nijaké chyby pri spúšťaní! V prípade, že vynecháte tieto testy,
+  môže stať, že sa Vám nebude doručovať pošta!
+  
+  <A NAME="spamassassin_procmail"></A>
+  <H3>6.3.4 Prepojenie programu SpamAssassin s programom na doručovanie pošty</H3>
+
+  <P ALIGN="justify">
+  Ak predchádzajúce testy dopadli dobre, je čas nasadiť <code>SpamAssassin</code> do
+  reálneho života. Pomôže nám pri tom program, ktorý fyzicky doručuje poštu
+  jednotlivým používateľom do ich mailboxov. Tento program je vo väčšine
+  inštalácií štandardne "<code>procmail</code>" - ak používate "Postfix",
+  môžete sa o tom presvedčiť kontrolou premennej
+  "<code>mailbox_command</code>" v konfiguračnom súbore
+  "<code>/etc/postfix/main.cf</code>". U nás v práci používame na doručovanie
+  mailov program "<code>maildrop</code>", ktorý pracuje s formátom Maildir.
+  Tento program si môžete stiahnuť na stránke <A
+    HREF="http://www.courier-mta.org/">www.courier-mta.org</A>, kde nájdete aj
+  IMAP server "Courier".
+
+  <P ALIGN="justify">
+  <b>Upozornenie!</b> Pri testovaní a konfigurovaní akéhokoľvek filtra (a teda
+  aj programu "<code>SpamAssassin</code>") sledujte logy Vášho mailového
+  servera ("<code>/var/log/mail.log</code>") a hľadajte anomálie. Ak sa
+  mailovému serveru nepodarí doručiť poštu (programy "<code>procmail</code>"
+  resp. "<code>maildrop</code>" zlyhajú), ponecháva si ju stále vo fronte
+  mailov, zaloguje však chybové hlásenie s dôvodom chyby. Najčastejšie je to
+  chybná cesta/meno súboru.
+
+  <A NAME="spamassassin_procmail_example"></A>
+  <H4>6.3.4.1 SpamAssassin a Procmail</H4>
+
+  <P ALIGN="justify">
+  Program "<code>procmail</code>" pri doručovaní pošty konkrétnemu
+  používateľovi hľadá súbor "<code>.procmailrc</code>" v jeho domácom
+  adresári. V prípade, že ho nájde, riadi sa jeho pravidlami, čo umožňuje
+  napr. triediť si poštu do priečinkov už na serveri (nie v e-mailovom
+  klientovi!), automaticky forwardovať poštu na iné adresy, alebo robiť
+  s mailami rôzne psie kusy. Presne takto použijeme teraz náš program
+  SpamAssassin.
+
+  <P ALIGN="justify">
+  Pomocou textového editora otvorte (alebo vytvorte) súbor
+  "<code>.procmailrc</code>" vo vašom domácom adresári a na jeho
+  <b>začiatok</b> (aby sa toto pravidlo vykonalo ako prvé bez ohľadu na to, čo
+  budete neskôr s poštou robiť) vložte toto:</P>
+
+  <pre class="example">
+  :0fw
+  * &lt; 256000
+  | /usr/local/bin/spamassassin
+  </pre>
+
+  <P ALIGN="justify">
+  Uvedené pravidlo spôsobí automatické filtrovanie každého prijatého mailu,
+  ktorý je menší ako cca 256 KB cez program <code>SpamAssassin</code> (zadajte
+  cestu platnú pre vašu inštaláciu!). Limit veľkosti má význam preto, že mail
+  so SPAMom zvyčajne nebýva taký veľký a kontrola veľkých mailov trvá
+  pochopiteľne dlhšie.
+
+  <P ALIGN="justify">
+  Uložte súbor "<code>.procmailrc</code>" a skúste si poslať mail. Ideálne je,
+  ak si pošlete jeden normálny mail a potom súbor
+  "<code>sample-spam.txt</code>", aby ste sa presvedčili, že v poli "Subject:"
+  je zreteľné označenie "<code>****SPAM****</code>"
+
+  <p class="poznamka">
+  <b>Poznámka</b>: pri prvom spustení programu <code>SpamAssassin</code> (čiže
+  pri doručení prvého mailu) sa používateľovi vytvorí adresár
+  "<code>.spamassassin</code>" v domácom adresári s konfiguračnými súbormi,
+  ktoré si môže upraviť podľa svojho gusta. Ja osobne som ich upravovať zatiaľ
+  nepotreboval.
+
+  <p class="poznamka">
+  <b>Poznámka</b>: <I>ak všetko funguje</I>, môžete vytvoriť globálne pravidlo, ktoré
+  urobí presne to isté, ako sme si ukázali, ale pre všetkých používateľov na
+  serveri. Postupujte podobne, ale použite/vytvorte súbor
+  "<code>/etc/procmailrc</code>". Nezostáva mi nič iné, ako vás dôrazne
+  varovať, aby ste k tomuto kroku pristúpili až náležitom otestovaní!
+  Pamätajte tiež na to, že toto riešenie je pomerne neefektívne a neumožňuje
+  použiť "SpamAssassin" na mailových serveroch, ktoré nedoručujú poštu do
+  lokálnach schránok, ale ju len preposielajú napr. medzi dvomi sieťami
+  (relay).</p>
+
+  <p align="justify">Ja používam "<code>/etc/procmailrc</code>" v takejto
+  podobe:</p>
+
+  <pre class="example">
+  <b>DROPPRIVS=yes</b>
+  MAILDIR=$HOME/mail
+
+  :0fw: spamassassin.lock
+  * &lt; 256000
+  | /usr/local/bin/spamassassin
+  </pre>
+
+
+  <P ALIGN="justify">
+  Uvedené pravidlo "<code>| /usr/local/bin/spamassassin</code>"
+  "<code>.procmailrc</code>" resp. "<code>/etc/procmailrc</code>" zabezpečuje
+  iba označovanie mailov, ako som spomínal v úvode. Ak chcete s označenou
+  poštou urobiť niečo iné, musíte si naštudovať manuál k programu
+  "<code>procmail</code>" ("<code><b>man procmailrc</b></code>", "<code><b>man
+          procmailex</b></code>"), prečítať súbor
+  "<code>procmail.example</code>" v adresári so zdrojovými kódmi programu
+  <code>SpamAssassin</code>, alebo - počkať, kým sa v tejto príručke stihnem
+  vyjadriť aj k samotnému "<code>procmailu</code>".</p>
+
+  <p class="pozor"><b>Upozornenie</b>: v globálnom konfiguračnom súbore
+  "<code>/etc/procmailrc</code>" sa musí nachádzať direktíva
+  "<code>DROPPRIVS=yes</code>"! Pomocou nej zaručíte, že všetky príkazy
+  spúšťané z "<code>procmail</code>" sa spustia s právami používateľa, ktorému
+  sa doručuje mail. Bez tejto direktívy sa <code>SpamAssassin</code>
+  nespustí.</p>
+
+
+  <A NAME="spamassassin_maildrop_example"></A>
+  <H4>6.3.4.2 SpamAssassin a Maildrop</H4>
+
+  <P ALIGN="justify">
+  Program "<code>maildrop</code>" pri doručovaní pošty kontroluje, či existuje
+  súbor "<code>.mailfilter</code>" v domácom adresári používateľa, ktorému
+  doručuje poštu. V prípade, že ho nájde, riadi sa pravidlami uvedenými
+  v tomto súbore.
+
+  <P ALIGN="justify">
+  Pomocou textového editora otvorte (alebo vytvorte) súbor
+  "<code>.mailfilter</code>" vo Vašom domácom adresári a na jeho
+  <b>začiatok</b> (aby sa toto pravidlo vykonalo ako prvé) vložte riadok:</P>
+
+  <pre class="example">
+  xfilter "/usr/local/bin/spamassassin"
+  </pre>
+
+  <P ALIGN="justify">
+  Samozrejme, musíte uviesť platnú cestu k programu "<code>spamassassin</code>". Teraz
+  uložte súbor "<code>.mailfilter</code>" a skúste si poslať mailom súbory
+  "<code>sample-spam.txt</code>" a "<code>sample-nonspam.txt</code>" z distribúcie programu
+  "<code>SpamAssassin</code>" (alebo akékoľvek maily). Ak sa Vám doručia, filtrovanie
+  funguje, navyše by mail so SPAMom mal byť označený.
+  
+  <p class="poznamka">
+  <b>Poznámka</b>: pri prvom spustení programu <code>SpamAssassin</code> (čiže
+  pri doručení prvého mailu) sa používateľovi vytvorí adresár
+  "<code>.spamassassin</code>" v domácom adresári s konfiguračnými súbormi,
+  ktoré si môže upraviť podľa svojho gusta. Ja osobne som ich upravovať zatiaľ
+  nepotreboval.
+
+  <A NAME="spamassassin_optimize"></A>
+  <H3>6.3.5 Optimalizácia výkonu programu SpamAssassin</H3>
+
+  <P ALIGN="justify">
+  Program "<code>SpamAssassin</code>" je napísaný v Perle, v čom spočíva veľká
+  výhoda
+  - netreba ho kompilovať, je ľahko prenosný a relatívne bezpečný, pretože
+    v Perle je bezpečnosť prideľovania voľnej pamäte riešená lepšie ako
+    v jazyku C. Na druhej strane, Perl je interpretovaný kód, resp. pri jeho
+    spustení sa vykonáva jeho preklad, čo spôsobuje isté spomalenie. Ak
+    sa filtrovanie mailov vykonáva na serveri, ktorý prijíma veľa pošty, bude
+    sa interpreter Perlu spúšťať v podstate stále (zakaždým, keď sa má mail
+    doručiť do mailboxu).
+
+  <P ALIGN="justify">
+  Je jasné, že výkon takéhoto riešenia nie je celkom optimálny. Pre malý počet
+  používateľov, ktorí používajú "<code>SpamAssassin</code>" to nepredstavuje
+  nejaký závažný problém, ale v prípade väčšej organizácie, kde sa maily
+  filtrujú globálne, sa to už na výkone servera prejaví.
+
+  <P ALIGN="justify">
+  Riešenie je však (našťastie) jednoduché. Program "<code>SpamAssassin</code>"
+  obsahuje totiž okrem perlovského skriptu aj klient-server verziu. Démon
+  "<code>spamd</code>" je napísaný v Perle, spúšťa sa však iba raz, pri štarte
+  systému (vytvára nový proces pre každý filtrovaný mail). Démon počúva na
+  localhoste na porte 783 (možno ho zmeniť) a štandardne beží s právami roota,
+  aby mohol zmeniť identitu na používateľa, ktorému doručuje poštu (aj toto je
+  možné zmeniť, ale treba si preštudovať manuál). Klientský program
+  "<code>spamc</code>" je napísaný v jazyku C a pri jeho spúšťaní teda
+  nevzniká oneskorenie ako pri perlovskej verzii.
+
+  <P ALIGN="justify">
+  V praxi teda stačí oproti predchádzajúcej inštalácii uskutočniť tieto
+  zmeny:</P>
+
+  <OL>
+    <LI> zabezpečiť spúšťanie démona "<code>spamd</code>" (najčastejšie
+    "<code>/usr/local/bin/spamd</code>"). Pri manuálnej inštalácii treba použiť
+    priložený init-skript (v podadresári "<code>spamd</code>") - je ich
+    viacero pre rôzne verzie Unixu/Linuxu. Skontrolujte cesty k programu
+    "<code>spamd</code>" v skripte a nezabudnite vytvoriť symbolické linky
+    z adresárov pre jednotlivé runlevely! Ak použijete balíčkovú distribúciu,
+    štartovací skript je už vytvorený; na Debiane nezabudnite skontrolovať
+    súbor "<code>/etc/default/spamassassin</code>" a nastaviť potrebné
+    parametre, najmä však parameter "<code>ENABLE=1</code>". Bez tohto
+    parametra sa <code>SpamAssassin</code> pri štarte servera <b>nespustí</b>.
+    <LI> zameniť volanie programu "<code>/usr/local/bin/spamassassin</code>"
+    v súbore "<code>.procmailrc</code>" resp. "<code>.mailfilter</code>"
+    volaním programu "<code>/usr/local/bin/spamc</code>"
+    <LI> spustiť démona "<code>spamd</code>" pomocou init-skriptu:
+    "<code><b>/etc/init.d/spamd start</b></code>"(automaticky sa bude spúšťať
+    po štarte servera)
+  </OL>
+
+  <P ALIGN="justify">
+  Nasleduje opätovné testovanie funkčnosti. Ak Vám doručovanie mailov funguje,
+  všetko je v poriadku.
+
+  <p class="poznamka">
+  <b>Poznámka:</b> možno Vás napadla otázka: "čo sa stane s mailami v prípade,
+  že démon na kontrolu SPAMu spadne?". Odpoveď je našťastie jednoduchá
+  a podarilo sa mi ju aj otestovať. Ak sa programu "spamc" nepodarí pripojiť
+  na démona, jednoducho sa mail doručí bez filtrovania. Pošta sa teda
+  nestratí.
+  
+  <A NAME="spamassassin_tweaking"></A>
+  <H3>6.3.6 Ladenie programu SpamAssassin</H3>
+
+  <P ALIGN="justify">
+  Nech je program "<code>SpamAssassin</code>" akokoľvek perfektný, jeho
+  nastavenie nemusí vyhovovať každému. Niekto môže požadovať citlivejšie,
+  niekto benevolentnejšie detekovanie SPAMu. Niekto dokonca bude chcieť
+  upraviť skóre pre jednotlivé testy. Pre toto a všeličo iné existuje možnosť,
+  ako nastavenie programu "<code>SpamAssassin</code>" upraviť.
+
+  <A NAME="spamassassin_tweaking_config"></A>
+  <H4>6.3.6.2 Konfiguračný súbor programu SpamAssassin</H4>
+
+  <P ALIGN="justify">
+  Globálny lokálny konfiguračný súbor (nádherné pomenovanie, len čo je pravda
+  ;-) pre "<code>SpamAssassin</code>" je umiestnený
+  v "<b><code>/etc/mail/spamassassin/local.cf</code></b>", prípadne
+  v "<code>/etc/spamassassin/local.cf</code>" a môže obsahovať napríklad tieto
+  nastavenia:
+
+  <pre class="example">
+  # prepisat Subject: na "****SPAM**** (povodny subject)"
+  rewrite_subject 1
+  
+  # nevykonavat kontrolu adresy odosielatela mailu na verejnych RBL (real
+  # black listing) serveroch - vyrazne to zrychluje pracu a je to zbytocne
+  # v pripade, ze tieto kontroly za vas vykonava mailovy server
+  skip_rbl_checks 1
+
+  # vkladat originalny SPAM do samostatnej prilohy (starsie verzie to nerobili
+  # a napr. HTML maily neboli uz potom citatelne)
+  report_safe 1
+
+</pre>
+
+<P ALIGN="justify">
+  Ak Vám to nestačí (nestačí!), pozrite si dokumentáciu príkazom
+
+  <pre class="example"><b>
+      perldoc Mail::SpamAssassin::Conf
+  </b></pre>
+
+  <A NAME="spamassassin_tweaking_learning"></A>
+  <H4>6.3.6.3 Učenie sa na vzorkách</H4>
+
+  <P ALIGN="justify">
+  Program "<code>SpamAssassin</code>" využíva pri svojej činnosti tzv.
+  Bayesovské filtre, ktoré majú za úlohu priebežne vyhodnocovať všetky maily,
+  ktoré sa dostanú do Vašej schránky. Pri kontrole mailov vytvára
+  "<code>SpamAssassin</code>" databázu, do ktorej zapisuje rôzne údaje
+  - napríklad pre odosielateľov, od ktorých často dostávate poštu, automaticky
+  predpokladá, že mail s vysokou pravdepodobnosťou nie je SPAM. Mimochodom,
+  rovnaké samoučiace sa mechanizmy dokáže používať aj <A
+    HREF="http://www.mozilla.org/">Mozilla</A> od verzie 1.3 a vyššej.
+  
+  <P ALIGN="justify">
+  Bez toho, aby som vysvetľoval, ako funguje (priznám sa, že sám to zatiaľ
+  nechápem) Vám prezradím, na čo je táto sranda dobrá.
+
+  <P ALIGN="justify">
+  V praxi sa Vám isto stane, že okrem detekovaných SPAMov sa vo Vašich
+  schránkach budú aj naďalej objavovať aj maily, ktoré
+  "<code>SpamAssassin</code>" nezachytí, hoci by mal. Takéto maily je vhodné
+  uchovávať v jednom samostatnom priečinku a z času na čas na týchto mailoch
+  spustiť program "<code>sa-learn</code>". Tento program slúži na "učenie sa"
+  "<code>SpamAssassina</code>", konkrétne na učenie sa Bayesovských filtrov.
+  Podľa rôznych materiálov sa odporúča vytrénovať filtre na vzorke približne
+  1000 SPAMov a 1000 normálnych mailov. Po tomto učení sa sú Bayesovské filtre
+  schopné zachytiť SPAM s vysokou účinnosťou.
+
+  <P ALIGN="justify">
+  Osobne som nemal poruke 1000 SPAMov, na ktorých by som program trénoval,
+  preto som používal iba priebežné trénovanie a dnes (po niekoľkých mesiacoch)
+  už bežne dostávam maily, ktoré Bayes označí za "SPAM s 90%-tnou
+  pravdepodobnosťou", za čo v konečnom dôsledku získa mail v celkovom skóre
+  minimálne 3 body.</P>
+
+  <P ALIGN="justify">Program "<code>sa-learn</code>" sa používa veľmi
+  jednoducho. Stačí zadať jeden z parametrov "<code>--spam</code>" (učíme sa
+  zo SPAMu) alebo "<code>--ham</code>" (učíme sa z ne-SPAMovej pošty), ďalej
+  formát poštovej schránky (súbor, adresár) a jej meno. V jednom učiacom cykle
+  môžete zadať aj viacero schránok (súborov, adresárov).</P>
+
+  <p align="justify">
+  Ak chcete trénovať "<code>SpamAssassina</code>" pravidelne, najlepšie je vytvoriť si na
+  tento účel samostatný priečinok, do ktorého budete odhadzovať iba SPAM.</p>
+
+  <p align="justify">
+  Všeobecná syntax príkazu "<code>sa-learn</code>" je nasledovná:</p>
+
+  <pre class="example">sa-learn [--mbox|--file|--dir] meno1 meno2 .. menoN</pre>
+  
+  <p align="justify">
+  Formát poštovej schránky môžete vybrať z:</p>
+
+  <ol>
+      <li> <code>--mbox</code>: klasický spôsob uloženia mailov v jedinom súbore, napr.
+      "<code>/var/spool/mail/vix</code>" alebo "<code>~/mail/SPAM</code>"
+
+      <li> <code>--file</code>: súbor, ktorý obsahuje presne jeden mail (napr.
+      ak uložíte mail z Vášho mailového klienta)
+
+      <li> <code>--dir</code>: adresár vo formáte "<code>Maildir</code>"
+      (používa sa najčastejšie s mailovým serverom "qmail"). V takomto
+      adresári je každý mail uložený vo vlastnom súbore.
+  </ol>
+  
+  <p align="justify"><b>Príklad 1</b>: nauč sa zo SPAMu zo schránky ~/mail/SPAM:</p>
+  
+  <pre class="example">sa-learn --spam --mbox ~/mail/SPAM</pre>
+
+  <p align="justify"><b>Príklad 2</b>: nauč sa zo SPAMu z uloženého mailu (súbor obsahuje iba tento
+  mail):</p>
+
+  <pre class="example">sa-learn --spam --file spam.txt</pre>
+
+  <p align="justify"><b>Príklad 3</b>: nauč sa zo SPAMu z niekoľkých uložených
+  mailov (každý súbor obsahuje iba jeden mail):</p>
+
+  <pre class="example">sa-learn --spam --file spam1.txt spam2.txt spam3.txt</pre>
+  
+  <p align="justify"><b>Príklad 4</b>: nauč sa zo SPAMu z adresára ~/Maildir:</p>
+
+  <pre class="example">sa-learn --spam --dir ~/Maildir</pre>
+  
+  <p align="justify"><b>Príklad 4</b>: nauč sa na dobrej pošte zo schránky /var/spool/mail/vix
+  
+  <pre class="example">sa-learn --ham --mbox /var/spool/mail/vix</pre>
+
+  <p class="poznamka">
+  <b>Poznámka:</b> Od verzie
+  "<code>SpamAssassina</code>" 2.60 sa mení odporúčaný formát internej
+  bayesovskej databázy, pričom máte možnosť skonvertovať bayesovské databázy
+  vytvorené staršími verziami programu. Pokiaľ ste používali staršiu verziu,
+  upgradli ste ju a nefunguje Vám Bayes, musíte skonvertovať databázy
+  príkazom: <code><b>sa-learn --import</b></code>. Túto konverziu je potrebné
+  vykonať iba raz pre každého používateľa, ktorý používa
+  "<code>SpamAssassin</code>".<br>
+  Takáto zmena interného formátu je samozrejme veľmi nepríjemná záležitosť
+  a viete si predstaviť, ako ma prekvapilo, keď mi po takomto upgrade Bayes
+  nechodil. V tej verzii "<code>SpamAssassina</code>" však nefungoval (nebol
+  dokumentovaný) ani spôsob importu ;-) Máloktorý upgrade som tak rýchlo
+  vracal na pôvodnú verziu. Na druhej strane musím priznať, že s novým
+  formátom databázy sa pracuje o dosť rýchlejšie.
+  </p>
+
+  <A NAME="pop3imap"></A>
+  <H2>6.4 Služby na výber mailov (POP3, IMAP)</H2>
+
+  <P ALIGN="justify">
+  Maily sa nám doručujú, všetko vyzerá výborne, ale má to jednu malú chybičku:
+  ako sa k mailom dostaneme? Ak majú používatelia konto so shellom na serveri,
+  ktorý maily prijíma, je to úplne jednoduché, pretože na výber mailov
+  nepotrebujú nijaké špeciálne protokoly a postupy. Nevýhodou tohto riešenia
+  je však práve fakt, že používatelia musia mať vytvorené konto so shellom,
+  aby mohli spúšťať mailového klienta. Ak maily prijíma a doručuje firewall,
+  najlepším riešením je preposielanie mailov na mail server vo vnútornej
+  sieti, na ktorom už používatelia môžu mať kontá. Vonkajší server funguje iba
+  ako brána pre posielanie mailov. Ak takéto nastavenie nie je
+  možné, prichádza do úvahy ešte výber mailov pomocou protokolov POP3
+  a IMAP z vnútornej siete.
+
+  <P ALIGN="justify">
+  Niekedy (napr. na školách) nie je možné zabezpečiť, aby funkciu firewallu
+  a mailového servera vykonával samostatný a iba na to určený počítač. Je to
+  škoda, ale tak to proste chodí. Na druhej strane, aj v takýchto prípadoch je
+  žiadúce, aby sa používatelia vnútornej siete dostali k svojim mailom pomocou
+  ich obľúbených e-mailových klientov zo svojich počítačov. Takže služby POP3
+  a IMAP predsa len budeme potrebovať. Zároveň to však znamená, že používatelia
+  nebudú nevyhnutne potrebovať shell na serveri.
+  
+  <P ALIGN="justify">
+  V tomto momente treba povedať, že nastavenie servera pre spúšťanie POP3
+  a/alebo IMAP servera je v podstate triviálne, pretože sa takmer stopercentne
+  používa "<code>inetd</code>", v ktorom sú vhodné riadky často už aj napísané, hoci aj
+  zakomentované. Oveľa zložitejšie je zabezpečenie týchto služieb. Prečo?</P>
+
+  <OL>
+  <LI> obslužné démony pre výber mailov sa spúšťajú zásadne pod
+  rootom, po autentifikácii používateľa bežia s jeho identitou. Akákoľvek
+  snaha o preniknutie na server prostredníctvom týchto služieb (a najmä
+  úspešná) je nebezpečná pre ďalší beh servera. Prístup na tieto služby by mal
+  byť obmedzený, najlepšie iba z vnútornej siete. Na obmedzenie môžete použiť
+  <A HREF="tcp_wrappers.html">TCP wrapper</A> a/alebo firewall.
+  <LI> protokoly POP3 a IMAP pri autentifikácii <b>nešifrujú</b> heslo
+  používateľa, preto je ho možné zachytiť kdekoľvek na ceste medzi klientom
+  a serverom. Ak je povolené používanie týchto služieb iba z vnútornej siete,
+  ktorá je implementovaná ako prepínaný Ethernet (pomocou switchov),
+  nebezpečenstvo nie je veľké. Ak je však potrebné sprístupniť POP3 a IMAP
+  zvonku, je nevyhnutné použiť šifrovanie!
+  </OL>
+
+  <A NAME="pop3imap_tcpwrapped"></A>
+  <H3>6.4.1 Obmedzenie prístupu k službám POP3 a IMAP</H3>
+
+  <P ALIGN="justify">
+  V nasledujúcej ukážke použijeme na obmedzenie prístupu TCP wrapper
+  (predpokladá sa, že POP3, resp. IMAP služby sa spúšťajú
+  z "<code>inetd</code>") Predpokladá sa, že lokálna (vnútorná) sieť má adresu
+  192.168.1.0/255.255.255.0.</P>
+
+<P ALIGN="justify"><b><code>/etc/hosts.deny</code>:</b></P>
+
+<pre class="example">
+ALL:ALL
+### koniec suboru hosts.deny
+</pre>
+
+<P ALIGN="justify"><b><code>/etc/hosts.allow</code>:</b></P>
+
+<pre class="example">
+ipop3d: 192.168.1.
+imapd:  192.168.1. 127.0.0.1
+
+### koniec suboru hosts.allow
+</pre>
+
+<P ALIGN="justify"><b><code>/etc/inetd.conf</code>:</b></P>
+
+<pre class="example"><b>
+port   typ     prot.   detaily    user       program         argumenty</b>
+
+imap   stream  tcp     nowait.200 root       /usr/sbin/tcpd  /usr/sbin/imapd
+pop3   stream  tcp     nowait     root       /usr/sbin/tcpd  /usr/sbin/ipop3d
+</pre>
+
+<p class="poznamka">
+<b>Poznámka:</b> Číslo "200" v riadku
+"imap" určuje počet spojení, ktoré možno uskutočniť v priebehu jednej minúty.
+Toto číslo je úmyselne explicitne zvýšené kvôli problémom s prihlasovaním sa
+na webmail (<a href="http://www.horde.org/">Horde</a>/<a
+    href="http://www.horde.org/projects/imp/">IMP</A>). So štandardným
+nastavením sa Vám nepodarí prihlásiť na webmail, ak sa bude naraz prihlasovať
+väčšia skupina ľudí (napr. celá učebňa).</p>
+
+<P ALIGN="justify">
+Pre aktualizáciu údajov treba reštartovať inetd zaslaním signálu HUP ("<b><code>killall
+-HUP inetd</code></b>") alebo spustením "<b><code>/etc/init.d/inetd reload"</code></b>.
+  
+<A NAME="stunnel"></A>
+<H3>6.4.2 Tunelovanie &amp; šifrovanie: stunnel</H3>
+
+<P ALIGN="justify">
+Program "<code>stunnel</code>" je užitočná utilita, ktorá vám umožní používať
+šifrovanie pri prenášaní údajov aj pri tých službách, ktoré normálne nijaké
+šifrovanie neumožňujú. Spomenuli sme, že služby, ktoré sa používajú na výber pošty,
+posielajú meno používateľa a jeho heslo v nezašifrovanom tvare. Ak aj
+používate na prihlasovanie na server "<code>ssh</code>", pri čítaní pošty
+pomocou "<code>pop3" alebo "imap</code>" ste z hľadiska bezpečnosti tam, kde
+ste boli pred zavedením "<code>ssh</code>".
+
+<P ALIGN="justify">
+Program "<code>stunnel</code>" vytvára bezpečný kanál medzi aplikáciou
+a serverom. Používa na to funkcie knižnice "<code>openssl</code>". Princíp
+tunelovania protokolu "<code>pop3</code>", "<code>imap</code>" resp.
+akéhokoľvek iného protokolu, ktorý by ste chceli použiť s programami typu
+"<code>stunnel</code>" je takýto:
+
+<P ALIGN="justify">
+Stav pred zavedením "<code>stunnel</code>": klient elektronickej pošty sa
+pripája na server na port "pop3" (110) resp. "imap" (143):
+
+<pre>
+ +------------------+  (login, password)           +------------------+
+ |                  |  <FONT COLOR="red">-----------------------&gt;</FONT>    |                  |
+ | Klient el. pošty |  <FONT COLOR="red">&lt;----------------------</FONT>     | Server pop3/imap |
+ |                  |        (e-mailové správy)    |                  |
+ +------------------+                              +------------------+
+                       <FONT COLOR="red">nešifrovaný kanál (sieť)</FONT>
+</pre>
+
+<P ALIGN="justify">
+Po zavedení "<code>stunnel</code>": klient elektronickej pošty sa pripája na
+port "<code>pop3s</code>" (995), ktorý obsluhuje démon "<code>stunnel</code>".
+Komunikácia s "<code>stunnelom</code>" je šifrovaná, nikto teda nemôže
+zachytiť na sieti vaše heslo. "<code>stunnel</code>" sa následne
+<b>lokálne</b> pripojí na port "<code>pop3</code>" a odovzdá prihlasovacie
+meno a heslo používateľa. "<code>stunnel</code>" vystupuje ako transparentný
+prostredník medzi klientom a serverom.
+
+<pre>
+ +-----------------------+ (login, password)          +-----------------------+
+ |                       | <FONT COLOR="green">-----------------------&gt;</FONT>   |                       |
+ | Klient el. pošty      | <FONT COLOR="green">&lt;----------------------</FONT>    | STUNNEL               |
+ |                       |       (e-mailové správy)   |                       |
+ +-----------------------+                            +-----------------------+
+                            <FONT COLOR="green">šifrovaný kanál (sieť)</FONT><FONT COLOR="blue">     |                     ^
+                                                     / |(login, password)    |
+                                                    .  |                     |
+                             spojenie cez localhost .  |                     |
+                                                     \ v  (e-mailové správy) |</FONT>
+                                                      +-----------------------+
+                                                      |                       |
+                                                      | Server pop3/imap      |
+                                                      |                       |
+                                                      +-----------------------+
+</pre>
+
+<P ALIGN="justify">
+Ak používate na vašej sieti klientov, ktorí nepodporujú šifrovanie
+"<code>pop3</code>" resp. "<code>imap</code>", máte o jeden problém viac.
+V takom prípade treba spustiť program "<code>stunnel</code>" aj na strane
+klienta, aby dáta pochádzajúce od nešifrujúceho klienta zašifroval
+a komunikoval so "<code>stunnelom</code>" na druhej strane - teda na serveri:
+
+<pre>
+ +-----------------------+ 
+ |                       |
+ | Klient el. pošty      |
+ |                       |
+ +-----------------------+
+  <FONT COLOR="blue">|(login, password)    ^
+  |                     | \
+  |                     |  .
+  |                     |  . spojenie cez localhost
+  v  (e-mailové správy) | /</FONT>
+ +-----------------------+ (login, password)          +-----------------------+
+ |                       | <FONT COLOR="green">-----------------------&gt;</FONT>   |                       |
+ | STUNNEL               | <FONT COLOR="green">&lt;----------------------</FONT>    | STUNNEL               |
+ |                       |       (e-mailové správy)   |                       |
+ +-----------------------+                            +-----------------------+
+                                                       <FONT COLOR="blue">|                     ^
+                                                    /  |(login, password)    |
+                             spojenie cez localhost .  |                     |
+                                                    .  |                     |
+                                                    \  v  (e-mailové správy) |</FONT>
+                                                      +-----------------------+
+                                                      |                       |
+                                                      | Server pop3/imap      |
+                                                      |                       |
+                                                      +-----------------------+
+</pre>
+
+<P ALIGN="justify">
+Tento problém s väčšinou dostupných a používaných klientov našťastie odpadá
+a stačí vytvoriť jednu "stranu" tunela - na serveri, čo je presne prípad,
+ktorý sme si opísali vyššie.
+
+<P ALIGN="justify">
+Ak teda používate na vašej sieti iba klientov, ktorí sa vedia pripájať pomocou
+šifrovaného spojenia (Mozilla, Microsoft Outlook, Microsoft Outlook Express,
+Eudora a určite aj ďalšie), môžete pripojenie na "<code>pop3" a "imap</code>"
+neskôr pomocou firewallu zo siete celkom zakázať, pretože
+"<code>stunnel</code>" sa na tieto porty bude pripájať výlučne lokálne
+(pomocou "<code>localhost</code>" resp. "<code>127.0.0.1</code>").
+
+<A NAME="stunnel_config"></A>
+<H4>6.4.2.1 Konfigurácia</H4>
+
+<P ALIGN="justify">
+Existujú dva spôsoby, ako nastaviť "<code>stunnel</code>": aby sa spúšťal ako samostatný
+démon pre obsluhu každej tunelovanej služby, alebo aby sa spúšťal z démona
+"<code>inetd</code>". Pre konkrétnu implementáciu sa rozhodnite podľa toho, ako často
+budete obsluhu služby vyžadovať (prečítajte si časť "<A
+HREF="services.html#inetdvsstandalone">Inetd versus samostatné služby</A>").
+
+<A NAME="stunnel_config_standalone"></A>
+<H5>6.4.2.1.1 Samostatne spúšťaný démon</H5>
+
+<P ALIGN="justify">
+V prípade, že budete "<code>stunnel</code>" používať vo forme samostatného démona, treba
+zabezpečiť jeho spustenie po štarte servera napríklad prostredníctvom skriptu
+v "<code>/etc/init.d</code>". Nasledujúce riadky platia pre distribúciu
+"Debian", ktorá má upravený štartovací skript:
+
+<P ALIGN="justify">
+Riadiaci skript "<code>stunnel</code>" sa nachádza v "<code>/etc/init.d/stunnel</code>". Po spustení
+načíta konfiguráciu zo súboru "<code>/etc/stunnel.conf</code>", čím uľahčuje nastavenie.
+
+<P ALIGN="justify">
+Dôležité direktívy konfiguračného súboru:</P>
+<DL>
+<DT><b>SERVERCERT cesta</b></DT>
+<DD>cesta k certifikátu</DD>
+
+<DT><b>TUNNEL port cesta -- meno_demona</b></DT>
+<DD>určuje jednotlivé "tunely", čiže porty, na ktorých bude "stunnel" počúvať.
+"Cesta" určuje umiestnenie obslužného démona. "meno_demona" využijete pri
+obmedzení prístupu pomocou <A HREF="tcp_wrappers.html">TCP wrappera</A>.
+</DD>
+</DL>
+
+<pre class="example">
+#!/bin/bash
+
+# stunnel configuration file
+# by Steve Haslam
+
+# Level of verification to use [-v]
+VERIFY 1
+
+# Certificate for server mode [-p]
+# cesta k certifikatu
+SERVERCERT /etc/ssl/certs/stunnel.pem
+
+# Trusted certs directory for VERIFY 3 [-a]
+#TRUSTEDCERTS /etc/ssl/certs
+
+# Tunnel definitions (daemon mode)
+# definicie tunelov, ak bezi stunnel ako demon
+
+#TUNNEL imaps /usr/sbin/imapd -- imapd
+# tunel pre sifrovanie imap pomocou imaps; tu: nepouzivane
+
+TUNNEL pop3s /usr/sbin/solid-pop3d -- solid-pop3d
+# tunel pre sifrovanie pop3 pomocou pop3s
+</pre>
+
+<P ALIGN="justify">
+Ak nemáte distribúciu "Debian" alebo sa vám z mne neznámeho dôvodu pri inštalovaní
+nevytvoril konfiguračný súbor "<code>/etc/stunnel.conf</code>", nezúfajte. V skutočnosti
+stačí poznať niekoľko parametrov a môžete zariadiť spúšťanie "<code>stunnel-a</code>" sami.
+
+"<code>stunnel</code>", ktorý zabezpečuje tunelovanie protokolu "<code>pop3</code>" na obslužného démona
+"<code>solid-pop3d</code>" vyzerá takto:
+
+<pre class="example"><b>
+/usr/sbin/stunnel -v 1 -p /etc/ssl/certs/stunnel.pem -d pop3s -l /usr/sbin/spop3d -- solid-pop3d</b></pre>
+
+<P ALIGN="justify">
+(príkaz treba zadať v jednom riadku!)
+
+<P ALIGN="justify">
+Parametre:
+<UL>
+<LI> <code>-v číslo</code>: verifikácia klienta pomocou certifikátu. Hodnota "<code>1</code>": iba v prípade,
+že existuje certifikát klienta. V prípade problémov skúste parameter "<code>-v</code>"
+úplne odstrániť.
+<LI> <code>-p cesta</code>: cesta k súboru s PEM certifikátom servera
+<LI> <code>-l program -- meno</code>: cesta k obslužnému démonovi služby (spustí ho
+"<code>stunnel</code>", keď príde požiadavka). Za "<code>--</code>" uveďte meno programu, na základe
+tohto mena môžete neskôr vytvoriť pravidlá <A HREF="tcp_wrappers.html">TCP
+wrappera</A>
+<LI> <code>-d port</code>: číslo alebo meno portu, na ktorom má "<code>stunnel</code>" počúvať
+</UL>
+
+<P ALIGN="justify">
+<b>Príklad: v prípade, že používate na obsluhu "<code>pop3</code>" iného démona, napr.
+"<code>ipop3d</code>":</b>
+
+<pre class="example"><b>
+/usr/sbin/stunnel -v 1 -p /etc/ssl/certs/stunnel.pem -d pop3s -l /usr/sbin/ipop3d -- ipop3d</b></pre>
+
+<A NAME="stunnel_conf_inetd"></A>
+<H5>6.4.2.1.2 Spúšťanie "<code>stunnel</code>" z "<code>inetd</code>"</H5>
+
+<P ALIGN="justify">
+Princíp spúšťania je úplne rovnaký, nebude však editovať štartovací skript,
+ale súbor "<code>/etc/inetd.conf</code>". Ukážka, tentokrát pre tunelovanie
+"<code>imap</code>":
+
+<P ALIGN="justify">
+Pred zmenou:</P>
+
+<pre class="example">
+imap   stream  tcp     nowait.200 root       /usr/sbin/tcpd  /usr/sbin/imapd
+</pre>
+
+<P ALIGN="justify">
+Po zmene:
+</P>
+
+<pre class="example">
+imap   stream  tcp     nowait.200 root       /usr/sbin/tcpd  /usr/sbin/stunnel -v 1 -p /etc/ssl/certs/stunnel.pem -d imaps -l /usr/sbin/imapd -- imapd
+</pre>
+
+<P ALIGN="justify">
+(príkaz treba zadať v <b>jednom riadku</b>)
+
+<A NAME="stunnel_certificate"></A>
+<H4>6.4.2.2 Vytvorenie certifikátu</H4>
+
+<P ALIGN="justify">
+Pre používanie démona "<code>stunnel</code>" treba ešte vygenerovať certifikát
+pre server (bez neho by vám napríklad "Outlook Express" škaredo nadával vždy
+pri sťahovaní pošty). Program je našťastie vybavený "jednoriadkovým helpom",
+ktorý sa vypíše priamo po inštalácii balíčka:
+
+<pre class="example">
+To build a new pem, execute the following OpenSSL command:
+    openssl req -new -x509 -days 365 -nodes \
+    -config /usr/share/doc/stunnel-3.20/stunnel.cnf \
+    -out /etc/ssl/certs/stunnel.pem -keyout /etc/ssl/certs/stunnel.pem
+</pre>
+    
+<P ALIGN="justify">
+Takže tieto tri riadky treba skopírovať do príkazového riadku, spustiť
+a odpovedať na otázky. Certifikát sa sám sebou podpíše a uloží do súboru
+"<code>/etc/ssl/certs/stunnel.pem</code>". Platnosť certifikátu je jeden rok
+(365 dní).
+
+<P ALIGN="justify" class="pozor">
+<b>Pozor!</b> Ako ste si všimli, cesta k "<code>stunnel.cnf</code>" závisí od
+čísla verzie, preto použíte výpis vášho konkrétneho balíčka.
+
+<A NAME="stunnel_client_config"></A>
+<H4>6.4.2.3 Konfigurácia klienta</H4>
+
+<P ALIGN="justify">
+Konfigurácia klienta je väčšinou jednoduchá, len treba nájsť tie správne
+zaškrtávacie položky. Ukážka pre "<code>Outlook Express</code>", ktorý jediný
+som mal pre screenshoty k dispozícii:
+
+<P>
+<b>Krok 1</b>: vyberte menu "Nástroje" a "Kontá":</P>
+<CENTER>
+<IMG SRC="pictures/express08.gif" ALT="Nastavenie Outlook Express (1)">
+</CENTER>
+
+<BR CLEAR="all">
+<P>
+<b>Krok 2</b>: Pre nastavované konto elektronickej pošty vyberte "Vlastnosti":
+</P>
+
+<CENTER>
+<IMG SRC="pictures/express09.gif" ALT="Nastavenie Outlook Express (2)">
+</CENTER>
+
+<BR CLEAR="all">
+<P>
+<b>Krok 3</b>: Zaškrtnite možnosť "Tento server vyžaduje bezpečné spojenie (SSL)" pre
+<b>Prichádzajúcu poštu!!</b> Číslo portu sa zmení zo "110" (pop3) na "995"
+(pop3s), resp. "143" na "993" (imaps):</P>
+<CENTER>
+<IMG SRC="pictures/express10.gif" ALT="Nastavenie Outlook Express (3)">
+</CENTER>
+<BR CLEAR="all">
+
+<A NAME="stunnel_combined"></A>
+<H3>6.4.3 Kombinovaný prístup</H3>
+
+<P ALIGN="justify">
+Obe metódy (obmedzovanie prístupu a šifrovanie) môžete aj kombinovať.
+V nasledujúcom príklade platí obmedzenie služieb POP3 a IMAP z vnútornej siete
+a službu POP3 so šifrovaním môže využívať každý počítač v Internete, ktorý
+nefalšuje svoj DNS záznam:</P>
+
+<P ALIGN="justify"><b><code>/etc/hosts.allow</code>:</b></P>
+
+<pre class="example">
+ipop3d: 192.168.1.
+imapd:  192.168.1. 127.0.0.1
+solid-pop3d: ALL EXCEPT PARANOID
+
+### koniec suboru hosts.allow
+</pre>
+
+<CENTER>
+<TABLE WIDTH="75%" BORDER="0">
+<TR>
+<TD WIDTH="33%" ALIGN="center"><A HREF="security.html">Späť (Druhy útokov na
+server v sieti)</A></TD>
+<TD WIDTH="33%" ALIGN="center"><A HREF="index.php">Obsah</A></TD>
+<TD WIDTH="33%" ALIGN="center"><A HREF="proxy.html">Ďalej (Proxy server)</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<HR>
+<P ALIGN="right">&copy; Ivan "VIX" Noris, 2002-2005<BR>
+mail: vix (zavinac) deja-vix bodka sk</P>
+
+
+
+  </BODY>
+</HTML>
+
+

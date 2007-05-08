@@ -236,12 +236,12 @@ int link_email(email *new_email, email *master_email)
 		if(acl_set_permset(entry_p, permset) == -1) {
 			logging(DEBUG,"Error, seting permset of acl: %s\n",strerror(errno));	
 		}
-		if (!acl_valid(acl)) {
-			logging(DEBUG,"Error, not valid acl\n");
-		}
 		if(acl_set_file(master_email->filepath,ACL_TYPE_ACCESS,acl) == -1) {
 			logging(DEBUG,"Error, set new acl for file %s\nerrno: %s\n",new_email->filepath,strerror(errno));
 			if(errno == EINVAL) new_email->done = EINVAL;
+		}
+		else {
+			logging(DEBUG,"Successful, create new ACL\n");
 		}
 		if(new_email->done != EINVAL) {
 			logging(DEBUG,"link(%s,%s);\n",master_email->filepath, new_email->filepath);

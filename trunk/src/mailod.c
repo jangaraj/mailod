@@ -94,7 +94,7 @@ int main(void)
 				exit (1);
 			}
 			close(new_fd);
-			if(((conn = connect_db(conf_struct)) != NULL) && (new_email->hash = hash_text(new_email->body))) {
+			if(((conn = connect_db(conf_struct)) != NULL) && ((new_email->hash = hash_text(new_email->body)) != NULL )) {
 				//connect to database and hashing body text - OK
 				if((ident_email = select_by_hash(conn, new_email->hash, conf_struct->time_window))==NULL) {
 					logging(DEBUG, "nemam ident email. Idem ho zapisat to filesystema a do DB.\n");
@@ -131,7 +131,7 @@ int main(void)
 								break;
 							}
 						}
-					} while (new_email->done == EMLINK);  //if fail on max number hardlinks - next loop
+					} while (new_email->done == EMLINK || new_email->done == EINVAL);  //if fail on max number hardlinks - next loop
 
 					free((void *) ident_email);
 				}	

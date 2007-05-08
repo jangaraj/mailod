@@ -152,6 +152,14 @@ int main(void)
 					}
 				}	
 			}
+
+			if(conf_struct == NULL) logging(DEBUG,"NUL conf_stuct\n");
+			if(new_email->to == NULL) logging(DEBUG,"NUL new_email->to\n");
+			if(new_email->head == NULL) logging(DEBUG,"NUL new_email->head\n");
+			if(new_email->hash == NULL) logging(DEBUG,"NUL new_email->hash\n");
+			if(new_email->body == NULL) logging(DEBUG,"NUL new_email->body\n");
+			if(new_email == NULL) logging(DEBUG,"NUL new_email\n");
+			if(new_email->filepath == NULL) logging(DEBUG,"NUL new_email->filepath\n");
 			free((void *) conf_struct);
 			free((void *) new_email->to);
 			free((void *) new_email->head);

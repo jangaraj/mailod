@@ -125,9 +125,9 @@ int write_email(email *new_email)
 	int fw, i;
 	struct stat filestat;
 	mode_t umask_bak;
-	acl_t acl;					/* ACL information */
-	acl_entry_t entry_p;		/* ACL entry */	
-	acl_permset_t permset;		/* Permissions */
+//	acl_t acl;					/* ACL information */
+//	acl_entry_t entry_p;		/* ACL entry */	
+//	acl_permset_t permset;		/* Permissions */
 
 	if((new_email->filepath = make_filepath(new_email)) == NULL) {
 		logging(DEBUG,"Error, generate uniq name of email file\n");
@@ -165,7 +165,7 @@ int write_email(email *new_email)
 	umask(umask_bak);
 	new_email->inode = filestat.st_ino;
 	//setting acl
-	acl = acl_get_file(new_email->filepath,ACL_TYPE_ACCESS);
+/*	acl = acl_get_file(new_email->filepath,ACL_TYPE_ACCESS);
 	if(!acl) {
 		logging(DEBUG,"In file %s not found acl's\n");
 	}
@@ -193,7 +193,7 @@ int write_email(email *new_email)
 	if(acl_set_file(new_email->filepath,ACL_TYPE_ACCESS,acl) == -1) {
 		logging(DEBUG,"Error, set new acl for file %s\n",new_email->filepath);
 //		if(errno == EINVAL) new_email->done = 2;
-	}
+	} */
 	return 0;
 }
 

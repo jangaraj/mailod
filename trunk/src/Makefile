@@ -14,3 +14,6 @@ email.o: email.c email.h const.h
 install:
 	cp ../bin/mailod /usr/sbin/mailod
 	cp ../etc/postfix/mailod.conf /etc/postfix/mailod.conf
+clean:
+	rm *.o
+	rm ../bin/mailod

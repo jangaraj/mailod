@@ -13,7 +13,7 @@ while ($i <= $count )
 	setfacl -b /home/posttest$i/.maildir/new
 	setfacl -k /home/posttest$i/.maildir/new
 	setfacl -m g:users:rwx /home/posttest$i/.maildir/new
-	setfacl -d -m u::---,u:postfix:rw-,g::---,o::--- /home/posttest$i/.maildir/new
+	setfacl -d -m u::---,u:postfix:rw-,u:posttest$i\:rw-,g::---,o::--- /home/posttest$i/.maildir/new
 	setfacl -b /home/posttest$i/.maildir/cur
 	setfacl -k /home/posttest$i/.maildir/cur
 	setfacl -m g:users:rwx /home/posttest$i/.maildir/cur

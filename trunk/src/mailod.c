@@ -84,10 +84,10 @@ int main(void)
 			logging(DEBUG,"accept");
 			continue;
 		}
-		logging(DEBUG,"got connection from %s\n",inet_ntoa(their_addr.sin_addr));
+		logging(DEBUG,"Connection from %s\n",inet_ntoa(their_addr.sin_addr));
 		if (!fork()) { 						//this is the child process
 			close(sockfd); 					//child doesn't need the listener
-			logging(DEBUG,"USPESNE FORKNUTY");
+			logging(DEBUG,"Successful fork");
 			if((new_email = readmail(new_fd)) == NULL) {
 				logging(DEBUG, "Error, reading and processing input email\n");
 				exit (1);
@@ -96,30 +96,30 @@ int main(void)
 			if(((conn = connect_db(conf_struct)) != NULL) && ((new_email->hash = hash_text(new_email->body)) != NULL )) {
 				//connect to database and hashing body text - OK
 				if((ident_email = select_by_hash(conn, new_email->hash, conf_struct->time_window))==NULL) {
-					logging(DEBUG, "nemam ident email. Idem ho zapisat to filesystema a do DB.\n");
+					logging(DEBUG, "ident email is NULL\n");
 					if(write_email(new_email)!=0) {
-						logging(DEBUG, "Error standard-writing email.\n");
+						logging(DEBUG, "Error standard-writing email\n");
 					}
 					else 
 					{	
 					  	new_email->done = 0;
-						logging(DEBUG, "uspesny zapis email suboru\n");
+						logging(DEBUG, "Successful writing email file\n");
 						if((insert_email(conn, new_email))!=0) {
 							logging(DEBUG, "Error standard-writing email.\n");
 						}
 						else {
-							logging(DEBUG, "uspesny zapis zaznamu do db\n");
+							logging(DEBUG, "Successful inser to database\n");
 						}
 					}
 				}
 				else {
-					logging(DEBUG, "Linkujem podla ident emailu\n");
+					logging(DEBUG, "Linked by ident email\n");
 					do {
 						new_email->done = 1;
 						if(link_email(new_email, ident_email)!=0) {
 							logging(DEBUG, "Error, linking email\n");
 							if(new_email->done == EMLINK) { 
-								logging(DEBUG, "Idem zmazat zaznam, ktory uz ma full hardlinks\n");
+								logging(DEBUG, "Deleting record with full hardlinks\n");
 								if((delete_email(conn, ident_email))!=0) {
 									logging(DEBUG, "Error, deleting full hardlinks record from database\n");
 								}
@@ -127,7 +127,7 @@ int main(void)
 							free((void *) ident_email);
 							if((ident_email = select_by_hash(conn, new_email->hash, conf_struct->time_window))==NULL) {
 								//not found ident email in database, break loop
-								logging(DEBUG, "Nenasiel som dalsi vhodny email z db\n");
+								logging(DEBUG, "Not found next ident email in database\n");
 								break;
 							}
 						}
@@ -143,12 +143,12 @@ int main(void)
 				}
 				else 
 				{	
-					logging(DEBUG, "uspesny zapis email suboru2\n");
+					logging(DEBUG, "Successful fail-writing email file\n");
 					if((insert_email(conn, new_email))!=0) {
 						logging(DEBUG, "Error, inserting email to database2\n");
 					}
 					else {
-						logging(DEBUG, "uspesny zapis zaznamu do db2\n");
+						logging(DEBUG, "Successfull insert record to database after fail-writing\n");
 					}
 				}	
 			}

@@ -1,5 +1,5 @@
 /*
- * mailod:  optimalization of the usage disk
+ * mailod: optimalization of the usage disk
  * Author: Jan Garaj	
  */
 
@@ -15,7 +15,6 @@
 #include "common_function.h"
 #include "logging.h"
 
-static char msg_buffer[4096];
 static int  log_level;
 
 void start_log(config *conf) {
@@ -55,34 +54,4 @@ void logging(int ll, const char *fmt, ... ) {
 				if( ll == RUN && log_level >= RUN ) {
 					syslog( LOG_INFO, buffer );
 				}
-}
-
-void start_msg(void) {
-	msg_buffer[0] = '\0';
-}
-
-
-
-void log_msg(int ll) {
-	logging( ll, msg_buffer );
-}
-
-
-
-void build_msg(const char *fmt, ... ) {
-	char buffer[1024];
-	va_list ap;
-	va_start( ap, fmt );
-
-	vsnprintf( buffer, sizeof( buffer ), fmt, ap );
-	if( strlen( msg_buffer ) >= sizeof( msg_buffer ) ) {
-		return;
-	}
-	else
-		if( ( strlen( buffer ) + strlen( msg_buffer ) )  < sizeof( msg_buffer ) ) {
-			strcat( msg_buffer, buffer );
-		}
-		else {
-			strncat( msg_buffer, buffer, sizeof( msg_buffer ) - strlen( msg_buffer ) - 1 );
-		}
 }

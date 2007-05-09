@@ -88,6 +88,7 @@ int main(void)
 		if (!fork()) { 						//this is the child process
 			close(sockfd); 					//child doesn't need the listener
 			logging(DEBUG,"Successful fork");
+			exit (1);
 			if((new_email = readmail(new_fd)) == NULL) {
 				logging(DEBUG, "Error, reading and processing input email\n");
 				exit (1);

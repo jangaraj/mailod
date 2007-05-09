@@ -3,15 +3,21 @@
 @ count=10
 @ i=1
 #chmod ma moc prav - obmedzit
-chmod -R 760 /home/posttest*/.maildir
+chmod -R 770 /home/posttest*/.maildir
 while ($i <= $count )
 	echo "Menim prava pre posttest$i"
 	chown -R postfix:users /home/posttest$i/.maildir
-	setfacl -m g:users:rw- /home/posttest$i/.maildir
-	setfacl -m g:users:rw- /home/posttest$i/.maildir/new
-	setfacl -d -m u::---,u:vlk:rw-,u:postfix:rw-,g::---,o::--- /home/posttest$i/.maildir/new
+	setfacl -b /home/posttest$i/.maildir
+	setfacl -k /home/posttest$i/.maildir
+	setfacl -m g:users:rwx /home/posttest$i/.maildir
+	setfacl -b /home/posttest$i/.maildir/new
+	setfacl -k /home/posttest$i/.maildir/new
+	setfacl -m g:users:rwx /home/posttest$i/.maildir/new
+	setfacl -d -m u::---,u:postfix:rw-,g::---,o::--- /home/posttest$i/.maildir/new
+	setfacl -b /home/posttest$i/.maildir/cur
+	setfacl -k /home/posttest$i/.maildir/cur
 	setfacl -m g:users:rwx /home/posttest$i/.maildir/cur
-	setfacl -d -m u::---,u:vlk:rw-,g::---,o::--- /home/posttest$i/.maildir/cur
+	setfacl -d -m u::---,g::---,o::--- /home/posttest$i/.maildir/cur
 	setfacl -m g:users:rwx /home/posttest$i/.maildir/tmp
 	chown posttest$i\:users /home/posttest$i/.maildir/courierimapuiddb
 	chmod 600 /home/posttest$i/.maildir/courierimapuiddb

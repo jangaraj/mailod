@@ -3,7 +3,7 @@
 @ count=10
 @ i=1
 while ($i <= $count )
-	echo "Posielam test_email pouzivatelovi posttest$i"
-	cat ../src/test_mail  | mail posttest$i
+	echo "Posielam test_text pouzivatelovi posttest$i"
+	cat test_text | mail -s testing_mailod posttest$i
 	@ i++
 end

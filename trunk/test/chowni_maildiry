@@ -3,35 +3,26 @@
 @ count=10
 @ i=1
 #chmod ma moc prav - obmedzit
-chmod -R 770 /home/posttest*/.maildir
+chmod -R 760 /home/posttest*/.maildir
 while ($i <= $count )
 	echo "Menim prava pre posttest$i"
 	chown -R postfix:users /home/posttest$i/.maildir
 	setfacl -m g:users:rwx /home/posttest$i/.maildir
 	setfacl -m g:users:rwx /home/posttest$i/.maildir/new
-	setfacl -d -m u::---,u:vlk:rw-,g::---,o::--- /home/posttest$i/.maildir/new
+	setfacl -d -m u::---,u:vlk:rw-,u:postfix:rw-,g::---,o::--- /home/posttest$i/.maildir/new
 	setfacl -m g:users:rwx /home/posttest$i/.maildir/cur
 	setfacl -d -m u::---,u:vlk:rw-,g::---,o::--- /home/posttest$i/.maildir/cur
+	setfacl -m g:users:rwx /home/posttest$i/.maildir/tmp
 	chown posttest$i\:users /home/posttest$i/.maildir/courierimapuiddb
 	chmod 600 /home/posttest$i/.maildir/courierimapuiddb
 	chown -R posttest$i\:posttest$i /home/posttest$i/.maildir/courierimapkeywords
-	chmod -R 600 /home/posttest$i/.maildir/courierimapkeywords
+	chmod -R 700 /home/posttest$i/.maildir/courierimapkeywords
 	chown posttest$i\:posttest$i /home/posttest$i/.maildir/courierimapsubscribed
 	chmod 600 /home/posttest$i/.maildir/courierimapsubscribed
+	chown -R posttest$i\:users /home/posttest$i/.maildir/.Trash
+	chmod -R 700 /home/posttest$i/.maildir/.Trash
+	chmod 600 /home/posttest$i/.maildir/.Trash/courierimapacl
+	chmod 600 /home/posttest$i/.maildir/.Trash/courierimapuiddb
+	chmod 600 /home/posttest$i/.maildir/.Trash/maildirfolder
 	@ i++
 end
-
-#	chown -R postfix:users /home/posttest$i/.maildir
-#	chmod -R 777 /home/posttest$i/.maildir
-#	chmod -R 777 /home/posttest*/.maildir
-#	chmod 700 /home/posttest$i/.maildir
-#	setfacl -m g:users:rwx /home/posttest$i/.maildir
-#	chown -R posttest$i:posttest$i /home/posttest$i/.maildir/.Trash
-#	chown -R posttest$i:posttest$i /home/posttest$i/.maildir/courierimapkeywords
-#	chown -R posttest$i:posttest$i /home/posttest$i/.maildir/tmp
-#	chown posttest$i:posttest$i /home/posttest$i/.maildir/courierimapuiddb
-#	setfacl -m g:users:rwx /home/posttest$i/.maildir/new
-#	setfacl -d -m u::---,u:vlk:rwx,g::---,o::--- /home/posttest$i/.maildir/new
-#	setfacl -m g:users:rwx /home/posttest$i/.maildir/cur
-#	setfacl -d -m u::---,u:vlk:rwx,g::---,o::--- /home/posttest$i/.maildir/cur
-

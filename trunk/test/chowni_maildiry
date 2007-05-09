@@ -1,36 +1,37 @@
-(#!/bin/bash
+#!/bin/csh -f
 #count - pocet uzivatelov
-count=10
-i=1
-while [[ $i<$count ]]
-do
+@ count=10
+@ i=1
+#chmod ma moc prav - obmedzit
+chmod -R 770 /home/posttest*/.maildir
+while ($i <= $count )
 	echo "Menim prava pre posttest$i"
-	chown -R postfix:postfix /home/posttest$i/.maildir
-	chmod -R 777 /home/posttest$i/.maildir
-	chmod 700 /home/posttest$i/.maildir
+	chown -R postfix:users /home/posttest$i/.maildir
 	setfacl -m g:users:rwx /home/posttest$i/.maildir
+	setfacl -m g:users:rwx /home/posttest$i/.maildir/new
+	setfacl -d -m u::---,u:vlk:rw-,g::---,o::--- /home/posttest$i/.maildir/new
+	setfacl -m g:users:rwx /home/posttest$i/.maildir/cur
+	setfacl -d -m u::---,u:vlk:rw-,g::---,o::--- /home/posttest$i/.maildir/cur
+	chown posttest$i\:users /home/posttest$i/.maildir/courierimapuiddb
+	chmod 600 /home/posttest$i/.maildir/courierimapuiddb
+	chown -R posttest$i\:posttest$i /home/posttest$i/.maildir/courierimapkeywords
+	chmod -R 600 /home/posttest$i/.maildir/courierimapkeywords
+	chown posttest$i\:posttest$i /home/posttest$i/.maildir/courierimapsubscribed
+	chmod 600 /home/posttest$i/.maildir/courierimapsubscribed
+	@ i++
+end
+
+#	chown -R postfix:users /home/posttest$i/.maildir
+#	chmod -R 777 /home/posttest$i/.maildir
+#	chmod -R 777 /home/posttest*/.maildir
+#	chmod 700 /home/posttest$i/.maildir
+#	setfacl -m g:users:rwx /home/posttest$i/.maildir
 #	chown -R posttest$i:posttest$i /home/posttest$i/.maildir/.Trash
 #	chown -R posttest$i:posttest$i /home/posttest$i/.maildir/courierimapkeywords
 #	chown -R posttest$i:posttest$i /home/posttest$i/.maildir/tmp
-	echo $i
-	echo "chown posttest$i:posttest$i /home/posttest$i/.maildir/courierimapsubscribed"
 #	chown posttest$i:posttest$i /home/posttest$i/.maildir/courierimapuiddb
-	setfacl -m g:users:rwx /home/posttest$i/.maildir/new
-	setfacl -d -m u::---,u:vlk:rwx,g::---,o::--- /home/posttest$i/.maildir/new
-	setfacl -m g:users:rwx /home/posttest$i/.maildir/cur
-	setfacl -d -m u::---,u:vlk:rwx,g::---,o::--- /home/posttest$i/.maildir/cur
-	i=$(($i+1)) 
-done
-#    chmod -R 777 /home/posttest*/.maildir
-#	chown -R postfix:postfix /home/vlk/.maildir
-#	chmod 700 /home/vlk/.maildir
-#	setfacl -m g:users:rwx /home/vlk/.maildir
-#	setfacl -m g:users:rwx /home/vlk/.maildir/new
-#	setfacl -m g:users:rwx /home/vlk/.maildir/cur
+#	setfacl -m g:users:rwx /home/posttest$i/.maildir/new
+#	setfacl -d -m u::---,u:vlk:rwx,g::---,o::--- /home/posttest$i/.maildir/new
+#	setfacl -m g:users:rwx /home/posttest$i/.maildir/cur
+#	setfacl -d -m u::---,u:vlk:rwx,g::---,o::--- /home/posttest$i/.maildir/cur
 
-#	chown -R postfix:postfix /root/.maildir
-#	chmod 700 /root/.maildir
-#	setfacl -m g:users:rwx /root/.maildir
-#	setfacl -m g:users:rwx /root/.maildir/new
-#	setfacl -m g:users:rwx /root/.maildir/cur
-exit 0

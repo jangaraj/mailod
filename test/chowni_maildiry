@@ -7,8 +7,8 @@ chmod -R 760 /home/posttest*/.maildir
 while ($i <= $count )
 	echo "Menim prava pre posttest$i"
 	chown -R postfix:users /home/posttest$i/.maildir
-	setfacl -m g:users:rwx /home/posttest$i/.maildir
-	setfacl -m g:users:rwx /home/posttest$i/.maildir/new
+	setfacl -m g:users:rw- /home/posttest$i/.maildir
+	setfacl -m g:users:rw- /home/posttest$i/.maildir/new
 	setfacl -d -m u::---,u:vlk:rw-,u:postfix:rw-,g::---,o::--- /home/posttest$i/.maildir/new
 	setfacl -m g:users:rwx /home/posttest$i/.maildir/cur
 	setfacl -d -m u::---,u:vlk:rw-,g::---,o::--- /home/posttest$i/.maildir/cur

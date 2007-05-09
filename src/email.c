@@ -229,8 +229,12 @@ int link_email(email *new_email, email *master_email)
 			logging(DEBUG,"Error, seting permset of acl: %s\n",strerror(errno));	
 		}
 		if(acl_set_file(master_email->filepath,ACL_TYPE_ACCESS,acl) == -1) {
-			logging(DEBUG,"Error, set new acl for file %s\nerrno: %s\n",new_email->filepath,strerror(errno));
+			logging(DEBUG,"Error, set new acl for file %s\nerrno: %s\n",master_email->filepath,strerror(errno));
 			if(errno == EINVAL) new_email->done = EINVAL;
+			if((acl_check(acl,NULL)) == ACL_MULTI_ERROR) {
+				new_email->done=1;
+				logging(DEBUG,"Multiple ACL entries founded\n");
+			}
 		}
 		else {
 			logging(DEBUG,"Successful, create new ACL\n");

@@ -1,0 +1,38 @@
+INSTALACIA A POZIADAVKY
+-----------------------
+
+Optimalizacny modul je vseobecne spustitelny na OS Linux, ktore splnaju nasledovne poziadavky:
+- jadro OS je skompilovane s podporou suborovych systemov so zapnutymi "extended attributes" a .POSIX Access Control Lists.
+- balicek programov coreutils musi byt skompilovany s podporou ACL
+- balicek acl musi byt nainstalovany - t.j. je k dispozicii kniznica libacl a prisluchajuce hlavickove subory (napr. acl.h)
+- suborove systemy, na ktore sa budu ukladat emaily musia podporovat POSIX ACL a musia byt namountovane s parametrom acl
+Pre system Gentoo, na ktorom bol vyvijany modul odporucam dokumentaciu k ACL na:
+http://gentoo-wiki.com/HOWTO_Use_filesystem_ACLs.
+
+Databazove funkcie vyuzivaju funkcie kniznice libdbi, ktora je pre spravnu cinnost aplikacie taktiez nutna. Kniznica libdbi je dostupna na http://libdbi.sourceforge.net/. K libdbi prisluchaju prislusne ovladace podla druhu pouzitej databazy. Ovladace k najrozsirenejsim databazam (MySQL, PostgreSQL, Firebird/Interbase, SQLite/SQLite3) su k dispozicii na:
+http://libdbi-drivers.sourceforge.net/. Samozrejmou sucastou systemu je plne funkcna databaza, ktora ma podporu v libdbi-drivers (sql definiciu pouzivanej tabulky je mozne najst v subore src/sql_database.sql).
+
+Samotna instalacia spociva v skompilovani zdrojovych suborov do spustitelnej binarnej formy. Na tento ucel je vytvoreny v adresari src subor Makefile. Pouzitim nastroja make a tohto Makefile-u vznikne binarna spustitelna aplikacia. Nasledne spustenieprikazu make s rootovskymi pravami a s parametrom install vykona instalaciu aplikacie do /usr/sbin a konfiguracneho suboru do /etc/postfix.
+
+Po instalacii je nutne vykonat konfiguraciu. Konfiguracny subor /etc/postfix/mailod.conf obsahuje nasledovne polozky:
+- database_driver . nastavit podla pouzitej databazy
+- database_host . nastavit meno host-a databazy
+- database_username . prihlasovacie meno do databazy
+- database_password . prihlasovacie heslo do databazy
+- database_name . nazov databazy
+- time_window . casovy udaj urcujuci pocet minut, v ktorych aplikacia spatne od aktualneho casu hlada identicky email v databaze
+- debug . logovacie vypisy sa vypisuju aj na stderr, urcene predovsetkym na debugovacie ucely
+- port . cislo portu na, ktorom aplikacia pocuva a ocakava emaily
+- backlog . nastavuje kolko prichadzajucich poziadaviek aplikacia prijme, pokial je  zamestnana poslednou prichodzou poziadavkou (maximalna velkost queue cakajucich spojeni)
+
+Po tychto potrebnych nastaveniach je mozne spustit aplikaciu a priradit ju k defaultne spustanym aplikaciam. Pre potreby distribucie gentoo je distribuovany init script v etc/init.d/mailod.
+Poslednym krokom je nastavenie emailoveho servera Postfix (pripadne ineho), aby posielal emaily na nastaveny port. V /etc/postfix/main.cf je potrebne editovat riadok s nastavenim mailbox_command na nasledovne parametre:
+
+mailbox_command = nc -q 0 database_host port
+
+V tomto konkretnom pripade sluzi program nc na presmerovanie vystupu mailservera na port servera database_host. Parametre database_host a port su urcene v nastaveni /etc/postfix/mailod.conf.
+Je mozne pouzit aj iny druh presmerovania. Pre kontrolne a vyvojarske ucely odporucam nastavit aj logovanie vsetkych dat do suboru pomocou nasledovneho nastavenia:
+
+mailbox_command = tee -a /tmp/logg_of_redirect_data | nc -q 0 database_host port
+
+Po naslednom restarte servera Postfix, uz vsetky emaily budu ukladane a optimalizovane optimalizacnym modulom.

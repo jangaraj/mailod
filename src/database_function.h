@@ -1,5 +1,5 @@
 /*
- * mailod:  optimalization of the usage disk
+ * mailod: optimalization of the usage disk
  * Author: Jan Garaj	
  */
 #include <dbi/dbi.h>

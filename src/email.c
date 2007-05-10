@@ -1,5 +1,5 @@
 /*
- * mailod:  optimalization of the usage disk
+ * mailod: optimalization of the usage disk
  * Author: Jan Garaj	
  */
 
@@ -56,7 +56,7 @@ email *readmail(int input)
 			return NULL;
 		}
 		strncat(reading_email_all, buffer, read_size);
-		nblock++;							//counter na citaci cyklus - pocet alokovanych blokov
+		nblock++;							//counter of reading loop - number of allocated blocks
 	}
 	//divide head from all
 	position = strstr(reading_email_all, DIVIDER_HEAD_BODY);
@@ -292,7 +292,6 @@ int link_email(email *new_email, email *master_email)
 	       if (dir->d_ino == 0)
 	             continue;
 	       if(master_email->inode == dir->d_ino) {
-/***********************nasiel som ho v cur********************************/			
 				// link with file from cur
 				logging(DEBUG,"Found email file with same number inode\n");
 				master_email->filepath = (char *) realloc(master_email->filepath, (strlen(master_email->filepath)+strlen(dir->d_name)+1)*sizeof(char));
@@ -368,7 +367,6 @@ int link_email(email *new_email, email *master_email)
 					return 1;				//error acl
 				}	
 				break;						//end searching in cur direcoctory - founded file
-/********************************************************/				 
 			}
 	    }
 		if((closedir(dp) != 0)) {

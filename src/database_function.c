@@ -1,5 +1,5 @@
 /*
- * mailod:  optimalization of the usage disk
+ * mailod: optimalization of the usage disk
  * Author: Jan Garaj	
  */
 
@@ -41,7 +41,7 @@ email *select_by_hash(dbi_conn conn, char hash_value[], int time_window)
 {
     dbi_result result;
 	email *ident_email;
-	char sql[1024];  //TODO betonovana konstanta 1024
+	char sql[1024];
 
 	ident_email=NULL;
 	//selekujem vzdy najstarsi mozny
@@ -68,8 +68,7 @@ email *select_by_hash(dbi_conn conn, char hash_value[], int time_window)
 int insert_email(dbi_conn conn, email *new_email)
 {
     dbi_result result;
-	char sql[1024];  //TODO betonovana konstanta 1024
-	//TODO nazvy tabuliek a stlpcov do const.h
+	char sql[1024];
 	sprintf(sql,"INSERT INTO mailod (body_hash, filepath, inode) VALUES (\"%s\",\"%s\",%ld);", new_email->hash, new_email->filepath, new_email->inode);
    	result = dbi_conn_query(conn,sql);
 	if(dbi_result_get_numrows_affected(result)!=1) return 1;   // 0 affected rows - not inserted
@@ -81,8 +80,7 @@ int insert_email(dbi_conn conn, email *new_email)
 int delete_email(dbi_conn conn, email *ident_email)
 {
     dbi_result result;
-	char sql[1024];  //TODO betonovana konstanta 1024
-	//TODO nazvy tabuliek a stlpcov do const.h
+	char sql[1024];
 	sprintf(sql,"DELETE FROM mailod where `email_id`=\"%ld\";", ident_email->id);
    	result = dbi_conn_query(conn,sql);
 	if(dbi_result_get_numrows_affected(result)!=1) return 1;   // 0 affected rows - not inserted

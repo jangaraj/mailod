@@ -1,5 +1,5 @@
 /*
- * mailod:  optimalization of the usage disk
+ * mailod: optimalization of the usage disk
  * Author: Jan Garaj	
  */
 
@@ -63,14 +63,6 @@ int readconf( char conffile[], config *conf )
 				return 1;
 			}
 		}
-/*		if( (strcasecmp(LOG_LEVEL, parm)) == 0 ) {
-			conf->log_level = atoi(val);
-			if((conf->log_level<0) || (conf->log_level>6)) {
-				logging(DEBUG,"Error, <param> %s at line %d has invalid value %d\n", LOG_LEVEL, line, conf->log_level);
-				return 1;
-			}
-
-		}*/
 		conf->log_level = 1;
 		if( (strcasecmp(LOG_STDERR, parm)) == 0 ) {
 			conf->debug = atoi(val);
@@ -97,12 +89,7 @@ int readconf( char conffile[], config *conf )
 
 	}
 	fclose(fp);
-	/*
-	if( !conf->db_driver ) {
-		fprintf(stderr,"Error, missing db_driver <param> in %s\n", conffile );
-		return 1;
-	}
-	}*/
+
 	return 0;
 }
 

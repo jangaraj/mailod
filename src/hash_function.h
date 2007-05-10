@@ -1,5 +1,5 @@
 /*
- * mailod:  optimalization of the usage disk
+ * mailod: optimalization of the usage disk
  * Author: Jan Garaj	
  * source: http://b-con.us/code/sha256_c.php
  */

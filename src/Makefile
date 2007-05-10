@@ -12,8 +12,15 @@ email.o: email.c email.h const.h
 	gcc -g -Wall -c email.c
 
 install:
+	echo "Installing mailod to /usr/sbin"
 	cp ../bin/mailod /usr/sbin/mailod
-#	cp ../etc/postfix/mailod.conf /etc/postfix/mailod.conf
+	if ( -f /etc/postfix/mailod.conf ) then
+		echo "Config file is installed from previous installation"
+	else
+		echo "Instaling new mailod.conf to /etc/postfix/mailod.conf"
+		cp ../etc/postfix/mailod.conf /etc/postfix/mailod.conf
+	endif
 clean:
+	echo "Cleaning object files and binaries from system"
 	rm *.o
 	rm ../bin/mailod

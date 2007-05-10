@@ -1,0 +1,30 @@
+Nasledovne skripty boli vyuzite pri testovani a vyvoji:
+
+add_posttest_users.sh
+---------------------
+prida do systemu 10 pouzivatelov posttest1 - posttest10
+
+
+chowni_maildiry.sh
+------------------
+zmeni pristupove prava na jednotlive maildiry a ich sucasti podal potreby mailod-a
+
+
+clean_maildir_of_posttestx.sh
+-----------------------------
+vymaze vsetkym pouzivatelom posttestx ich emaily z new a cur
+
+
+postal.sh
+---------
+postal je program na testovanie SMTP serverov, uvedeny skript rozposiela na adresy nadefinovane v users_list emaily s nahodnym obsahom
+
+
+reload.sh
+---------
+zastavi demona mailod, skompiluje mailod tento novy mailod nainstaluje a opatovne nastartuje demona mailod
+
+
+sends_test_mails.sh
+-------------------
+odosle test_text na mail kazdemu pouzivatelovi posttestx
